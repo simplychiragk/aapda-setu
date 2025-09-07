@@ -1,12 +1,39 @@
-# React + Vite
+# Aapda Setu - Disaster Preparedness App 🛡️
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+A comprehensive web application designed to equip students and educational institutions in India with the tools and knowledge needed for effective disaster preparedness and response. This project was built for a hackathon.
 
-Currently, two official plugins are available:
+## 🚀 Live Demo
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+**The live version of Aapda Setu is deployed on Vercel.**
 
-## Expanding the ESLint configuration
+**🔗 Visit the site:** **https://bit.ly/aapdasetu**
+***
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+## ✨ Key Features
+
+* **🚨 Real-Time Alerts:** Live disaster warnings to keep students and staff informed.
+* **📚 Video Library:** A curated collection of educational videos on various disaster protocols.
+* **🧠 Interactive Quizzes:** Gamified quizzes to test knowledge and reinforce learning.
+* **🔥 Virtual Drills:** Step-by-step interactive simulations for emergency procedures.
+* **📞 Emergency Contacts:** A quick-access directory for critical services.
+* **📊 Admin Dashboard:** A portal for school administrators to track campus-wide preparedness.
+
+***
+
+## 📸 Screenshots
+
+![Aapda Setu Dashboard][![Screenshot-2025-09-07-092636.png](https://i.postimg.cc/j5v5W3mN/Screenshot-2025-09-07-092636.png)](https://postimg.cc/YGGkZRpq)
+*A screenshot of the main dashboard, showcasing the welcome message and navigation cards.*
+
+![Aapda Setu Alerts Page][![Screenshot-2025-09-07-093401.png](https://i.postimg.cc/gcQpMPVj/Screenshot-2025-09-07-093401.png)](https://postimg.cc/6TrF3g1x)
+*A screenshot of the alerts page, showing different severity levels.*
+
+***
+
+## 🛠️ Tech Stack
+
+* **Frontend:** [React](https://reactjs.org/) (with Vite)
+* **Styling:** [Tailwind CSS](https://tailwindcss.com/)
+* **Routing:** [React Router](https://reactrouter.com/)
+* **Live Data Source:** [ReliefWeb API](https://reliefweb.int/help/api)
+* **Deployment:** [Vercel](https://vercel.com/)
