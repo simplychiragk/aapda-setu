@@ -41,15 +41,14 @@ Temporary demo credentials:
 
 Note: Google Sheets integration remains in the code but is disabled when env vars are missing or `USE_HARDCODED_AUTH=true`. To re-enable Sheets, set the env vars as described below.
 
-### Google Sheets Structure
+### Demo-only Auth (Hardcoded)
 
-Worksheet: `Users`
+In this demo build, Google Sheets is disabled and credentials are hardcoded:
 
-Columns (headers on first row):
+- Student: user `student`, password `student` → `/dashboard`
+- Staff/Admin: user `admin`, password `admin` → `/admin`
 
-userId | password_hash | role | displayName | email | settings_json | migrated_at
-
-Service account must have access. Do not commit secrets.
+If you want to re-enable Sheets later, restore the removed files and env configs and replace the demo handlers with real integrations.
 
 ### Environment Variables
 
@@ -69,12 +68,6 @@ npm run dev
 
 Vite runs on :5173; API server on :5174 proxied at `/api`.
 
-### Password Migration
+### Notes
 
-Plaintext `password_hash` values are auto-migrated to bcrypt on first successful login. Or run locally:
-
-```
-node scripts/migrate-plaintext-passwords.js
-```
-
-An audit row is appended to `Audit` sheet.
+All server endpoints run in demo mode with in-memory data; no external services are called.
