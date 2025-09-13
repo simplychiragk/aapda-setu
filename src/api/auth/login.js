@@ -47,12 +47,15 @@ export async function handler(req, res) {
     // Hardcoded fallback if Sheets not configured or explicitly requested
     const useHardcoded = !process.env.GOOGLE_SERVICE_ACCOUNT_KEY || !process.env.GOOGLE_SHEETS_USERS_SHEET_ID || process.env.USE_HARDCODED_AUTH === 'true';
     if (useHardcoded) {
-      const users = [
-        { userId: 'student', password: 'student', role: 'student', displayName: 'Student User', email: 'student@example.com' },
-        { userId: 'admin', password: 'admin', role: 'staff', displayName: 'Administrator', email: 'admin@example.com' },
-      ];
-      const u = users.find((u) => u.userId === userId);
-      if (!u || u.password !== password || u.role !== role) { res.statusCode = 401; res.end(JSON.stringify({ message: 'Invalid credentials' })); return; }
+      const uid = String(userId || '').trim().toLowerCase();
+      const pwd = String(password || '').trim();
+      let u = null;
+      if (uid === 'student' && pwd === 'student') {
+        u = { userId: 'student', role: 'student', displayName: 'Student User', email: 'student@example.com' };
+      } else if (uid === 'admin' && pwd === 'admin') {
+        u = { userId: 'admin', role: 'staff', displayName: 'Administrator', email: 'admin@example.com' };
+      }
+      if (!u) { res.statusCode = 401; res.end(JSON.stringify({ message: 'Invalid credentials' })); return; }
       const token = jwt.sign({ userId: u.userId, role: u.role }, JWT_SECRET, { expiresIn: '8h' });
       const isProd = process.env.NODE_ENV === 'production';
       const setCookie = cookie.serialize('token', token, { httpOnly: true, sameSite: 'lax', secure: isProd, path: '/', maxAge: 60 * 60 * 8 });
