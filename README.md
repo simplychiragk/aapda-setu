@@ -32,7 +32,14 @@ Visit: https://bit.ly/aapdasetu
 
 ## Auth, Admin, Assistant (This branch)
 
-This branch adds authentication via Google Sheets and role-based dashboards, persistent dark mode and settings, and a floating Assistant.
+This branch adds authentication (currently in DEMO MODE with hardcoded users), role-based dashboards, persistent dark mode and settings, and a floating Assistant.
+
+Temporary demo credentials:
+
+- Student: user `student`, password `student` (redirects to `/dashboard`)
+- Staff/Admin: user `admin`, password `admin` (redirects to `/admin`)
+
+Note: Google Sheets integration remains in the code but is disabled when env vars are missing or `USE_HARDCODED_AUTH=true`. To re-enable Sheets, set the env vars as described below.
 
 ### Google Sheets Structure
 
