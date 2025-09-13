@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import { NotificationContext } from "../context/NotificationContext";
 import { useNavigate } from "react-router-dom";
 
 const ALL_QUESTIONS = [
@@ -26,6 +27,7 @@ function pickRandomQuestions(all, count = 15) {
 
 export default function Quizzes() {
   const navigate = useNavigate();
+  const { addNotification } = React.useContext(NotificationContext);
   const [showStartPage, setShowStartPage] = useState(true);
   const [questions, setQuestions] = useState([]);
   const [currentIdx, setCurrentIdx] = useState(0);
@@ -74,10 +76,22 @@ export default function Quizzes() {
       setShowScore(true);
       setQuizStarted(false);
 
+      const percent = Math.round((score / questions.length) * 100);
+      localStorage.setItem("lastQuizPercent", String(percent));
       let currentPrep = parseInt(localStorage.getItem("preparedness")) || 0;
-      let bonus = Math.round((score / questions.length) * 20);
+      let bonus = Math.round((percent / 100) * 20);
       let updated = Math.min(currentPrep + bonus, 100);
-      localStorage.setItem("preparedness", updated);
+      localStorage.setItem("preparedness", String(updated));
+
+      // badge
+      if (percent >= 80) {
+        const badges = JSON.parse(localStorage.getItem("badges") || "[]");
+        if (!badges.includes("Quiz Master")) {
+          const next = [...badges, "Quiz Master"];
+          localStorage.setItem("badges", JSON.stringify(next));
+          addNotification("🎉 Earned badge: Quiz Master");
+        }
+      }
     }
   };
 

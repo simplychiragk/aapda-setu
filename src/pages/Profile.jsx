@@ -120,6 +120,20 @@ export default function Profile() {
           <p style={{ marginTop: 10, color: "#334155", fontWeight: 500 }}>
             This score increases as you complete quizzes and drills.
           </p>
+
+          {/* Badges */}
+          <div style={{ marginTop: 16, textAlign: 'left' }}>
+            <div style={{ fontWeight: 700, marginBottom: 8 }}>🏅 Badges</div>
+            <div style={{ display: 'flex', flexWrap: 'wrap', gap: 8 }}>
+              {(JSON.parse(localStorage.getItem('badges') || '[]')).length === 0 ? (
+                <span style={{ color: '#64748b' }}>No badges yet. Take a quiz or complete drills!</span>
+              ) : (
+                (JSON.parse(localStorage.getItem('badges') || '[]')).map((b) => (
+                  <span key={b} style={{ padding: '6px 10px', background: '#fff', border: '1px solid #e2e8f0', borderRadius: 999, fontWeight: 600 }}>{b}</span>
+                ))
+              )}
+            </div>
+          </div>
         </div>
       </div>
     </div>

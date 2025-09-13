@@ -1,11 +1,15 @@
 import React, { useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { ThemeContext } from '../context/ThemeContext';
+import { NotificationContext } from '../context/NotificationContext';
+import Toaster from './Toaster';
+import OfflineBanner from './OfflineBanner';
 
 export default function Layout({ children }) {
   const location = useLocation();
   const { darkModeEnabled, setTheme } = React.useContext(ThemeContext);
   const [assistantOpen, setAssistantOpen] = useState(false);
+  const { notifications, unreadCount, markAllRead } = React.useContext(NotificationContext);
   
   const navItems = [
     { to: "/", icon: "🏠", label: "Dashboard" },
@@ -13,6 +17,7 @@ export default function Layout({ children }) {
     { to: "/drills", icon: "🧯", label: "Drills" },
     { to: "/videos", icon: "🎬", label: "Videos" },
     { to: "/quizzes", icon: "❓", label: "Quizzes" },
+    { to: "/leaderboard", icon: "🏆", label: "Leaderboard" },
     { to: "/contacts", icon: "📞", label: "Contacts" },
     { to: "/game", icon: "🎮", label: "Game" },
     { to: "/profile", icon: "👤", label: "Profile" },
@@ -52,6 +57,31 @@ export default function Layout({ children }) {
                 </Link>
               ))}
               <button onClick={() => setTheme(darkModeEnabled ? 'light' : 'dark')} className="ml-2 px-3 py-2 rounded-xl text-sm font-medium text-gray-600 dark:text-slate-300 hover:bg-blue-50 dark:hover:bg-slate-800" aria-label="Toggle dark mode">{darkModeEnabled ? '🌙' : '☀️'}</button>
+              <div className="relative ml-2">
+                <details className="group">
+                  <summary className="list-none cursor-pointer px-3 py-2 rounded-xl text-sm font-medium text-gray-600 dark:text-slate-300 hover:bg-blue-50 dark:hover:bg-slate-800 flex items-center gap-2">
+                    🔔 {unreadCount > 0 && (<span className="text-xs bg-red-500 text-white px-1.5 py-0.5 rounded-full">{unreadCount}</span>)}
+                  </summary>
+                  <div className="absolute right-0 mt-2 w-80 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl shadow-xl p-2 z-50">
+                    <div className="flex items-center justify-between px-2 py-1">
+                      <div className="text-sm font-semibold">Notifications</div>
+                      <button onClick={markAllRead} className="text-xs text-blue-600">Mark all read</button>
+                    </div>
+                    <div className="max-h-72 overflow-y-auto space-y-1">
+                      {notifications.length === 0 ? (
+                        <div className="text-xs text-slate-500 px-2 py-3">No notifications</div>
+                      ) : notifications.map((n) => (
+                        <div key={n.id} className={`px-3 py-2 rounded-lg text-sm ${n.read ? 'bg-slate-50 dark:bg-slate-800' : 'bg-blue-50 dark:bg-slate-800/70'}`}>
+                          <div className="flex items-center justify-between">
+                            <div>{n.message}</div>
+                            <div className="text-[10px] text-slate-500">{new Date(n.at).toLocaleTimeString()}</div>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                </details>
+              </div>
             </div>
 
             {/* Mobile menu button */}
@@ -68,7 +98,9 @@ export default function Layout({ children }) {
 
       {/* Main Content */}
       <main className="relative">
+        <OfflineBanner />
         {children}
+        <Toaster />
 
         {/* Floating Assistant Button */}
         <button onClick={() => setAssistantOpen(true)} className="fixed bottom-6 right-6 w-14 h-14 rounded-full bg-gradient-to-r from-blue-500 to-indigo-500 text-white shadow-2xl hover:scale-110 active:scale-95 transition-transform focus:outline-none" aria-label="Open assistant">💬</button>
