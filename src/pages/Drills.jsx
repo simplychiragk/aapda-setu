@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { NotificationContext } from "../context/NotificationContext";
 
 /** Utils */
 function hexToRGBA(hex, alpha = 0.14) {
@@ -165,6 +166,7 @@ const DRILLS = [
 ];
 
 export default function Drills() {
+  const { addNotification } = React.useContext(NotificationContext);
   const [selectedCategory, setSelectedCategory] = useState(null);
   const [selectedDrill, setSelectedDrill] = useState(null);
   const [started, setStarted] = useState(false);
@@ -313,6 +315,20 @@ export default function Drills() {
       let current = parseInt(localStorage.getItem("preparedness")) || 0;
       let updated = Math.min(current + 15, 100);
       localStorage.setItem("preparedness", updated);
+
+      // ✅ Badges: Safety Pro when all drills in category done at least once
+      const done = JSON.parse(localStorage.getItem("drillsDoneById") || "{}");
+      done[drill.id] = true;
+      localStorage.setItem("drillsDoneById", JSON.stringify(done));
+      const allIds = DRILLS.flatMap((c) => c.drills.map((d) => d.id));
+      const allDone = allIds.every((id) => done[id]);
+      if (allDone) {
+        const badges = JSON.parse(localStorage.getItem("badges") || "[]");
+        if (!badges.includes("Safety Pro")) {
+          localStorage.setItem("badges", JSON.stringify([...badges, "Safety Pro"]));
+          addNotification("🏅 Earned badge: Safety Pro");
+        }
+      }
 
       window.setTimeout(() => {
         window.alert(`✅ ${drill.title} completed! Great job!`);

@@ -18,12 +18,15 @@ import NotAuthorized from "./pages/NotAuthorized";
 import ProtectedRoute from "./utils/ProtectedRoute";
 import { ThemeProvider } from "./context/ThemeContext";
 import { AuthProvider } from "./context/AuthContext";
+import { NotificationProvider } from "./context/NotificationContext";
+import Leaderboard from "./pages/Leaderboard";
 
 function App() {
   return (
     <BrowserRouter>
       <ThemeProvider>
         <AuthProvider>
+          <NotificationProvider>
           <Layout>
             <Routes>
               <Route path="/" element={<Entry />} />
@@ -42,6 +45,7 @@ function App() {
               <Route path="/videos" element={<Videos />} />
               <Route path="/quizzes" element={<Quizzes />} />
               <Route path="/contacts" element={<EmergencyContacts />} />
+              <Route path="/leaderboard" element={<Leaderboard />} />
               <Route
                 path="/admin"
                 element={
@@ -58,6 +62,7 @@ function App() {
               <Route path="*" element={<NotFound />} />
             </Routes>
           </Layout>
+          </NotificationProvider>
         </AuthProvider>
       </ThemeProvider>
     </BrowserRouter>

@@ -34,6 +34,8 @@ export async function handler(req, res) {
       preparednessPercent: Math.floor(Math.random() * 100),
     }));
 
+    // merge current user metrics from localStorage if available (best-effort on serverless is limited; client can enrich)
+
     res.setHeader('Content-Type', 'application/json');
     res.end(JSON.stringify({ students }));
   } catch {
