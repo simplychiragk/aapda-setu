@@ -1,3 +1,4 @@
+/* eslint-env node */
 import { google } from 'googleapis';
 
 export function getSheetsClient() {

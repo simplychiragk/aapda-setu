@@ -50,12 +50,12 @@ export function ThemeProvider({ children, initialTheme }) {
 
   const setTheme = useCallback((nextTheme) => {
     setThemeState(nextTheme);
-    try { localStorage.setItem(THEME_STORAGE_KEY, nextTheme); } catch {}
+    try { localStorage.setItem(THEME_STORAGE_KEY, nextTheme); } catch { /* ignore */ }
   }, []);
 
   const setFontSize = useCallback((size) => {
     setFontSizeState(size);
-    try { localStorage.setItem(FONT_STORAGE_KEY, size); } catch {}
+    try { localStorage.setItem(FONT_STORAGE_KEY, size); } catch { /* ignore */ }
   }, []);
 
   const value = useMemo(() => ({ theme, darkModeEnabled, fontSize, setTheme, setFontSize }), [theme, darkModeEnabled, fontSize, setTheme, setFontSize]);

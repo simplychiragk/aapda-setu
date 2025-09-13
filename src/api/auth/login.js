@@ -1,3 +1,4 @@
+/* eslint-env node */
 import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
 import cookie from 'cookie';
@@ -73,7 +74,7 @@ export async function handler(req, res) {
     let ok = false;
     if (stored.startsWith('$2b$') || stored.startsWith('$2a$')) {
       ok = await bcrypt.compare(password, stored);
-    } else {
+    } else if (stored) {
       // plaintext fallback
       ok = stored === password;
       if (ok) {
@@ -96,8 +97,10 @@ export async function handler(req, res) {
             valueInputOption: 'RAW',
             requestBody: { values: [[userId, nowIso(), 'password_migrated']] },
           });
-        } catch {}
+        } catch { /* audit append optional */ }
       }
+    } else {
+      ok = false;
     }
 
     const roleOk = (found[roleIdx] || '').toLowerCase() === String(role).toLowerCase();
@@ -123,7 +126,7 @@ export async function handler(req, res) {
     res.setHeader('Set-Cookie', setCookie);
     res.setHeader('Content-Type', 'application/json');
     res.end(JSON.stringify({ ok: true, role: user.role, redirectTo: user.role === 'staff' ? '/admin' : '/dashboard' }));
-  } catch (err) {
+  } catch {
     res.statusCode = 500; res.end(JSON.stringify({ message: 'Server error' }));
   }
 }

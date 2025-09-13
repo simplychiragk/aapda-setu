@@ -1,3 +1,4 @@
+/* eslint-env node */
 import jwt from 'jsonwebtoken';
 import cookie from 'cookie';
 import { getSheetsClient } from '../_utils/sheets';

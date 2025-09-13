@@ -18,7 +18,7 @@ export function AuthProvider({ children }) {
       setLoading(true);
       const me = await authClient.me();
       setUser(me?.user || null);
-    } catch (err) {
+    } catch {
       setUser(null);
     } finally {
       setLoading(false);
@@ -40,7 +40,7 @@ export function AuthProvider({ children }) {
   const logout = useCallback(async () => {
     try {
       await authClient.logout?.();
-    } catch {}
+    } catch { /* ignore */ }
     setUser(null);
   }, []);
 

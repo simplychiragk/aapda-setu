@@ -1,14 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 
-function hexToRGBA(hex, alpha = 0.12) {
-  const h = hex.replace("#", "");
-  const bigint = parseInt(h, 16);
-  const r = (bigint >> 16) & 255;
-  const g = (bigint >> 8) & 255;
-  const b = bigint & 255;
-  return `rgba(${r}, ${g}, ${b}, ${alpha})`;
-}
+//
 
 export default function Dashboard() {
   const [showProfile, setShowProfile] = useState(false);
@@ -17,9 +10,7 @@ export default function Dashboard() {
   const [username, setUsername] = useState(localStorage.getItem("username") || "");
   const [showLoginPopup, setShowLoginPopup] = useState(!localStorage.getItem("username"));
   const [inputName, setInputName] = useState("");
-  const [preparedness, setPreparedness] = useState(
-    parseInt(localStorage.getItem("preparedness")) || 0
-  );
+  const [preparedness, setPreparedness] = useState(parseInt(localStorage.getItem("preparedness")) || 0); // eslint-disable-line no-unused-vars
 
   useEffect(() => {
     localStorage.setItem("preparedness", preparedness);
@@ -46,6 +37,7 @@ export default function Dashboard() {
   useEffect(() => {
     const randomIndex = Math.floor(Math.random() * tips.length);
     setTip(tips[randomIndex]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const formatTime = (date) => {

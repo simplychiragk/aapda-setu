@@ -1,3 +1,4 @@
+/* eslint-env node */
 import cookie from 'cookie';
 
 export async function handler(req, res) {

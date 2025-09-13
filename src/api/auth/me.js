@@ -1,3 +1,4 @@
+/* eslint-env node */
 import jwt from 'jsonwebtoken';
 import cookie from 'cookie';
 import { getSheetsClient } from '../_utils/sheets';
@@ -33,7 +34,7 @@ export async function handler(req, res) {
     };
     res.setHeader('Content-Type', 'application/json');
     res.end(JSON.stringify({ user }));
-  } catch (err) {
+  } catch {
     res.statusCode = 401; res.end(JSON.stringify({ user: null }));
   }
 }

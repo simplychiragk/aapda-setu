@@ -1,10 +1,11 @@
+/* eslint-env node */
 import jwt from 'jsonwebtoken';
 import cookie from 'cookie';
 import { getSheetsClient } from '../_utils/sheets';
 
 const JWT_SECRET = process.env.JWT_SECRET || 'dev-secret-change-me';
 
-function requireStaff(req, res) {
+function requireStaff(req) {
   try {
     const cookies = cookie.parse(req.headers.cookie || '');
     const token = cookies.token;
@@ -17,7 +18,7 @@ function requireStaff(req, res) {
 
 export async function handler(req, res) {
   if (req.method !== 'GET') { res.statusCode = 405; res.end('Method Not Allowed'); return; }
-  const auth = requireStaff(req, res);
+  const auth = requireStaff(req);
   if (!auth) { res.statusCode = 403; res.end('Forbidden'); return; }
 
   try {
@@ -65,7 +66,7 @@ export async function handler(req, res) {
 
     res.setHeader('Content-Type', 'application/json');
     res.end(JSON.stringify({ students }));
-  } catch (err) {
+  } catch {
     res.statusCode = 500; res.end('Server error');
   }
 }

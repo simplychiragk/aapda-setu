@@ -1,3 +1,4 @@
+/* eslint-env node */
 import jwt from 'jsonwebtoken';
 import cookie from 'cookie';
 import { getSheetsClient } from '../_utils/sheets';
@@ -19,7 +20,8 @@ export async function handler(req, res) {
   if (req.method !== 'GET') { res.statusCode = 405; res.end('Method Not Allowed'); return; }
   const auth = requireStaff(req);
   if (!auth) { res.statusCode = 403; res.end('Forbidden'); return; }
-  const id = req.url.split('/').pop();
+  const raw = (req.params && req.params.id) || req.url.split('/').pop() || '';
+  const id = String(raw).split('?')[0];
   try {
     let detail = null;
     try {
@@ -40,7 +42,7 @@ export async function handler(req, res) {
           email: row[emailIdx] || '',
         };
       }
-    } catch {}
+    } catch { /* ignore sheet read errors in demo mode */ }
 
     if (!detail) detail = { userId: id, name: id, email: `${id}@example.com` };
     // Stub analytics
@@ -52,7 +54,7 @@ export async function handler(req, res) {
 
     res.setHeader('Content-Type', 'application/json');
     res.end(JSON.stringify({ student: detail }));
-  } catch (e) {
+  } catch {
     res.statusCode = 500; res.end('Server error');
   }
 }
