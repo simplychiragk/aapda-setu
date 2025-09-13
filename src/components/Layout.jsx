@@ -71,13 +71,13 @@ export default function Layout({ children }) {
         {children}
 
         {/* Floating Assistant Button */}
-        <button onClick={() => setAssistantOpen(true)} className="fixed bottom-6 right-6 w-14 h-14 rounded-full bg-gradient-to-r from-blue-500 to-indigo-500 text-white shadow-2xl hover:scale-105 transition transform focus:outline-none" aria-label="Open assistant">💬</button>
+        <button onClick={() => setAssistantOpen(true)} className="fixed bottom-6 right-6 w-14 h-14 rounded-full bg-gradient-to-r from-blue-500 to-indigo-500 text-white shadow-2xl hover:scale-110 active:scale-95 transition-transform focus:outline-none" aria-label="Open assistant">💬</button>
 
         {/* Assistant Panel */}
         {assistantOpen && (
           <div className="fixed inset-0 z-50 flex items-end sm:items-center justify-center">
             <div className="absolute inset-0 bg-black/30" onClick={() => setAssistantOpen(false)} />
-            <div className="relative w-full sm:max-w-md bg-white dark:bg-slate-900 rounded-t-2xl sm:rounded-2xl shadow-2xl border border-slate-200 dark:border-slate-800 p-4 m-0 sm:m-4">
+            <div className="relative w-full sm:max-w-md bg-white dark:bg-slate-900 rounded-t-2xl sm:rounded-2xl shadow-2xl border border-slate-200 dark:border-slate-800 p-4 m-0 sm:m-4 animate-[slideInFromTop_0.25s_ease-out]">
               <div className="flex items-center justify-between mb-2">
                 <div className="font-semibold">Assistant</div>
                 <button onClick={() => setAssistantOpen(false)} className="text-slate-500 hover:text-slate-700">✖</button>

@@ -37,7 +37,9 @@ export default function Login() {
 
   return (
     <div className="min-h-[70vh] flex items-center justify-center p-4">
-      <div className="w-full max-w-md bg-white/80 dark:bg-slate-900/60 backdrop-blur rounded-2xl p-8 shadow-xl border border-white/20">
+      <div className="relative w-full max-w-md">
+        <div className="absolute inset-0 -z-10 blur-2xl opacity-40 bg-gradient-to-tr from-blue-300 to-indigo-300 rounded-[24px] animate-[fadeIn_1s_ease-in-out]" />
+        <div className="w-full bg-white/80 dark:bg-slate-900/60 backdrop-blur rounded-2xl p-8 shadow-xl border border-white/20 animate-[slideInFromTop_0.4s_ease-out]">
         <h1 className="text-2xl font-bold text-slate-900 dark:text-white text-center mb-6">Login ({role === 'staff' ? 'Staff' : 'Student'})</h1>
         {error && (
           <div className="mb-4 rounded-lg border border-red-200 text-red-700 bg-red-50 px-3 py-2 text-sm">
@@ -60,10 +62,14 @@ export default function Login() {
               <option value="staff">Staff</option>
             </select>
           </div>
-          <button disabled={loading} className="w-full h-11 rounded-xl bg-gradient-to-r from-blue-500 to-indigo-500 text-white font-semibold shadow-lg hover:shadow-2xl transition-all disabled:opacity-60 disabled:cursor-not-allowed">
-            {loading ? 'Signing in…' : 'Sign In'}
+          <button disabled={loading} className="w-full h-11 rounded-xl bg-gradient-to-r from-blue-500 to-indigo-500 text-white font-semibold shadow-lg hover:shadow-2xl transition-all disabled:opacity-60 disabled:cursor-not-allowed transform active:scale-[0.98]">
+            <span className="inline-flex items-center gap-2">
+              {loading && <span className="inline-block h-4 w-4 border-2 border-white/70 border-t-transparent rounded-full animate-spin" />}
+              {loading ? 'Signing in…' : 'Sign In'}
+            </span>
           </button>
         </form>
+        </div>
       </div>
     </div>
   );

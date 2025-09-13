@@ -44,6 +44,25 @@ export async function handler(req, res) {
   }
 
   try {
+    // Hardcoded fallback if Sheets not configured or explicitly requested
+    const useHardcoded = !process.env.GOOGLE_SERVICE_ACCOUNT_KEY || !process.env.GOOGLE_SHEETS_USERS_SHEET_ID || process.env.USE_HARDCODED_AUTH === 'true';
+    if (useHardcoded) {
+      const users = [
+        { userId: 'student', password: 'student', role: 'student', displayName: 'Student User', email: 'student@example.com' },
+        { userId: 'admin', password: 'admin', role: 'staff', displayName: 'Administrator', email: 'admin@example.com' },
+      ];
+      const u = users.find((u) => u.userId === userId);
+      if (!u || u.password !== password || u.role !== role) { res.statusCode = 401; res.end(JSON.stringify({ message: 'Invalid credentials' })); return; }
+      const token = jwt.sign({ userId: u.userId, role: u.role }, JWT_SECRET, { expiresIn: '8h' });
+      const isProd = process.env.NODE_ENV === 'production';
+      const setCookie = cookie.serialize('token', token, { httpOnly: true, sameSite: 'lax', secure: isProd, path: '/', maxAge: 60 * 60 * 8 });
+      res.setHeader('Set-Cookie', setCookie);
+      res.setHeader('Content-Type', 'application/json');
+      res.end(JSON.stringify({ ok: true, role: u.role, redirectTo: u.role === 'staff' ? '/admin' : '/dashboard' }));
+      return;
+    }
+
+    // Google Sheets path (unchanged)
     const { sheets, spreadsheetId } = getSheetsClient();
     const range = 'Users!A:G';
     const resp = await sheets.spreadsheets.values.get({ spreadsheetId, range });
@@ -75,29 +94,16 @@ export async function handler(req, res) {
     if (stored.startsWith('$2b$') || stored.startsWith('$2a$')) {
       ok = await bcrypt.compare(password, stored);
     } else if (stored) {
-      // plaintext fallback
       ok = stored === password;
       if (ok) {
-        // migrate to bcrypt
         const hash = await bcrypt.hash(password, 10);
         const newRow = [...found];
         newRow[passIdx] = hash;
         if (migratedIdx >= 0) newRow[migratedIdx] = nowIso();
-        await sheets.spreadsheets.values.update({
-          spreadsheetId,
-          range: `Users!A${foundRowIndex + 1}:G${foundRowIndex + 1}`,
-          valueInputOption: 'RAW',
-          requestBody: { values: [newRow] },
-        });
-        // Optional: write audit row (best-effort)
+        await sheets.spreadsheets.values.update({ spreadsheetId, range: `Users!A${foundRowIndex + 1}:G${foundRowIndex + 1}`, valueInputOption: 'RAW', requestBody: { values: [newRow] } });
         try {
-          await sheets.spreadsheets.values.append({
-            spreadsheetId,
-            range: 'Audit!A:C',
-            valueInputOption: 'RAW',
-            requestBody: { values: [[userId, nowIso(), 'password_migrated']] },
-          });
-        } catch { /* audit append optional */ }
+          await sheets.spreadsheets.values.append({ spreadsheetId, range: 'Audit!A:C', valueInputOption: 'RAW', requestBody: { values: [[userId, nowIso(), 'password_migrated']] } });
+        } catch { /* audit optional */ }
       }
     } else {
       ok = false;
@@ -116,13 +122,7 @@ export async function handler(req, res) {
 
     const token = jwt.sign({ userId: user.userId, role: user.role }, JWT_SECRET, { expiresIn: '8h' });
     const isProd = process.env.NODE_ENV === 'production';
-    const setCookie = cookie.serialize('token', token, {
-      httpOnly: true,
-      sameSite: 'lax',
-      secure: isProd,
-      path: '/',
-      maxAge: 60 * 60 * 8,
-    });
+    const setCookie = cookie.serialize('token', token, { httpOnly: true, sameSite: 'lax', secure: isProd, path: '/', maxAge: 60 * 60 * 8 });
     res.setHeader('Set-Cookie', setCookie);
     res.setHeader('Content-Type', 'application/json');
     res.end(JSON.stringify({ ok: true, role: user.role, redirectTo: user.role === 'staff' ? '/admin' : '/dashboard' }));
