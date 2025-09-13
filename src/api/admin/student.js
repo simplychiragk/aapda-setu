@@ -1,7 +1,7 @@
 /* eslint-env node */
 import jwt from 'jsonwebtoken';
 import cookie from 'cookie';
-import { getSheetsClient } from '../_utils/sheets';
+// Sheets removed in demo mode
 
 const JWT_SECRET = process.env.JWT_SECRET || 'dev-secret-change-me';
 
@@ -24,25 +24,8 @@ export async function handler(req, res) {
   const id = String(raw).split('?')[0];
   try {
     let detail = null;
-    try {
-      const { sheets, spreadsheetId } = getSheetsClient();
-      const resp = await sheets.spreadsheets.values.get({ spreadsheetId, range: 'Users!A:G' });
-      const rows = resp.data.values || [];
-      const header = rows[0] || [];
-      const idx = (name) => header.indexOf(name);
-      const userIdIdx = idx('userId');
-      const roleIdx = idx('role');
-      const displayIdx = idx('displayName');
-      const emailIdx = idx('email');
-      const row = rows.find((r) => (r[userIdIdx] || '') === id && (r[roleIdx] || '').toLowerCase() === 'student');
-      if (row) {
-        detail = {
-          userId: row[userIdIdx],
-          name: row[displayIdx] || row[userIdIdx],
-          email: row[emailIdx] || '',
-        };
-      }
-    } catch { /* ignore sheet read errors in demo mode */ }
+    // Demo detail
+    detail = { userId: id, name: id, email: `${id}@example.com` };
 
     if (!detail) detail = { userId: id, name: id, email: `${id}@example.com` };
     // Stub analytics
