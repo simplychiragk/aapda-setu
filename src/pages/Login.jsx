@@ -69,6 +69,7 @@ export default function Login() {
             </span>
           </button>
         </form>
+        <div className="mt-4 text-center text-xs text-slate-500">Prototype login: any credentials will sign you in. Choose role above for Staff vs Student.</div>
         </div>
       </div>
     </div>
