@@ -15,9 +15,7 @@ export default function Profile() {
   });
 
   // Preparedness is read-only (from drills & quizzes)
-  const [preparedness, setPreparedness] = useState(
-    parseInt(localStorage.getItem("preparedness")) || 0
-  );
+  const [preparedness] = useState(parseInt(localStorage.getItem("preparedness")) || 0);
 
   // Save profile info (not preparedness)
   useEffect(() => {
