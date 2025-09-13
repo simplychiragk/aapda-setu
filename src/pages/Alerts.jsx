@@ -1,7 +1,6 @@
 import React, { useState, useEffect, useMemo } from "react";
 import { useNavigate } from "react-router-dom";
 
-/** Utils */
 function hexToRGBA(hex, alpha = 0.14) {
   const h = hex.replace("#", "");
   const bigint = parseInt(h, 16);
@@ -13,7 +12,7 @@ function hexToRGBA(hex, alpha = 0.14) {
 
 const SEVERITY_COLORS = {
   High: "#dc2626",
-  Medium: "#d97706",
+  Medium: "#d97706", 
   Low: "#059669",
 };
 
@@ -35,11 +34,13 @@ export default function Alerts() {
   const [alerts, setAlerts] = useState([]);
   const [pushEnabled, setPushEnabled] = useState(false);
   const [selectedState, setSelectedState] = useState("All India");
+  const [loading, setLoading] = useState(true);
   const navigate = useNavigate();
 
   useEffect(() => {
     async function fetchAlerts() {
       try {
+        setLoading(true);
         const res = await fetch(
           "https://api.reliefweb.int/v2/disasters?appname=aapda-setu&limit=50&profile=lite&sort[]=date:desc&filter[field]=primary_country.name&filter[value]=India"
         );
@@ -64,13 +65,14 @@ export default function Alerts() {
       } catch (err) {
         console.error("Failed to fetch alerts:", err);
         setAlerts(SAMPLE_ALERTS);
+      } finally {
+        setLoading(false);
       }
     }
 
     fetchAlerts();
   }, []);
 
-  // Filter alerts by state
   const filtered = useMemo(() => {
     if (selectedState === "All India") return alerts;
     return alerts.filter((a) =>
@@ -78,64 +80,153 @@ export default function Alerts() {
     );
   }, [alerts, selectedState]);
 
-  // Share alert
   const shareAlert = async (alert) => {
     const text = `${alert.title} (${alert.severity})\nRegion: ${alert.region}\n${alert.details}\nTime: ${alert.time}\n— via Aapda Setu`;
     try {
       if (navigator.share) await navigator.share({ title: alert.title, text });
       else {
         await navigator.clipboard.writeText(text);
-        window.alert("Copied alert to clipboard!");
+        alert("Copied alert to clipboard!");
       }
     } catch {}
   };
 
-  const styles = {
-    container: { padding: 20 },
-    header: { display: "flex", justifyContent: "space-between", marginBottom: 16 },
-    card: { padding: 16, marginBottom: 12, borderRadius: 12, boxShadow: "0 2px 6px rgba(0,0,0,0.1)" },
-    backBtn: { padding: "6px 12px", background: "#2563eb", color: "#fff", border: "none", borderRadius: 6, cursor: "pointer" },
-    select: { padding: "6px 12px", borderRadius: 6, border: "1px solid #2563eb", cursor: "pointer", marginBottom: 20 },
-    shareBtn: { padding: "6px 12px", background: "#059669", color: "#fff", border: "none", borderRadius: 6, marginTop: 10, cursor: "pointer" },
+  const getSeverityIcon = (severity) => {
+    switch(severity) {
+      case 'High': return '🔴';
+      case 'Medium': return '🟡';
+      case 'Low': return '🟢';
+      default: return '⚠️';
+    }
   };
 
   return (
-    <div style={styles.container}>
-      <div style={styles.header}>
-        <h2>📢 Disaster Alerts (India)</h2>
-        <button style={styles.backBtn} onClick={() => navigate(-1)}>⬅ Back</button>
-      </div>
-
-      {/* All India / State Dropdown */}
-      <div style={{ marginBottom: 20 }}>
-        <select style={styles.select} value={selectedState} onChange={(e) => setSelectedState(e.target.value)}>
-          <option>All India</option>
-          {STATES.map((s) => <option key={s}>{s}</option>)}
-        </select>
-      </div>
-
-      {/* Notifications Toggle */}
-      <button
-        style={{ ...styles.backBtn, background: pushEnabled ? "#059669" : "#6b7280", marginBottom: 20 }}
-        onClick={() => setPushEnabled(!pushEnabled)}
-      >
-        {pushEnabled ? "Disable Notifications" : "Enable Notifications"}
-      </button>
-
-      {/* Alerts List */}
-      {filtered.length === 0 ? (
-        <p>No alerts available for {selectedState}.</p>
-      ) : (
-        filtered.map((a) => (
-          <div key={a.id} style={{ ...styles.card, borderLeft: `6px solid ${SEVERITY_COLORS[a.severity]}`, background: hexToRGBA(SEVERITY_COLORS[a.severity], 0.08) }}>
-            <h3>{a.icon} {a.title}</h3>
-            <p><strong>{a.region}</strong> — {a.time}</p>
-            <p>Severity: {a.severity}</p>
-            <p>{a.details}</p>
-            <button style={styles.shareBtn} onClick={() => shareAlert(a)}>📤 Share this alert</button>
+    <div className="min-h-screen bg-gradient-to-br from-slate-50 to-blue-50">
+      {/* Header */}
+      <div className="bg-gradient-to-r from-red-500 to-red-600 text-white">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+          <div className="flex items-center justify-between">
+            <div>
+              <h1 className="text-3xl font-bold mb-2">🚨 Disaster Alerts</h1>
+              <p className="text-red-100">Real-time disaster notifications for India</p>
+            </div>
+            <button
+              onClick={() => navigate(-1)}
+              className="bg-white/20 hover:bg-white/30 backdrop-blur-sm px-4 py-2 rounded-xl font-semibold transition-all duration-200"
+            >
+              ← Back
+            </button>
           </div>
-        ))
-      )}
+        </div>
+      </div>
+
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        {/* Controls */}
+        <div className="bg-white rounded-2xl shadow-lg border border-gray-100 p-6 mb-8">
+          <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+            <div className="flex items-center space-x-4">
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">Filter by State</label>
+                <select 
+                  value={selectedState} 
+                  onChange={(e) => setSelectedState(e.target.value)}
+                  className="px-4 py-2 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all bg-white"
+                >
+                  <option>All India</option>
+                  {STATES.map((s) => <option key={s}>{s}</option>)}
+                </select>
+              </div>
+            </div>
+            
+            <button
+              onClick={() => setPushEnabled(!pushEnabled)}
+              className={`px-6 py-3 rounded-xl font-semibold transition-all duration-200 ${
+                pushEnabled 
+                  ? 'bg-emerald-500 hover:bg-emerald-600 text-white shadow-lg' 
+                  : 'bg-gray-100 hover:bg-gray-200 text-gray-700'
+              }`}
+            >
+              {pushEnabled ? '🔔 Notifications On' : '🔕 Enable Notifications'}
+            </button>
+          </div>
+        </div>
+
+        {/* Loading State */}
+        {loading && (
+          <div className="flex items-center justify-center py-12">
+            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-500"></div>
+            <span className="ml-4 text-gray-600">Loading alerts...</span>
+          </div>
+        )}
+
+        {/* Alerts Grid */}
+        {!loading && (
+          <div className="space-y-6">
+            {filtered.length === 0 ? (
+              <div className="text-center py-12">
+                <div className="w-24 h-24 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                  <span className="text-4xl">📭</span>
+                </div>
+                <h3 className="text-xl font-semibold text-gray-900 mb-2">No alerts found</h3>
+                <p className="text-gray-600">No alerts available for {selectedState} at the moment.</p>
+              </div>
+            ) : (
+              filtered.map((alert) => (
+                <div 
+                  key={alert.id} 
+                  className="bg-white rounded-2xl shadow-lg border-l-4 hover:shadow-xl transition-all duration-300 overflow-hidden"
+                  style={{ borderLeftColor: SEVERITY_COLORS[alert.severity] }}
+                >
+                  <div className="p-6">
+                    <div className="flex items-start justify-between mb-4">
+                      <div className="flex items-center space-x-3">
+                        <div 
+                          className="w-12 h-12 rounded-xl flex items-center justify-center text-white font-bold shadow-lg"
+                          style={{ backgroundColor: SEVERITY_COLORS[alert.severity] }}
+                        >
+                          {alert.icon}
+                        </div>
+                        <div>
+                          <h3 className="text-xl font-bold text-gray-900">{alert.title}</h3>
+                          <div className="flex items-center space-x-2 mt-1">
+                            <span className="text-sm text-gray-500">📍 {alert.region}</span>
+                            <span className="text-sm text-gray-400">•</span>
+                            <span className="text-sm text-gray-500">🕒 {alert.time}</span>
+                          </div>
+                        </div>
+                      </div>
+                      
+                      <div className="flex items-center space-x-2">
+                        <span 
+                          className="px-3 py-1 rounded-full text-sm font-semibold text-white shadow-sm"
+                          style={{ backgroundColor: SEVERITY_COLORS[alert.severity] }}
+                        >
+                          {getSeverityIcon(alert.severity)} {alert.severity}
+                        </span>
+                      </div>
+                    </div>
+                    
+                    <p className="text-gray-700 mb-4 leading-relaxed">{alert.details}</p>
+                    
+                    <div className="flex items-center justify-between pt-4 border-t border-gray-100">
+                      <div className="text-sm text-gray-500">
+                        Stay safe and follow official guidelines
+                      </div>
+                      <button
+                        onClick={() => shareAlert(alert)}
+                        className="bg-blue-50 hover:bg-blue-100 text-blue-600 px-4 py-2 rounded-xl font-semibold transition-all duration-200 flex items-center space-x-2"
+                      >
+                        <span>📤</span>
+                        <span>Share</span>
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              ))
+            )}
+          </div>
+        )}
+      </div>
     </div>
   );
 }

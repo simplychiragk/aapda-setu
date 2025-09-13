@@ -1,8 +1,6 @@
-// Quizzes.jsx
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 
-// ---------------- BIG QUESTION BANK (100+) ----------------
 const ALL_QUESTIONS = [
   { question: "Emergency number for Police in India?", options: ["100", "101", "102", "108"], answer: "100" },
   { question: "Emergency number for Fire in India?", options: ["100", "101", "102", "108"], answer: "101" },
@@ -19,102 +17,13 @@ const ALL_QUESTIONS = [
   { question: "During fire drill, how should you leave the building?", options: ["Quickly and quietly", "Running and shouting", "Slowly talking", "Skipping"], answer: "Quickly and quietly" },
   { question: "Who is the leader in your classroom during a drill?", options: ["Teacher", "Principal", "Class pet", "Tallest student"], answer: "Teacher" },
   { question: "What is an emergency kit for?", options: ["Supplies you might need", "Snacks only", "Toys", "Homework"], answer: "Supplies you might need" },
-  { question: "Where should you avoid standing during an earthquake?", options: ["Under desk", "Near window", "Open ground", "Door frame"], answer: "Near window" },
-  { question: "What should you do if trapped in smoke?", options: ["Crawl low to ground", "Run upright", "Hold breath and run", "Stand still"], answer: "Crawl low to ground" },
-  { question: "What does 'evacuate' mean?", options: ["Leave building quickly", "Eat food", "Raise hand", "Go to nurse"], answer: "Leave building quickly" },
-  { question: "If outside during lightning, best action?", options: ["Go inside immediately", "Lie on ground", "Hold umbrella", "Keep playing"], answer: "Go inside immediately" },
-  { question: "Tsunami is caused by?", options: ["Earthquake under sea", "Heavy rainfall", "Strong winds", "Volcano only"], answer: "Earthquake under sea" },
-  { question: "Cyclone warning signals are given at?", options: ["Ports", "Schools", "Hospitals", "Police stations"], answer: "Ports" },
-  { question: "Full form of SDRF?", options: ["State Disaster Response Force", "School Disaster Rescue Force", "Safe Disaster Relief Fund", "State Defence Relief Force"], answer: "State Disaster Response Force" },
-  { question: "First step of CPR?", options: ["Check response & breathing", "Give water", "Shake hard", "Call police"], answer: "Check response & breathing" },
-  { question: "Helpline for children in distress in India?", options: ["1098", "100", "108", "101"], answer: "1098" },
-  { question: "What is mock drill?", options: ["Practice for emergency", "Fun play", "Surprise test", "Dance event"], answer: "Practice for emergency" },
-  { question: "If earthquake occurs at night, what should you do?", options: ["Stay in bed, protect head", "Run outside immediately", "Go to balcony", "Turn on fan"], answer: "Stay in bed, protect head" },
-  { question: "During cyclone, what should be stored?", options: ["Dry food & water", "Toys", "Music system", "New clothes"], answer: "Dry food & water" },
-  { question: "Best way to treat small burn?", options: ["Cool water", "Butter", "Toothpaste", "Oil"], answer: "Cool water" },
-  { question: "Which color is used for fire extinguishers (water type)?", options: ["Red", "Blue", "Black", "Green"], answer: "Red" },
-  { question: "What is the Richter scale used for?", options: ["Measure earthquake", "Measure rainfall", "Measure wind speed", "Measure fire"], answer: "Measure earthquake" },
-  { question: "Floods can be prevented by?", options: ["Planting trees", "Cutting trees", "Building on river bed", "Ignoring warnings"], answer: "Planting trees" },
-  { question: "If a gas leak is suspected, you should NOT?", options: ["Switch on lights", "Open windows", "Turn off cylinder", "Call gas agency"], answer: "Switch on lights" },
-  { question: "Which is safest floor during earthquake?", options: ["Ground floor", "Top floor", "Middle floor", "Roof"], answer: "Ground floor" },
-  { question: "What is landslide?", options: ["Falling of rocks/soil", "Flood water", "Volcano fire", "Earthquake shaking"], answer: "Falling of rocks/soil" },
-  { question: "The safe triangle in earthquake refers to?", options: ["Beside furniture", "On roof", "In lift", "Near balcony"], answer: "Beside furniture" },
-  { question: "What is first thing during fire?", options: ["Raise alarm", "Hide", "Run randomly", "Collect things"], answer: "Raise alarm" },
-  { question: "Cyclone shelters are built in?", options: ["Coastal areas", "Mountains", "Deserts", "Forests"], answer: "Coastal areas" },
-  { question: "Which organ helps us breathe?", options: ["Lungs", "Heart", "Liver", "Kidney"], answer: "Lungs" },
-  { question: "Which kit is useful in first aid?", options: ["Bandages & medicines", "Snacks", "Books", "Shoes"], answer: "Bandages & medicines" },
-  { question: "Which country shares Indian Ocean tsunami risk?", options: ["India", "Sri Lanka", "Indonesia", "All of these"], answer: "All of these" },
-  { question: "How should you cross flood water?", options: ["Never, wait for rescue", "Swim fast", "Walk barefoot", "Drive car"], answer: "Never, wait for rescue" },
-  { question: "What is fire triangle made of?", options: ["Heat, Fuel, Oxygen", "Air, Smoke, Water", "Gas, Light, Ash", "Coal, Fire, Oil"], answer: "Heat, Fuel, Oxygen" },
-  { question: "What is global warming mainly caused by?", options: ["Greenhouse gases", "Rivers", "Trees", "Rain"], answer: "Greenhouse gases" },
-  { question: "In first aid, what is CPR?", options: ["Cardio Pulmonary Resuscitation", "Critical Patient Relief", "Careful Patient Rescue", "Cold Pressure Relief"], answer: "Cardio Pulmonary Resuscitation" },
-  { question: "What is the main cause of urban flooding?", options: ["Poor drainage", "Tree planting", "Empty grounds", "Wide rivers"], answer: "Poor drainage" },
-  { question: "What should you not use on electrical fire?", options: ["Water", "CO2 extinguisher", "Dry chemical powder", "Fire blanket"], answer: "Water" },
-  { question: "First step when someone faints?", options: ["Check airway and breathing", "Give water immediately", "Shake hard", "Ignore"], answer: "Check airway and breathing" },
-  { question: "Which natural disaster is measured by Saffir-Simpson scale?", options: ["Cyclone/Hurricane", "Earthquake", "Flood", "Volcano"], answer: "Cyclone/Hurricane" },
-  { question: "When should you call 108?", options: ["Medical emergency", "Picnic", "Classroom quiz", "Sports day"], answer: "Medical emergency" },
-  { question: "Why should candles be avoided in earthquake?", options: ["Gas leaks may cause fire", "Candles finish fast", "Too dim", "Unsafe smell"], answer: "Gas leaks may cause fire" },
-  { question: "If bitten by snake, what is first step?", options: ["Keep calm and limit movement", "Run fast", "Cut wound", "Drink alcohol"], answer: "Keep calm and limit movement" },
-  { question: "How many fire extinguisher types exist?", options: ["5", "2", "10", "20"], answer: "5" },
-  { question: "Who controls disaster management in India?", options: ["NDMA", "NDRF", "Home Ministry", "All of these"], answer: "All of these" },
-  { question: "Which is not a natural disaster?", options: ["Earthquake", "Cyclone", "Chemical spill", "Flood"], answer: "Chemical spill" },
-  { question: "First step when earthquake starts?", options: ["Drop, Cover, Hold", "Run to balcony", "Use lift", "Call friends"], answer: "Drop, Cover, Hold" },
-  { question: "If thunder roars, go?", options: ["Indoors", "To field", "To river", "To rooftop"], answer: "Indoors" },
-  { question: "If fire is small and manageable?", options: ["Use extinguisher", "Ignore", "Pour petrol", "Run away"], answer: "Use extinguisher" },
-  { question: "What is drought?", options: ["Lack of rainfall", "Heavy rain", "Cyclone", "Snowstorm"], answer: "Lack of rainfall" },
-  { question: "Which natural disaster is worst in deserts?", options: ["Sandstorm", "Flood", "Cyclone", "Earthquake"], answer: "Sandstorm" },
-  { question: "Best way to prevent disease after flood?", options: ["Boil water", "Drink river water", "Eat street food", "Ignore hygiene"], answer: "Boil water" },
-  { question: "Where is safe during stampede?", options: ["Stay on sides", "Push crowd", "Lie down", "Run opposite"], answer: "Stay on sides" },
-  { question: "Triage in disaster means?", options: ["Sorting patients by severity", "Counting victims", "Medical camp", "Ambulance service"], answer: "Sorting patients by severity" },
-  { question: "What is most common disaster in India?", options: ["Flood", "Volcano", "Tsunami", "Snowstorm"], answer: "Flood" },
-  { question: "Which of these is man-made disaster?", options: ["Chemical leak", "Cyclone", "Flood", "Earthquake"], answer: "Chemical leak" },
-  { question: "Which part of India is cyclone-prone?", options: ["Coastal areas", "Himalayas", "Desert", "Plateau"], answer: "Coastal areas" },
-  { question: "When flood comes, move to?", options: ["Higher ground", "Basement", "River bank", "Bridge"], answer: "Higher ground" },
-  { question: "During landslide, you should?", options: ["Move to open place", "Go near slope", "Dig hole", "Climb tree"], answer: "Move to open place" },
-  { question: "What should you pack in a go-bag?", options: ["Food, water, medicines", "Toys", "Gold", "Clothes only"], answer: "Food, water, medicines" },
-  { question: "What is safe action during fire in kitchen?", options: ["Turn off gas", "Pour water on oil fire", "Run outside", "Use fan"], answer: "Turn off gas" },
-  { question: "Which gas causes suffocation in closed fire?", options: ["Carbon monoxide", "Oxygen", "Nitrogen", "Carbon dioxide"], answer: "Carbon monoxide" },
-  { question: "Where should you meet after evacuation?", options: ["Assembly point", "Randomly anywhere", "Parking lot alone", "Classroom"], answer: "Assembly point" },
-  { question: "What should be checked in fire extinguisher?", options: ["Expiry date", "Color", "Weight", "Handle"], answer: "Expiry date" },
-  { question: "Most tsunamis occur in?", options: ["Pacific Ocean", "Atlantic", "Indian", "Arctic"], answer: "Pacific Ocean" },
-  { question: "Which natural disaster can trigger tsunami?", options: ["Earthquake", "Cyclone", "Flood", "Drought"], answer: "Earthquake" },
-  { question: "The cyclone that hit Odisha in 1999 was called?", options: ["Super Cyclone", "Hudhud", "Phailin", "Amphan"], answer: "Super Cyclone" },
-  { question: "Which disaster is Richter scale linked to?", options: ["Earthquake", "Cyclone", "Flood", "Volcano"], answer: "Earthquake" },
-  { question: "When is National Disaster Reduction Day?", options: ["29 October", "5 June", "26 January", "2 October"], answer: "29 October" },
-  { question: "If injured person bleeds heavily?", options: ["Apply pressure bandage", "Give water only", "Ignore", "Cover with blanket"], answer: "Apply pressure bandage" },
-  { question: "What to do in case of fire in cinema hall?", options: ["Use nearest exit", "Shout and push", "Use lift", "Hide"], answer: "Use nearest exit" },
-  { question: "Main role of NDRF?", options: ["Rescue & relief", "Traffic control", "Teaching", "Banking"], answer: "Rescue & relief" },
-  { question: "Which cyclone hit West Bengal in 2020?", options: ["Amphan", "Fani", "Titli", "Hudhud"], answer: "Amphan" },
-  { question: "What is first aid for fracture?", options: ["Immobilize area", "Run fast", "Massage", "Pull bone"], answer: "Immobilize area" },
-  { question: "What is aftershock?", options: ["Smaller quake after main quake", "Cyclone", "Flood wave", "Storm"], answer: "Smaller quake after main quake" },
-  { question: "What should you avoid during thunderstorm indoors?", options: ["Using electrical appliances", "Closing windows", "Sitting quietly", "Eating food"], answer: "Using electrical appliances" },
-  { question: "Most fire accidents at home happen due to?", options: ["Gas leak", "Earthquake", "Cyclone", "Flood"], answer: "Gas leak" },
-  { question: "Which Indian city faced major flood in 2015?", options: ["Chennai", "Delhi", "Mumbai", "Kolkata"], answer: "Chennai" },
-  { question: "Which Indian state faces highest earthquakes?", options: ["Assam", "Rajasthan", "Punjab", "Kerala"], answer: "Assam" },
-  { question: "What should you do in school evacuation?", options: ["Follow teacher instructions", "Run anywhere", "Shout loudly", "Stay back"], answer: "Follow teacher instructions" },
-  { question: "What is landslide triggered by?", options: ["Heavy rain & quake", "Fire", "Heat wave", "Cyclone only"], answer: "Heavy rain & quake" },
-  { question: "Why is mock drill important?", options: ["Prepares people", "Fun game", "Entertainment", "Holiday"], answer: "Prepares people" },
-  { question: "What should you never do during fire?", options: ["Use lift", "Use stairs", "Raise alarm", "Call 101"], answer: "Use lift" },
-  { question: "What is the safest response to chemical leak?", options: ["Stay indoors & seal windows", "Run on road", "Light fire", "Drink water"], answer: "Stay indoors & seal windows" },
-  { question: "Which cyclone hit Andhra Pradesh in 2014?", options: ["Hudhud", "Amphan", "Titli", "Phailin"], answer: "Hudhud" },
-  { question: "What is first step of disaster management?", options: ["Preparedness", "Rescue", "Relief", "Rehabilitation"], answer: "Preparedness" },
-  { question: "What does 112 stand for in India?", options: ["Single emergency helpline", "Police only", "Ambulance only", "Fire only"], answer: "Single emergency helpline" },
-  { question: "What to do in case of gas cylinder fire?", options: ["Cover with wet cloth", "Pour water", "Push cylinder", "Run"], answer: "Cover with wet cloth" },
-  { question: "What should you avoid in flood water?", options: ["Electric poles", "Rescue boats", "Safe bridge", "Clean water"], answer: "Electric poles" },
-  { question: "Which color code for medical oxygen cylinder?", options: ["Black & White", "Red", "Blue", "Yellow"], answer: "Black & White" },
-  { question: "What is the main focus of disaster risk reduction?", options: ["Prevention & preparedness", "Response only", "Relief only", "Rehabilitation only"], answer: "Prevention & preparedness" },
-
-,
-  // ---- Expand this list with 90+ more ----
 ];
 
-// ---------------- Utility ----------------
 function pickRandomQuestions(all, count = 15) {
   const shuffled = [...all].sort(() => Math.random() - 0.5);
   return shuffled.slice(0, count);
 }
 
-// ---------------- Main Component ----------------
 export default function Quizzes() {
   const navigate = useNavigate();
   const [showStartPage, setShowStartPage] = useState(true);
@@ -123,15 +32,32 @@ export default function Quizzes() {
   const [score, setScore] = useState(0);
   const [selected, setSelected] = useState(null);
   const [showScore, setShowScore] = useState(false);
+  const [timeLeft, setTimeLeft] = useState(30);
+  const [quizStarted, setQuizStarted] = useState(false);
 
   useEffect(() => {
-    if (!showStartPage) setQuestions(pickRandomQuestions(ALL_QUESTIONS, 15));
-  }, [showStartPage]);
+    if (!showStartPage && !showScore) {
+      setQuestions(pickRandomQuestions(ALL_QUESTIONS, 10));
+      setQuizStarted(true);
+      setTimeLeft(30);
+    }
+  }, [showStartPage, showScore]);
+
+  useEffect(() => {
+    let timer;
+    if (quizStarted && !showScore && timeLeft > 0 && !selected) {
+      timer = setTimeout(() => setTimeLeft(timeLeft - 1), 1000);
+    } else if (timeLeft === 0 && !selected) {
+      handleNext();
+    }
+    return () => clearTimeout(timer);
+  }, [timeLeft, quizStarted, showScore, selected]);
 
   if (questions.length === 0 && !showStartPage) return <div>Loading...</div>;
 
   const current = questions[currentIdx];
   const percentage = ((score / questions.length) * 100).toFixed(0);
+  const progress = ((currentIdx + 1) / questions.length) * 100;
 
   const handleOptionClick = (option) => {
     if (selected) return;
@@ -141,12 +67,13 @@ export default function Quizzes() {
 
   const handleNext = () => {
     setSelected(null);
+    setTimeLeft(30);
     if (currentIdx < questions.length - 1) {
       setCurrentIdx(currentIdx + 1);
     } else {
       setShowScore(true);
+      setQuizStarted(false);
 
-      // ✅ Preparedness score update
       let currentPrep = parseInt(localStorage.getItem("preparedness")) || 0;
       let bonus = Math.round((score / questions.length) * 20);
       let updated = Math.min(currentPrep + bonus, 100);
@@ -161,85 +88,210 @@ export default function Quizzes() {
     setScore(0);
     setSelected(null);
     setShowScore(false);
+    setQuizStarted(false);
+    setTimeLeft(30);
   };
 
-  const styles = {
-    container: { minHeight: "100vh", fontFamily: "Arial,sans-serif", padding: 20, background: "#f0f4f8", color: "#1e293b" },
-    card: { maxWidth: 600, margin: "20px auto", background: "#fff", borderRadius: 12, padding: 20, boxShadow: "0 6px 18px rgba(0,0,0,0.06)" },
-    question: { fontSize: 20, fontWeight: 600, marginBottom: 14 },
-    option: (option) => {
-      const baseStyle = {
-        padding: "10px 14px",
-        marginBottom: 10,
-        borderRadius: 8,
-        border: "1px solid #ddd",
-        cursor: selected ? "default" : "pointer",
-        background: "#fff",
-        color: "#0f172a",
-      };
-      if (selected) {
-        if (option === current.answer) return { ...baseStyle, background: "#16a34a", color: "#fff" };
-        if (option === selected && selected !== current.answer) return { ...baseStyle, background: "#dc2626", color: "#fff" };
-      }
-      return baseStyle;
-    },
-    button: {
-      next: { padding: "10px 16px", borderRadius: 8, border: "none", background: "#2563eb", color: "#fff", fontWeight: 600, cursor: "pointer", marginTop: 10 },
-      restart: { padding: "10px 16px", borderRadius: 8, border: "none", background: "#059669", color: "#fff", fontWeight: 600, cursor: "pointer", marginTop: 10 },
-      start: { padding: "14px 24px", borderRadius: 12, border: "none", background: "#2563eb", color: "#fff", fontWeight: 700, cursor: "pointer", fontSize: 20 },
-      back: { padding: "10px 16px", borderRadius: 8, border: "none", background: "#6b7280", color: "#fff", fontWeight: 600, cursor: "pointer", marginTop: 10 }
-    }
+  const getScoreMessage = () => {
+    if (score >= 8) return { message: "🎉 Excellent! You're a disaster preparedness expert!", color: "text-emerald-600", bg: "bg-emerald-50" };
+    if (score >= 6) return { message: "👍 Great job! You have good knowledge of safety protocols.", color: "text-blue-600", bg: "bg-blue-50" };
+    if (score >= 4) return { message: "📚 Good effort! Keep learning to improve your preparedness.", color: "text-yellow-600", bg: "bg-yellow-50" };
+    return { message: "💪 Don't give up! Practice more to become disaster-ready.", color: "text-red-600", bg: "bg-red-50" };
   };
 
-  // ---------- Start Page ----------
+  // Start Page
   if (showStartPage) {
     return (
-      <div style={{ ...styles.container, textAlign: "center", display: "flex", flexDirection: "column", justifyContent: "center", alignItems: "center" }}>
-        <h1 style={{ fontSize: 36, color: "#2563eb" }}>🎉 Safety Superstar Quiz 🎉</h1>
-        <p style={{ fontSize: 20, marginBottom: 30 }}>Test your knowledge and become a Disaster Hero!</p>
-        <button style={styles.button.start} onClick={() => setShowStartPage(false)}>Start Quiz</button>
-        <button style={styles.button.back} onClick={() => navigate(-1)}>⬅ Back</button>
+      <div className="min-h-screen bg-gradient-to-br from-emerald-50 to-blue-50 flex items-center justify-center p-4">
+        <div className="max-w-2xl w-full">
+          <div className="bg-white rounded-3xl shadow-2xl border border-gray-100 overflow-hidden">
+            {/* Header */}
+            <div className="bg-gradient-to-r from-emerald-500 to-blue-500 text-white p-8 text-center">
+              <div className="w-20 h-20 bg-white/20 rounded-full flex items-center justify-center mx-auto mb-4">
+                <span className="text-4xl">🧠</span>
+              </div>
+              <h1 className="text-3xl font-bold mb-2">Safety Knowledge Quiz</h1>
+              <p className="text-emerald-100">Test your disaster preparedness knowledge</p>
+            </div>
+
+            {/* Content */}
+            <div className="p-8">
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+                <div className="text-center p-4 bg-emerald-50 rounded-2xl">
+                  <div className="text-2xl font-bold text-emerald-600">10</div>
+                  <div className="text-sm text-emerald-700">Questions</div>
+                </div>
+                <div className="text-center p-4 bg-blue-50 rounded-2xl">
+                  <div className="text-2xl font-bold text-blue-600">30s</div>
+                  <div className="text-sm text-blue-700">Per Question</div>
+                </div>
+                <div className="text-center p-4 bg-purple-50 rounded-2xl">
+                  <div className="text-2xl font-bold text-purple-600">+20%</div>
+                  <div className="text-sm text-purple-700">Max Score Boost</div>
+                </div>
+              </div>
+
+              <div className="space-y-4 mb-8">
+                <div className="flex items-center space-x-3 text-gray-700">
+                  <span className="w-6 h-6 bg-emerald-100 rounded-full flex items-center justify-center text-emerald-600 text-sm">✓</span>
+                  <span>Multiple choice questions about disaster safety</span>
+                </div>
+                <div className="flex items-center space-x-3 text-gray-700">
+                  <span className="w-6 h-6 bg-emerald-100 rounded-full flex items-center justify-center text-emerald-600 text-sm">✓</span>
+                  <span>Timed questions to test quick thinking</span>
+                </div>
+                <div className="flex items-center space-x-3 text-gray-700">
+                  <span className="w-6 h-6 bg-emerald-100 rounded-full flex items-center justify-center text-emerald-600 text-sm">✓</span>
+                  <span>Boost your preparedness score based on performance</span>
+                </div>
+              </div>
+
+              <div className="flex space-x-4">
+                <button
+                  onClick={() => setShowStartPage(false)}
+                  className="flex-1 bg-gradient-to-r from-emerald-500 to-blue-500 text-white py-4 rounded-2xl font-bold text-lg hover:from-emerald-600 hover:to-blue-600 transition-all duration-200 shadow-lg hover:shadow-xl"
+                >
+                  Start Quiz 🚀
+                </button>
+                <button
+                  onClick={() => navigate(-1)}
+                  className="px-6 py-4 bg-gray-100 text-gray-700 rounded-2xl font-semibold hover:bg-gray-200 transition-all duration-200"
+                >
+                  Back
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
     );
   }
 
-  // ---------- Quiz Page ----------
+  // Quiz Page
   return (
-    <div style={styles.container}>
-      <h1>Disaster Management Quiz</h1>
-      <div style={styles.card}>
+    <div className="min-h-screen bg-gradient-to-br from-emerald-50 to-blue-50 p-4">
+      <div className="max-w-4xl mx-auto">
         {showScore ? (
-          <div style={{ textAlign: "center" }}>
-            <h2>Final Score: {score} / {questions.length}</h2>
-            <h3>Percentage: {percentage}%</h3>
+          // Results Page
+          <div className="bg-white rounded-3xl shadow-2xl border border-gray-100 overflow-hidden">
+            <div className="bg-gradient-to-r from-emerald-500 to-blue-500 text-white p-8 text-center">
+              <div className="w-20 h-20 bg-white/20 rounded-full flex items-center justify-center mx-auto mb-4">
+                <span className="text-4xl">🎯</span>
+              </div>
+              <h1 className="text-3xl font-bold mb-2">Quiz Complete!</h1>
+              <p className="text-emerald-100">Here are your results</p>
+            </div>
 
-            {score < 5 ? (
-              <>
-                <p style={{ color: "red", fontWeight: "bold" }}>😟 Don’t worry! Keep practicing, you’ll get better.</p>
-                <img src="https://i.ibb.co/ZTg5tfg/keep-trying.gif" alt="Keep Trying" style={{ maxWidth: "100%", borderRadius: 12 }} />
-              </>
-            ) : (
-              <>
-                <p style={{ color: "green", fontWeight: "bold" }}>🎉 Great job! You’re getting stronger at preparedness.</p>
-                <img src="https://i.ibb.co/9nF8h7C/congrats.gif" alt="Congrats" style={{ maxWidth: "100%", borderRadius: 12 }} />
-              </>
-            )}
+            <div className="p-8">
+              <div className="text-center mb-8">
+                <div className="text-6xl font-bold text-gray-900 mb-2">{score}/{questions.length}</div>
+                <div className="text-2xl font-semibold text-gray-600 mb-4">{percentage}% Correct</div>
+                
+                <div className={`inline-block px-6 py-3 rounded-2xl ${getScoreMessage().bg} ${getScoreMessage().color} font-semibold text-lg`}>
+                  {getScoreMessage().message}
+                </div>
+              </div>
 
-            <button style={styles.button.restart} onClick={handleRestart}>Restart Quiz</button>
-            <button style={styles.button.back} onClick={() => navigate("/dashboard")}>⬅ Back to Dashboard</button>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
+                <div className="bg-emerald-50 rounded-2xl p-6 text-center">
+                  <div className="text-3xl font-bold text-emerald-600">{score}</div>
+                  <div className="text-emerald-700">Correct Answers</div>
+                </div>
+                <div className="bg-red-50 rounded-2xl p-6 text-center">
+                  <div className="text-3xl font-bold text-red-600">{questions.length - score}</div>
+                  <div className="text-red-700">Incorrect Answers</div>
+                </div>
+              </div>
+
+              <div className="flex space-x-4">
+                <button
+                  onClick={handleRestart}
+                  className="flex-1 bg-gradient-to-r from-emerald-500 to-blue-500 text-white py-4 rounded-2xl font-bold hover:from-emerald-600 hover:to-blue-600 transition-all duration-200 shadow-lg hover:shadow-xl"
+                >
+                  Try Again 🔄
+                </button>
+                <button
+                  onClick={() => navigate("/")}
+                  className="px-6 py-4 bg-gray-100 text-gray-700 rounded-2xl font-semibold hover:bg-gray-200 transition-all duration-200"
+                >
+                  Dashboard
+                </button>
+              </div>
+            </div>
           </div>
         ) : (
-          <>
-            <div style={styles.question}>Q{currentIdx + 1}. {current.question}</div>
-            {current.options.map((opt, i) => (
-              <div key={i} style={styles.option(opt)} onClick={() => handleOptionClick(opt)}>{opt}</div>
-            ))}
-            {selected && (
-              <button style={styles.button.next} onClick={handleNext}>
-                {currentIdx === questions.length - 1 ? "Finish Quiz" : "Next"}
-              </button>
-            )}
-          </>
+          // Question Page
+          <div className="bg-white rounded-3xl shadow-2xl border border-gray-100 overflow-hidden">
+            {/* Progress Header */}
+            <div className="bg-gradient-to-r from-emerald-500 to-blue-500 text-white p-6">
+              <div className="flex items-center justify-between mb-4">
+                <div className="text-lg font-semibold">Question {currentIdx + 1} of {questions.length}</div>
+                <div className="flex items-center space-x-4">
+                  <div className="text-lg font-semibold">⏱️ {timeLeft}s</div>
+                  <div className="text-lg font-semibold">Score: {score}</div>
+                </div>
+              </div>
+              
+              <div className="w-full bg-white/20 rounded-full h-2">
+                <div 
+                  className="bg-white h-2 rounded-full transition-all duration-300"
+                  style={{ width: `${progress}%` }}
+                ></div>
+              </div>
+            </div>
+
+            {/* Question Content */}
+            <div className="p-8">
+              <h2 className="text-2xl font-bold text-gray-900 mb-8 leading-relaxed">
+                {current.question}
+              </h2>
+
+              <div className="space-y-4 mb-8">
+                {current.options.map((option, i) => {
+                  let buttonClass = "w-full p-4 text-left border-2 rounded-2xl font-semibold transition-all duration-200 ";
+                  
+                  if (selected) {
+                    if (option === current.answer) {
+                      buttonClass += "border-emerald-500 bg-emerald-50 text-emerald-700";
+                    } else if (option === selected && selected !== current.answer) {
+                      buttonClass += "border-red-500 bg-red-50 text-red-700";
+                    } else {
+                      buttonClass += "border-gray-200 bg-gray-50 text-gray-500";
+                    }
+                  } else {
+                    buttonClass += "border-gray-200 bg-white text-gray-900 hover:border-blue-300 hover:bg-blue-50 cursor-pointer";
+                  }
+
+                  return (
+                    <button
+                      key={i}
+                      onClick={() => handleOptionClick(option)}
+                      className={buttonClass}
+                      disabled={selected}
+                    >
+                      <div className="flex items-center space-x-3">
+                        <div className="w-8 h-8 rounded-full border-2 border-current flex items-center justify-center font-bold">
+                          {String.fromCharCode(65 + i)}
+                        </div>
+                        <span>{option}</span>
+                      </div>
+                    </button>
+                  );
+                })}
+              </div>
+
+              {selected && (
+                <div className="text-center">
+                  <button
+                    onClick={handleNext}
+                    className="bg-gradient-to-r from-emerald-500 to-blue-500 text-white px-8 py-4 rounded-2xl font-bold hover:from-emerald-600 hover:to-blue-600 transition-all duration-200 shadow-lg hover:shadow-xl"
+                  >
+                    {currentIdx === questions.length - 1 ? "Finish Quiz" : "Next Question"} →
+                  </button>
+                </div>
+              )}
+            </div>
+          </div>
         )}
       </div>
     </div>
