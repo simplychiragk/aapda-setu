@@ -1,5 +1,4 @@
 import React, { createContext, useCallback, useEffect, useMemo, useState } from 'react';
-import { authClient } from '../lib/api/authClient';
 
 export const AuthContext = createContext({
   user: null,
@@ -16,8 +15,9 @@ export function AuthProvider({ children }) {
   const refresh = useCallback(async () => {
     try {
       setLoading(true);
-      const me = await authClient.me();
-      setUser(me?.user || null);
+      const raw = localStorage.getItem('auth_user');
+      const parsed = raw ? JSON.parse(raw) : null;
+      setUser(parsed);
     } catch {
       setUser(null);
     } finally {
@@ -30,16 +30,19 @@ export function AuthProvider({ children }) {
   }, [refresh]);
 
   const login = useCallback(async ({ userId, password, role }) => {
-    const res = await authClient.login({ userId, password, role });
-    if (res?.ok) {
-      await refresh();
-    }
-    return res;
-  }, [refresh]);
+    const uid = String(userId || '').trim();
+    const pwd = String(password || '').trim();
+    if (!uid || !pwd) throw new Error('Enter credentials');
+    const assignedRole = (String(role || '').toLowerCase() === 'staff' || uid.toLowerCase() === 'admin') ? 'staff' : 'student';
+    const nextUser = { userId: uid, role: assignedRole, displayName: uid.charAt(0).toUpperCase() + uid.slice(1) };
+    localStorage.setItem('auth_user', JSON.stringify(nextUser));
+    setUser(nextUser);
+    return { ok: true, role: assignedRole, redirectTo: assignedRole === 'staff' ? '/admin' : '/dashboard' };
+  }, []);
 
   const logout = useCallback(async () => {
     try {
-      await authClient.logout?.();
+      localStorage.removeItem('auth_user');
     } catch { /* ignore */ }
     setUser(null);
   }, []);
