@@ -18,5 +18,8 @@ export const authClient = {
     const data = await res.json().catch(() => null);
     return data;
   },
+  async logout() {
+    await fetch('/api/auth/logout', { method: 'POST', credentials: 'include' });
+  },
 };
 
