@@ -15,7 +15,6 @@
     "bcryptjs": "^3.0.2",
     "cookie": "^1.0.2",
     "firebase": "^12.2.1",
-    "googleapis": "^159.0.0",
     "jsonwebtoken": "^9.0.2",
     "papaparse": "^5.5.3",
     "react": "^19.1.1",
