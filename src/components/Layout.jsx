@@ -1,15 +1,28 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { ThemeContext } from '../context/ThemeContext';
 import { NotificationContext } from '../context/NotificationContext';
 import Toaster from './Toaster';
 import OfflineBanner from './OfflineBanner';
+import { AuthContext } from '../context/AuthContext';
 
 export default function Layout({ children }) {
   const location = useLocation();
   const { darkModeEnabled, setTheme } = React.useContext(ThemeContext);
   const [assistantOpen, setAssistantOpen] = useState(false);
   const { notifications, unreadCount, markAllRead } = React.useContext(NotificationContext);
+  const { user } = React.useContext(AuthContext);
+
+  // Track page visits for demo analytics
+  useEffect(() => {
+    const uid = user?.userId || 'guest';
+    const key = `analytics:${uid}`;
+    const raw = localStorage.getItem(key);
+    const data = raw ? JSON.parse(raw) : { visits: [] };
+    data.visits.push({ path: location.pathname, at: Date.now() });
+    try { localStorage.setItem(key, JSON.stringify(data)); } catch {}
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [location.pathname]);
   
   const navItems = [
     { to: "/", icon: "🏠", label: "Dashboard" },
