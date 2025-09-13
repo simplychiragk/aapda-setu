@@ -1,4 +1,5 @@
-import cookie from 'cookie';
+/* eslint-env node */
+// import cookie from 'cookie';
 
 const PROVIDER = process.env.LLM_PROVIDER || 'mock';
 const MODEL_DEFAULT = process.env.LLM_MODEL_DEFAULT || '';
@@ -27,7 +28,7 @@ export async function handler(req, res) {
     const reply = `(${model}) ${last ? 'You asked: ' + last : 'Hello!'} `;
     res.setHeader('Content-Type', 'application/json');
     res.end(JSON.stringify({ message: reply }));
-  } catch (err) {
+  } catch {
     res.statusCode = 500; res.end('Assistant error');
   }
 }

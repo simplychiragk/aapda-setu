@@ -1,4 +1,5 @@
-#!/usr/bin/env node
+/* eslint-env node */
+// #!/usr/bin/env node
 import bcrypt from 'bcryptjs';
 import { google } from 'googleapis';
 
@@ -38,7 +39,7 @@ async function main() {
       updates++;
       try {
         await sheets.spreadsheets.values.append({ spreadsheetId: SHEET_ID, range: 'Audit!A:C', valueInputOption: 'RAW', requestBody: { values: [[row[userIdIdx], new Date().toISOString(), 'password_migrated_script']] }});
-      } catch {}
+      } catch { /* ignore audit append errors */ }
       console.log(`Migrated userId=${row[userIdIdx]}`);
     }
   }

@@ -1,5 +1,4 @@
 import React, { useEffect, useMemo, useState } from 'react';
-import { AuthContext } from '../context/AuthContext';
 import { ResponsiveContainer, LineChart, Line, XAxis, YAxis, Tooltip, CartesianGrid, BarChart, Bar } from 'recharts';
 
 function toCSV(rows) {
@@ -9,10 +8,9 @@ function toCSV(rows) {
 }
 
 export default function AdminDashboard() {
-  const { user } = React.useContext(AuthContext);
   const [students, setStudents] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState('');
+  const [, setErrorText] = useState('');
   const [selected, setSelected] = useState(null);
 
   useEffect(() => {
@@ -22,7 +20,7 @@ export default function AdminDashboard() {
         if (!res.ok) throw new Error('Failed to load');
         const data = await res.json();
         setStudents(data.students || []);
-      } catch (e) { setError('Failed to load students'); }
+      } catch { setErrorText('Failed to load students'); }
       finally { setLoading(false); }
     })();
   }, []);
@@ -31,7 +29,7 @@ export default function AdminDashboard() {
   const avgQuiz = useMemo(() => Math.round(students.reduce((a, s) => a + (s.latestQuizScore || 0), 0) / (students.length || 1)), [students]);
   const participation = useMemo(() => Math.round(100 * students.filter(s => s.videoCompletionsCount > 0).length / (students.length || 1)), [students]);
 
-  const chartData = useMemo(() => students.slice(0, 8).map((s, i) => ({ name: s.name || s.userId, score: s.latestQuizScore, videos: s.videoCompletionsCount })), [students]);
+  const chartData = useMemo(() => students.slice(0, 8).map((s) => ({ name: s.name || s.userId, score: s.latestQuizScore, videos: s.videoCompletionsCount })), [students]);
 
   const exportCSV = () => {
     if (!students.length) return;

@@ -11,7 +11,6 @@ export default function Settings() {
   const [status, setStatus] = useState("");
 
   useEffect(() => {
-    // Try to load server settings if logged-in
     (async () => {
       try {
         const res = await fetch('/api/user/settings', { credentials: 'include' });
@@ -23,7 +22,7 @@ export default function Settings() {
         if (typeof s.assistantEnabled === 'boolean') setAssistantEnabled(s.assistantEnabled);
         if (typeof s.assistantMemory === 'boolean') setAssistantMemory(s.assistantMemory);
         if (s.assistantModel) setAssistantModel(s.assistantModel);
-      } catch {}
+      } catch {/* ignore */}
     })();
   }, [setTheme, setFontSize]);
 
@@ -34,7 +33,7 @@ export default function Settings() {
       const settings = { theme, fontSize, assistantEnabled, assistantModel, assistantMemory };
       await fetch('/api/user/settings', { method: 'POST', headers: { 'Content-Type': 'application/json' }, credentials: 'include', body: JSON.stringify({ settings }) });
       setStatus("Saved");
-    } catch (e) {
+    } catch {
       setStatus("Failed to save");
     } finally { setSaving(false); }
   };
