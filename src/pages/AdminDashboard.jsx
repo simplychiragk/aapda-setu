@@ -1,5 +1,5 @@
 import React, { useEffect, useMemo, useState } from 'react';
-import { ResponsiveContainer, LineChart, Line, XAxis, YAxis, Tooltip, CartesianGrid, BarChart, Bar } from 'recharts';
+import { ResponsiveContainer, LineChart, Line, XAxis, YAxis, Tooltip, CartesianGrid, BarChart, Bar, PieChart, Pie, Cell, Legend } from 'recharts';
 
 function toCSV(rows) {
   const header = Object.keys(rows[0] || {});
@@ -12,6 +12,7 @@ export default function AdminDashboard() {
   const [loading, setLoading] = useState(true);
   const [, setErrorText] = useState('');
   const [selected, setSelected] = useState(null);
+  const [pageStats, setPageStats] = useState({ mostVisited: [], timeline: [] });
 
   useEffect(() => {
     (async () => {
@@ -19,7 +20,24 @@ export default function AdminDashboard() {
         const res = await fetch('/api/admin/students', { credentials: 'include' });
         if (!res.ok) throw new Error('Failed to load');
         const data = await res.json();
-        setStudents(data.students || []);
+        // Merge demo current user metrics from localStorage
+        const name = localStorage.getItem('username') || 'You';
+        const prep = parseInt(localStorage.getItem('preparedness')) || 0;
+        const quiz = parseInt(localStorage.getItem('lastQuizPercent')) || 0;
+        const drills = (JSON.parse(localStorage.getItem('drillReports')) || []).length;
+        const me = { userId: 'you', name, email: '', latestQuizScore: quiz || Math.floor(prep * 0.8), videoCompletionsCount: 0, alertsAcknowledged: 0, preparednessPercent: prep };
+        const merged = [me, ...(data.students || [])];
+        setStudents(merged);
+
+        // Build analytics from localStorage visits
+        const keys = Object.keys(localStorage).filter((k) => k.startsWith('analytics:'));
+        const visitEntries = keys.flatMap((k) => { try { return (JSON.parse(localStorage.getItem(k))?.visits) || []; } catch { return []; } });
+        const countByPath = visitEntries.reduce((acc, v) => { acc[v.path] = (acc[v.path] || 0) + 1; return acc; }, {});
+        const mostVisited = Object.entries(countByPath).map(([path, count]) => ({ path, count })).sort((a, b) => b.count - a.count).slice(0, 6);
+        // timeline by day
+        const byDay = visitEntries.reduce((acc, v) => { const d = new Date(v.at); const key = `${d.getFullYear()}-${d.getMonth()+1}-${d.getDate()}`; acc[key] = (acc[key] || 0) + 1; return acc; }, {});
+        const timeline = Object.entries(byDay).map(([day, visits]) => ({ day, visits })).sort((a, b) => (a.day > b.day ? 1 : -1));
+        setPageStats({ mostVisited, timeline });
       } catch { setErrorText('Failed to load students'); }
       finally { setLoading(false); }
     })();
@@ -30,6 +48,7 @@ export default function AdminDashboard() {
   const participation = useMemo(() => Math.round(100 * students.filter(s => s.videoCompletionsCount > 0).length / (students.length || 1)), [students]);
 
   const chartData = useMemo(() => students.slice(0, 8).map((s) => ({ name: s.name || s.userId, score: s.latestQuizScore, videos: s.videoCompletionsCount })), [students]);
+  const COLORS = ['#3b82f6','#10b981','#f59e0b','#ef4444','#8b5cf6','#06b6d4'];
 
   const exportCSV = () => {
     if (!students.length) return;
@@ -96,6 +115,48 @@ export default function AdminDashboard() {
                   <YAxis />
                   <Tooltip />
                   <Bar dataKey="videos" fill="#10b981" />
+                </BarChart>
+              </ResponsiveContainer>
+            )}
+          </div>
+        </div>
+        {/* Engagement Over Time */}
+        <div className="rounded-2xl p-4 bg-white shadow border border-slate-100 lg:col-span-2">
+          <div className="font-semibold mb-2">Engagement Over Time</div>
+          <div className="h-64">
+            {loading ? (
+              <div className="animate-pulse h-full bg-slate-100 rounded" />
+            ) : (
+              <ResponsiveContainer width="100%" height="100%">
+                <LineChart data={pageStats.timeline}>
+                  <CartesianGrid strokeDasharray="3 3" />
+                  <XAxis dataKey="day" />
+                  <YAxis />
+                  <Tooltip />
+                  <Line type="monotone" dataKey="visits" stroke="#8b5cf6" strokeWidth={2} />
+                </LineChart>
+              </ResponsiveContainer>
+            )}
+          </div>
+        </div>
+        {/* Most Visited Pages */}
+        <div className="rounded-2xl p-4 bg-white shadow border border-slate-100 lg:col-span-2">
+          <div className="font-semibold mb-2">Most Visited Pages</div>
+          <div className="h-72">
+            {loading ? (
+              <div className="animate-pulse h-full bg-slate-100 rounded" />
+            ) : (
+              <ResponsiveContainer width="100%" height="100%">
+                <BarChart data={pageStats.mostVisited}>
+                  <CartesianGrid strokeDasharray="3 3" />
+                  <XAxis dataKey="path" />
+                  <YAxis />
+                  <Tooltip />
+                  <Bar dataKey="count">
+                    {pageStats.mostVisited.map((entry, index) => (
+                      <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
+                    ))}
+                  </Bar>
                 </BarChart>
               </ResponsiveContainer>
             )}
