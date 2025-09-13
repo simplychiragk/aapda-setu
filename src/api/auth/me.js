@@ -14,9 +14,12 @@ export async function handler(req, res) {
     const useHardcoded = !process.env.GOOGLE_SERVICE_ACCOUNT_KEY || !process.env.GOOGLE_SHEETS_USERS_SHEET_ID || process.env.USE_HARDCODED_AUTH === 'true';
     let user;
     if (useHardcoded) {
-      user = decoded.role === 'staff'
-        ? { userId: 'admin', role: 'staff', displayName: 'Administrator', email: 'admin@example.com', settings: {} }
-        : { userId: 'student', role: 'student', displayName: 'Student User', email: 'student@example.com', settings: {} };
+      // Normalize by userId when available to avoid role mismatch from client
+      if (decoded.userId === 'admin') {
+        user = { userId: 'admin', role: 'staff', displayName: 'Administrator', email: 'admin@example.com', settings: {} };
+      } else {
+        user = { userId: 'student', role: 'student', displayName: 'Student User', email: 'student@example.com', settings: {} };
+      }
     } else {
       const { sheets, spreadsheetId } = getSheetsClient();
       const range = 'Users!A:G';
