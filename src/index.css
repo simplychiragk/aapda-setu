@@ -1,13 +1,1 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
-
-/* Smooth theme transition */
-.theme-transition * {
-  transition: background-color 200ms ease, color 200ms ease, border-color 200ms ease;
-}
-
-/* Font size utility classes applied on :root */
-.font-size-small { font-size: 14px; }
-.font-size-normal { font-size: 16px; }
-.font-size-large { font-size: 18px; }
+@import './styles/globals.css';
