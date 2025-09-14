@@ -1,4 +1,5 @@
 import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { Toaster } from 'react-hot-toast';
 import Layout from "./components/Layout";
 import Dashboard from "./pages/Dashboard";
 import Alerts from "./pages/Alerts";
@@ -20,6 +21,7 @@ import { ThemeProvider } from "./context/ThemeContext";
 import { AuthProvider } from "./context/AuthContext";
 import { NotificationProvider } from "./context/NotificationContext";
 import Leaderboard from "./pages/Leaderboard";
+import SafeZones from "./pages/SafeZones";
 
 function App() {
   return (
@@ -27,6 +29,18 @@ function App() {
       <ThemeProvider>
         <AuthProvider>
           <NotificationProvider>
+          <Toaster 
+            position="bottom-right"
+            toastOptions={{
+              duration: 4000,
+              style: {
+                background: '#1f2937',
+                color: '#f9fafb',
+                borderRadius: '12px',
+                padding: '16px',
+              },
+            }}
+          />
           <Layout>
             <Routes>
               <Route path="/" element={<Entry />} />
@@ -46,6 +60,7 @@ function App() {
               <Route path="/quizzes" element={<Quizzes />} />
               <Route path="/contacts" element={<EmergencyContacts />} />
               <Route path="/leaderboard" element={<Leaderboard />} />
+              <Route path="/safe-zones" element={<SafeZones />} />
               <Route
                 path="/admin"
                 element={
