@@ -1,8 +1,4 @@
-import axios from 'axios';
-
-const SACHET_RSS_URL = 'https://sachet.ndma.gov.in/cap_public/rss_en.xml';
-const OPENWEATHER_API_KEY = process.env.VITE_OPENWEATHER_API_KEY || 'demo_key';
-
+// Mock Alert Service - Self-contained demo data
 class AlertService {
   constructor() {
     this.alerts = [];
@@ -14,14 +10,17 @@ class AlertService {
     if (this.isLoading) return this.alerts;
     
     this.isLoading = true;
+    
+    // Simulate network delay
+    await new Promise(resolve => setTimeout(resolve, 500 + Math.random() * 1000));
+    
     try {
-      // In production, this would go through your backend
-      // For now, we'll use mock data that simulates the SACHET feed structure
-      const mockAlerts = [
+      // Generate dynamic mock alerts with some randomization
+      const baseAlerts = [
         {
           id: 'alert_001',
           title: 'Severe Cyclonic Storm Warning - Odisha Coast',
-          description: 'A severe cyclonic storm is approaching the Odisha coast. Wind speeds expected to reach 120-130 kmph.',
+          description: 'A severe cyclonic storm is approaching the Odisha coast. Wind speeds expected to reach 120-130 kmph. Residents advised to move to safer locations.',
           severity: 'Severe',
           urgency: 'Immediate',
           certainty: 'Observed',
@@ -35,7 +34,7 @@ class AlertService {
         {
           id: 'alert_002',
           title: 'Heavy Rainfall Warning - Mumbai Metropolitan Region',
-          description: 'Heavy to very heavy rainfall expected in Mumbai and surrounding areas. Waterlogging likely in low-lying areas.',
+          description: 'Heavy to very heavy rainfall expected in Mumbai and surrounding areas. Waterlogging likely in low-lying areas. Avoid unnecessary travel.',
           severity: 'Moderate',
           urgency: 'Expected',
           certainty: 'Likely',
@@ -49,7 +48,7 @@ class AlertService {
         {
           id: 'alert_003',
           title: 'Heat Wave Warning - Rajasthan',
-          description: 'Severe heat wave conditions prevailing over Rajasthan. Temperature may reach 47-48°C.',
+          description: 'Severe heat wave conditions prevailing over Rajasthan. Temperature may reach 47-48°C. Stay hydrated and avoid outdoor activities.',
           severity: 'Severe',
           urgency: 'Expected',
           certainty: 'Likely',
@@ -63,7 +62,7 @@ class AlertService {
         {
           id: 'alert_004',
           title: 'Earthquake Advisory - Delhi NCR',
-          description: 'Minor earthquake tremors felt in Delhi NCR region. No immediate threat, but residents advised to stay alert.',
+          description: 'Minor earthquake tremors felt in Delhi NCR region. Magnitude 4.2. No immediate threat, but residents advised to stay alert.',
           severity: 'Minor',
           urgency: 'Past',
           certainty: 'Observed',
@@ -73,14 +72,31 @@ class AlertService {
           expires: new Date(Date.now() + 6 * 60 * 60 * 1000).toISOString(),
           category: 'Earthquake',
           color: '#10b981'
+        },
+        {
+          id: 'alert_005',
+          title: 'Thunderstorm Alert - Bangalore',
+          description: 'Thunderstorm with lightning and gusty winds expected. Wind speeds up to 60 kmph. Secure loose objects.',
+          severity: 'Moderate',
+          urgency: 'Expected',
+          certainty: 'Likely',
+          area: 'Bangalore, Mysore',
+          coordinates: [[12.9716, 77.5946], [12.2958, 76.6394]],
+          effective: new Date().toISOString(),
+          expires: new Date(Date.now() + 8 * 60 * 60 * 1000).toISOString(),
+          category: 'Thunderstorm',
+          color: '#f59e0b'
         }
       ];
 
-      this.alerts = mockAlerts;
+      // Add some randomization to make it feel more dynamic
+      const activeAlerts = baseAlerts.filter(() => Math.random() > 0.2); // Sometimes hide some alerts
+      
+      this.alerts = activeAlerts;
       this.lastFetch = new Date();
       return this.alerts;
     } catch (error) {
-      console.error('Error fetching alerts:', error);
+      console.error('Error generating mock alerts:', error);
       return this.alerts;
     } finally {
       this.isLoading = false;
@@ -88,33 +104,39 @@ class AlertService {
   }
 
   async getWeatherData(lat, lon) {
+    // Simulate network delay
+    await new Promise(resolve => setTimeout(resolve, 300 + Math.random() * 700));
+    
     try {
-      // Mock weather data for demo
+      // Generate realistic mock weather data
+      const weatherTypes = ['Clear', 'Clouds', 'Rain', 'Thunderstorm'];
+      const currentWeather = weatherTypes[Math.floor(Math.random() * weatherTypes.length)];
+      
       const mockWeather = {
         current: {
-          temp: Math.round(25 + Math.random() * 15),
-          feels_like: Math.round(28 + Math.random() * 15),
-          humidity: Math.round(60 + Math.random() * 30),
-          wind_speed: Math.round(5 + Math.random() * 10),
+          temp: Math.round(20 + Math.random() * 20), // 20-40°C
+          feels_like: Math.round(22 + Math.random() * 22),
+          humidity: Math.round(40 + Math.random() * 50), // 40-90%
+          wind_speed: Math.round(2 + Math.random() * 15), // 2-17 km/h
           weather: [
             {
-              main: ['Clear', 'Clouds', 'Rain', 'Thunderstorm'][Math.floor(Math.random() * 4)],
-              description: 'partly cloudy',
-              icon: '02d'
+              main: currentWeather,
+              description: this.getWeatherDescription(currentWeather),
+              icon: this.getWeatherIcon(currentWeather)
             }
           ]
         },
         daily: Array.from({ length: 5 }, (_, i) => ({
           dt: Date.now() + i * 24 * 60 * 60 * 1000,
           temp: {
-            min: Math.round(20 + Math.random() * 10),
-            max: Math.round(30 + Math.random() * 15)
+            min: Math.round(18 + Math.random() * 12), // 18-30°C
+            max: Math.round(25 + Math.random() * 18)  // 25-43°C
           },
           weather: [
             {
-              main: ['Clear', 'Clouds', 'Rain'][Math.floor(Math.random() * 3)],
-              description: 'sunny',
-              icon: '01d'
+              main: weatherTypes[Math.floor(Math.random() * weatherTypes.length)],
+              description: 'partly cloudy',
+              icon: '02d'
             }
           ]
         }))
@@ -122,9 +144,29 @@ class AlertService {
 
       return mockWeather;
     } catch (error) {
-      console.error('Error fetching weather:', error);
+      console.error('Error generating mock weather:', error);
       return null;
     }
+  }
+
+  getWeatherDescription(main) {
+    const descriptions = {
+      'Clear': 'clear sky',
+      'Clouds': 'partly cloudy',
+      'Rain': 'light rain',
+      'Thunderstorm': 'thunderstorm with rain'
+    };
+    return descriptions[main] || 'partly cloudy';
+  }
+
+  getWeatherIcon(main) {
+    const icons = {
+      'Clear': '01d',
+      'Clouds': '02d',
+      'Rain': '10d',
+      'Thunderstorm': '11d'
+    };
+    return icons[main] || '02d';
   }
 
   getSeverityColor(severity) {
