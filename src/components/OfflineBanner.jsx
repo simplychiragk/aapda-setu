@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
 
 export default function OfflineBanner() {
   const [offline, setOffline] = useState(!navigator.onLine);
@@ -14,13 +15,25 @@ export default function OfflineBanner() {
     };
   }, []);
 
-  if (!offline) return null;
   return (
-    <div className="fixed top-0 left-0 right-0 z-[60]">
-      <div className="mx-auto max-w-4xl m-2 px-4 py-2 rounded-xl bg-yellow-100 text-yellow-900 border border-yellow-300 shadow animate-[fadeIn_0.2s_ease-out]">
-        ⚠️ Offline mode: Some data may be outdated.
-      </div>
-    </div>
+    <AnimatePresence>
+      {offline && (
+        <motion.div
+          initial={{ opacity: 0, y: -50 }}
+          animate={{ opacity: 1, y: 0 }}
+          exit={{ opacity: 0, y: -50 }}
+          transition={{ duration: 0.3, ease: "easeOut" }}
+          className="fixed top-0 left-0 right-0 z-[60]"
+        >
+          <div className="mx-auto max-w-4xl m-2 px-4 py-3 rounded-xl bg-yellow-100 dark:bg-yellow-900/30 text-yellow-900 dark:text-yellow-200 border border-yellow-300 dark:border-yellow-700 shadow-lg backdrop-blur-sm">
+            <div className="flex items-center justify-center space-x-2">
+              <span className="text-lg">⚠️</span>
+              <span className="font-medium">You're offline</span>
+              <span className="text-sm opacity-75">- Some data may be outdated</span>
+            </div>
+          </div>
+        </motion.div>
+      )}
+    </AnimatePresence>
   );
 }
-
