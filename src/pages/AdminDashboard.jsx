@@ -1,5 +1,5 @@
 import React, { useEffect, useMemo, useState } from 'react';
-import { Download, Users, TrendingUp, AlertTriangle, Activity } from 'lucide-react';
+import { Download, Users, TrendingUp, AlertTriangle } from 'lucide-react';
 import { ResponsiveContainer, LineChart, Line, XAxis, YAxis, Tooltip, CartesianGrid, BarChart, Bar, PieChart, Pie, Cell, Legend } from 'recharts';
 import LoadingSpinner from '../components/LoadingSpinner';
 
@@ -26,7 +26,6 @@ export default function AdminDashboard() {
         const name = localStorage.getItem('username') || 'You';
         const prep = parseInt(localStorage.getItem('preparedness')) || 0;
         const quiz = parseInt(localStorage.getItem('lastQuizPercent')) || 0;
-        const drills = (JSON.parse(localStorage.getItem('drillReports')) || []).length;
         const me = { userId: 'you', name, email: '', latestQuizScore: quiz || Math.floor(prep * 0.8), videoCompletionsCount: 0, alertsAcknowledged: 0, preparednessPercent: prep };
         const merged = [me, ...(data.students || [])];
         setStudents(merged);

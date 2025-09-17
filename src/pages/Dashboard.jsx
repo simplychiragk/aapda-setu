@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
+// eslint-disable-next-line no-unused-vars
 import { motion } from "framer-motion";
 import { TrendingUp, Users, Target, Award } from "lucide-react";
 import WeatherWidget from "../components/WeatherWidget";
@@ -14,7 +15,7 @@ const Dashboard = () => {
   const [username, setUsername] = useState(localStorage.getItem("username") || "");
   const [showLoginPopup, setShowLoginPopup] = useState(!localStorage.getItem("username"));
   const [inputName, setInputName] = useState("");
-  const [preparedness, setPreparedness] = useState(parseInt(localStorage.getItem("preparedness")) || 0);
+  const [preparedness, setPreparedness] = useState(() => parseInt(localStorage.getItem("preparedness")) || 0);
   const [alerts, setAlerts] = useState([]);
   const [showBeacon, setShowBeacon] = useState(false);
   const [achievements, setAchievements] = useState([]);

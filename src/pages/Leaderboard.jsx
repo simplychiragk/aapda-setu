@@ -2,7 +2,6 @@ import React, { useEffect, useMemo, useState } from 'react';
 
 function generateSyntheticStudents() {
   return Array.from({ length: 15 }).map((_, i) => {
-    const quizzes = Math.floor(Math.random() * 10) + 1;
     const score = Math.floor(Math.random() * 41) + 60; // 60-100
     const drills = Math.floor(Math.random() * 8);
     const preparedness = Math.min(100, Math.round(score * 0.6 + drills * 5));
