@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { motion } from "framer-motion";
-import WeatherWidget from "../components/WeatherWidget";
 import SafetyBeacon from "../components/SafetyBeacon";
 import alertService from "../services/alertService";
 import toast from "react-hot-toast";
@@ -456,11 +455,6 @@ const Dashboard = () => {
                 </div>
               </div>
             </motion.div>
-          </div>
-
-          {/* Weather Widget */}
-          <div className="mb-8">
-            <WeatherWidget location={{ lat: 28.7041, lon: 77.1025, name: localStorage.getItem("userLocation") || "Delhi" }} />
           </div>
 
           {/* Safety Tip */}
