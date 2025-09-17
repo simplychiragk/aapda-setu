@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+// eslint-disable-next-line no-unused-vars
 import { motion, AnimatePresence } from 'framer-motion';
 import toast from 'react-hot-toast';
 
@@ -34,7 +35,7 @@ const SafetyBeacon = ({ isVisible = false, userLocation = "Delhi" }) => {
       };
       localStorage.setItem('lastBeaconActivation', JSON.stringify(beaconData));
       
-    } catch (error) {
+    } catch {
       toast.error('Failed to activate safety beacon. Please try again.');
     } finally {
       setIsActivating(false);

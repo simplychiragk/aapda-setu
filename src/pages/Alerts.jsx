@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useMemo } from "react";
+// eslint-disable-next-line no-unused-vars
 import { motion, AnimatePresence } from "framer-motion";
 import { Search, Filter, MapPin, Clock, Share2, ExternalLink } from "lucide-react";
 import AlertMap from "../components/AlertMap";
