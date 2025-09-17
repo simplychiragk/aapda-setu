@@ -3,21 +3,52 @@
 @tailwind components;
 @tailwind utilities;
 
+/* CSS Custom Properties for consistent theming */
+:root {
+  --color-primary: #dd6b20;
+  --color-primary-dark: #c05621;
+  --transition-duration: 0.2s;
+  --border-radius: 0.75rem;
+  --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+  --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+  --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+}
+
 /* Global font override */
 * {
   font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', sans-serif;
 }
 
+/* Focus styles for accessibility */
+*:focus {
+  outline: 2px solid transparent;
+  outline-offset: 2px;
+}
+
+*:focus-visible {
+  outline: 2px solid var(--color-primary);
+  outline-offset: 2px;
+}
+
+/* Smooth theme transitions */
+.theme-transition,
+.theme-transition *,
+.theme-transition *:before,
+.theme-transition *:after {
+  transition: all var(--transition-duration) ease-in-out !important;
+  transition-delay: 0 !important;
+}
+
 /* Glassmorphism utilities */
 .glass {
-  background: rgba(255, 255, 255, 0.1);
+  background: rgba(255, 255, 255, 0.8);
   backdrop-filter: blur(12px);
   -webkit-backdrop-filter: blur(12px);
   border: 1px solid rgba(255, 255, 255, 0.2);
 }
 
 .glass-dark {
-  background: rgba(26, 32, 44, 0.8);
+  background: rgba(26, 32, 44, 0.85);
   backdrop-filter: blur(12px);
   -webkit-backdrop-filter: blur(12px);
   border: 1px solid rgba(255, 255, 255, 0.1);
@@ -44,19 +75,22 @@
 /* Custom scrollbar */
 ::-webkit-scrollbar {
   width: 8px;
+  height: 8px;
 }
 
 ::-webkit-scrollbar-track {
   background: #f1f1f1;
-}
-
-::-webkit-scrollbar-thumb {
-  background: #dd6b20;
   border-radius: 4px;
 }
 
+::-webkit-scrollbar-thumb {
+  background: var(--color-primary);
+  border-radius: 4px;
+  transition: background-color var(--transition-duration);
+}
+
 ::-webkit-scrollbar-thumb:hover {
-  background: #c05621;
+  background: var(--color-primary-dark);
 }
 
 /* Dark mode scrollbar */
@@ -65,7 +99,11 @@
 }
 
 .dark ::-webkit-scrollbar-thumb {
-  background: #dd6b20;
+  background: var(--color-primary);
+}
+
+.dark ::-webkit-scrollbar-thumb:hover {
+  background: var(--color-primary-dark);
 }
 
 /* Leaflet map styles */
@@ -73,6 +111,16 @@
   height: 100%;
   width: 100%;
   border-radius: 12px;
+}
+
+/* Leaflet popup improvements */
+.leaflet-popup-content-wrapper {
+  border-radius: var(--border-radius) !important;
+  box-shadow: var(--shadow-lg) !important;
+}
+
+.leaflet-popup-tip {
+  box-shadow: none !important;
 }
 
 /* Custom alert severity colors */
@@ -87,13 +135,13 @@
 
 .hover-lift:hover {
   transform: translateY(-4px) scale(1.02);
-  box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+  box-shadow: var(--shadow-lg);
 }
 
 /* Loading spinner */
 .spinner {
   border: 2px solid #f3f3f3;
-  border-top: 2px solid #dd6b20;
+  border-top: 2px solid var(--color-primary);
   border-radius: 50%;
   width: 20px;
   height: 20px;
@@ -107,11 +155,73 @@
 
 /* Achievement badge glow */
 .achievement-glow {
-  box-shadow: 0 0 20px rgba(221, 107, 32, 0.5);
+  box-shadow: 0 0 20px rgba(221, 107, 32, 0.4);
   animation: pulse-glow 2s infinite;
 }
 
 @keyframes pulse-glow {
-  0%, 100% { box-shadow: 0 0 20px rgba(221, 107, 32, 0.5); }
-  50% { box-shadow: 0 0 30px rgba(221, 107, 32, 0.8); }
+  0%, 100% { box-shadow: 0 0 20px rgba(221, 107, 32, 0.4); }
+  50% { box-shadow: 0 0 30px rgba(221, 107, 32, 0.6); }
+}
+
+/* Text truncation utilities */
+.line-clamp-1 {
+  overflow: hidden;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 1;
+}
+
+.line-clamp-2 {
+  overflow: hidden;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+}
+
+.line-clamp-3 {
+  overflow: hidden;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 3;
+}
+
+/* Font size utilities */
+.font-size-small {
+  font-size: 14px;
+}
+
+.font-size-normal {
+  font-size: 16px;
+}
+
+.font-size-large {
+  font-size: 18px;
+}
+
+/* Reduced motion support */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* High contrast mode support */
+@media (prefers-contrast: high) {
+  .glass,
+  .glass-dark {
+    background: rgba(255, 255, 255, 0.95);
+    border: 2px solid #000;
+  }
+  
+  .dark .glass,
+  .dark .glass-dark {
+    background: rgba(0, 0, 0, 0.95);
+    border: 2px solid #fff;
+  }
 }

@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { motion } from "framer-motion";
+import { TrendingUp, Users, Target, Award } from "lucide-react";
 import WeatherWidget from "../components/WeatherWidget";
 import SafetyBeacon from "../components/SafetyBeacon";
 import alertService from "../services/alertService";
@@ -18,6 +19,15 @@ const Dashboard = () => {
   const [showBeacon, setShowBeacon] = useState(false);
   const [achievements, setAchievements] = useState([]);
   const [streakCount, setStreakCount] = useState(0);
+
+  // Memoize expensive calculations
+  const prepLevel = React.useMemo(() => {
+    if (preparedness >= 90) return { level: "Expert", color: "text-emerald-600", bg: "bg-emerald-100" };
+    if (preparedness >= 70) return { level: "Advanced", color: "text-blue-600", bg: "bg-blue-100" };
+    if (preparedness >= 50) return { level: "Intermediate", color: "text-yellow-600", bg: "bg-yellow-100" };
+    if (preparedness >= 25) return { level: "Beginner", color: "text-orange-600", bg: "bg-orange-100" };
+    return { level: "Starter", color: "text-red-600", bg: "bg-red-100" };
+  }, [preparedness]);
 
   useEffect(() => {
     localStorage.setItem("preparedness", preparedness);
@@ -122,7 +132,7 @@ const Dashboard = () => {
   const cardData = [
     { 
       to: "/alerts", 
-      icon: "🚨", 
+      icon: <TrendingUp className="w-6 h-6" />, 
       title: "Live Alerts", 
       description: "Real-time disaster warnings with interactive map visualization", 
       gradient: "from-red-500 to-red-600",
@@ -202,16 +212,6 @@ const Dashboard = () => {
     setShowProfile(false);
     toast.success("Logged out successfully");
   };
-
-  const getPreparednessLevel = () => {
-    if (preparedness >= 90) return { level: "Expert", color: "text-emerald-600", bg: "bg-emerald-100" };
-    if (preparedness >= 70) return { level: "Advanced", color: "text-blue-600", bg: "bg-blue-100" };
-    if (preparedness >= 50) return { level: "Intermediate", color: "text-yellow-600", bg: "bg-yellow-100" };
-    if (preparedness >= 25) return { level: "Beginner", color: "text-orange-600", bg: "bg-orange-100" };
-    return { level: "Starter", color: "text-red-600", bg: "bg-red-100" };
-  };
-
-  const prepLevel = getPreparednessLevel();
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-50 via-blue-50 to-indigo-100 dark:from-dark-800 dark:via-dark-700 dark:to-dark-900">
@@ -389,7 +389,8 @@ const Dashboard = () => {
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.1 }}
-              className="glass dark:glass-dark rounded-2xl p-6 shadow-lg hover-lift"
+              className="glass dark:glass-dark rounded-2xl p-6 shadow-lg hover-lift cursor-pointer"
+              whileHover={{ scale: 1.02 }}
             >
               <div className="flex items-center justify-between">
                 <div>
@@ -397,8 +398,8 @@ const Dashboard = () => {
                   <p className="text-3xl font-bold text-primary-600">{preparedness}%</p>
                   <p className="text-xs text-gray-500 mt-1">{prepLevel.level}</p>
                 </div>
-                <div className="w-12 h-12 bg-primary-100 dark:bg-primary-900/30 rounded-xl flex items-center justify-center">
-                  <span className="text-2xl">📊</span>
+                <div className="w-12 h-12 bg-primary-100 dark:bg-primary-900/30 rounded-xl flex items-center justify-center text-primary-600">
+                  <Target size={24} />
                 </div>
               </div>
             </motion.div>

@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
+import { Eye, EyeOff, AlertCircle } from 'lucide-react';
 import { AuthContext } from '../context/AuthContext';
 import { motion } from 'framer-motion';
 
@@ -18,6 +19,7 @@ export default function Login() {
   const [role, setRole] = useState(roleParam);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
+  const [showPassword, setShowPassword] = useState(false);
 
   useEffect(() => setRole(roleParam), [roleParam]);
 
@@ -31,6 +33,12 @@ export default function Login() {
 
   const onSubmit = async (e) => {
     e.preventDefault();
+    
+    if (!userId.trim() || !password.trim()) {
+      setError('Please enter both username and password');
+      return;
+    }
+    
     setError('');
     setLoading(true);
     
@@ -76,8 +84,9 @@ export default function Login() {
             <motion.div 
               initial={{ opacity: 0, y: -10 }}
               animate={{ opacity: 1, y: 0 }}
-              className="mb-4 rounded-lg border border-red-200 text-red-700 bg-red-50 px-3 py-2 text-sm"
+              className="mb-4 rounded-lg border border-red-200 text-red-700 bg-red-50 px-3 py-2 text-sm flex items-center gap-2"
             >
+              <AlertCircle size={16} />
               {error}
             </motion.div>
           )}
@@ -100,14 +109,24 @@ export default function Login() {
               <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1">
                 Password
               </label>
-              <input 
-                type="password" 
-                value={password} 
-                onChange={(e) => setPassword(e.target.value)} 
-                className="w-full px-4 py-3 rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-900 dark:text-white outline-none focus:ring-2 focus:ring-blue-500 transition-all" 
-                placeholder={role === 'staff' ? 'admin' : 'student'}
-                required 
-              />
+              <div className="relative">
+                <input 
+                  type={showPassword ? "text" : "password"} 
+                  value={password} 
+                  onChange={(e) => setPassword(e.target.value)} 
+                  className="w-full px-4 py-3 pr-12 rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-900 dark:text-white outline-none focus:ring-2 focus:ring-blue-500 transition-all" 
+                  placeholder={role === 'staff' ? 'admin' : 'student'}
+                  required 
+                />
+                <button
+                  type="button"
+                  onClick={() => setShowPassword(!showPassword)}
+                  className="absolute right-3 top-1/2 transform -translate-y-1/2 text-slate-500 hover:text-slate-700 dark:hover:text-slate-300 transition-colors"
+                  aria-label={showPassword ? "Hide password" : "Show password"}
+                >
+                  {showPassword ? <EyeOff size={20} /> : <Eye size={20} />}
+                </button>
+              </div>
             </div>
             
             <div>
@@ -128,7 +147,7 @@ export default function Login() {
               whileHover={{ scale: 1.02 }}
               whileTap={{ scale: 0.98 }}
               disabled={loading} 
-              className="w-full h-12 rounded-xl bg-gradient-to-r from-blue-500 to-indigo-500 text-white font-semibold shadow-lg hover:shadow-2xl transition-all disabled:opacity-60 disabled:cursor-not-allowed transform active:scale-[0.98] relative overflow-hidden"
+              className="w-full h-12 rounded-xl bg-gradient-to-r from-blue-500 to-indigo-500 text-white font-semibold shadow-lg hover:shadow-2xl transition-all disabled:opacity-60 disabled:cursor-not-allowed transform active:scale-[0.98] relative overflow-hidden focus:ring-4 focus:ring-blue-500/25"
             >
               {loading && (
                 <motion.div

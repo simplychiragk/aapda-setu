@@ -1,27 +1,31 @@
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { Toaster } from 'react-hot-toast';
+import { Suspense, lazy } from 'react';
 import Layout from "./components/Layout";
-import Dashboard from "./pages/Dashboard";
-import Alerts from "./pages/Alerts";
-import Drills from "./pages/Drills";
-import Videos from "./pages/Videos";
-import Quizzes from "./pages/Quizzes";
-import EmergencyContacts from "./pages/EmergencyContacts";
-import AdminDashboard from "./pages/AdminDashboard";
-import Profile from "./pages/Profile";
-import Settings from "./pages/Settings";
-import Logout from "./pages/Logout";
-import Game from "./pages/Game";
-import Entry from "./pages/Entry";
-import Login from "./pages/Login";
-import NotFound from "./pages/NotFound";
-import NotAuthorized from "./pages/NotAuthorized";
+import LoadingSpinner from "./components/LoadingSpinner";
 import ProtectedRoute from "./utils/ProtectedRoute";
 import { ThemeProvider } from "./context/ThemeContext";
 import { AuthProvider } from "./context/AuthContext";
 import { NotificationProvider } from "./context/NotificationContext";
-import Leaderboard from "./pages/Leaderboard";
-import SafeZones from "./pages/SafeZones";
+
+// Lazy load pages for better performance
+const Dashboard = lazy(() => import("./pages/Dashboard"));
+const Alerts = lazy(() => import("./pages/Alerts"));
+const Drills = lazy(() => import("./pages/Drills"));
+const Videos = lazy(() => import("./pages/Videos"));
+const Quizzes = lazy(() => import("./pages/Quizzes"));
+const EmergencyContacts = lazy(() => import("./pages/EmergencyContacts"));
+const AdminDashboard = lazy(() => import("./pages/AdminDashboard"));
+const Profile = lazy(() => import("./pages/Profile"));
+const Settings = lazy(() => import("./pages/Settings"));
+const Logout = lazy(() => import("./pages/Logout"));
+const Game = lazy(() => import("./pages/Game"));
+const Entry = lazy(() => import("./pages/Entry"));
+const Login = lazy(() => import("./pages/Login"));
+const NotFound = lazy(() => import("./pages/NotFound"));
+const NotAuthorized = lazy(() => import("./pages/NotAuthorized"));
+const Leaderboard = lazy(() => import("./pages/Leaderboard"));
+const SafeZones = lazy(() => import("./pages/SafeZones"));
 
 function App() {
   return (
@@ -42,6 +46,7 @@ function App() {
             }}
           />
           <Layout>
+            <Suspense fallback={<LoadingSpinner />}>
             <Routes>
               <Route path="/" element={<Entry />} />
               <Route path="/entry" element={<Entry />} />
@@ -76,6 +81,7 @@ function App() {
               <Route path="/not-authorized" element={<NotAuthorized />} />
               <Route path="*" element={<NotFound />} />
             </Routes>
+            </Suspense>
           </Layout>
           </NotificationProvider>
         </AuthProvider>

@@ -1,4 +1,7 @@
-/* eslint-env node */
+/**
+ * AI Assistant API - Hardcoded responses for demo
+ * Provides contextual responses based on user queries and quick actions
+ */
 
 const responses = {
   alerts: [
@@ -38,12 +41,27 @@ const responses = {
   ]
 };
 
+/**
+ * Gets a random response from a category
+ * @param {string} category - Response category
+ * @returns {string} Random response
+ */
 const getRandomResponse = (category) => {
   const categoryResponses = responses[category] || [];
+  if (categoryResponses.length === 0) {
+    return "I don't have information about that topic right now. 🤔";
+  }
   return categoryResponses[Math.floor(Math.random() * categoryResponses.length)];
 };
 
+/**
+ * Finds the appropriate category for a user message
+ * @param {string} message - User message
+ * @returns {string|null} Category name or null
+ */
 const findCategory = (message) => {
+  if (!message || typeof message !== 'string') return null;
+  
   const msg = message.toLowerCase();
   
   if (msg.includes('alert') || msg.includes('warning') || msg.includes('disaster')) return 'alerts';
@@ -56,6 +74,11 @@ const findCategory = (message) => {
   return null;
 };
 
+/**
+ * Handles assistant API requests
+ * @param {Object} req - Express request object
+ * @param {Object} res - Express response object
+ */
 export async function handler(req, res) {
   if (req.method !== 'POST') { 
     res.statusCode = 405; 
@@ -72,14 +95,18 @@ export async function handler(req, res) {
   let parsed;
   try { 
     parsed = JSON.parse(body || '{}'); 
-  } catch { 
-    parsed = {}; 
+  } catch (error) { 
+    console.error('JSON parse error:', error);
+    res.statusCode = 400;
+    res.end(JSON.stringify({ message: "Invalid request format" }));
+    return;
   }
 
   const { messages = [], quickAction } = parsed;
   
   // Add realistic delay for better UX
-  await new Promise(resolve => setTimeout(resolve, 800 + Math.random() * 1200));
+  const delay = 800 + Math.random() * 1200;
+  await new Promise(resolve => setTimeout(resolve, delay));
 
   try {
     let response;
@@ -95,8 +122,13 @@ export async function handler(req, res) {
       if (category) {
         response = getRandomResponse(category);
       } else {
-        response = "I'm still learning! Try asking about alerts, quizzes, drills, profile, weather, or emergency tips. You can also use the quick action buttons below! 🙂";
+        response = "I'm still learning! Try asking about alerts, quizzes, drills, profile, weather, or emergency tips. You can also use the quick action buttons below! 🤖";
       }
+    }
+
+    // Ensure response is not empty
+    if (!response) {
+      response = "I'm having trouble understanding that. Could you try rephrasing your question? 🤔";
     }
 
     res.setHeader('Content-Type', 'application/json');
@@ -104,7 +136,9 @@ export async function handler(req, res) {
   } catch (error) {
     console.error('Assistant error:', error);
     res.statusCode = 500; 
-    res.end(JSON.stringify({ message: "I'm having trouble right now. Please try again! 🤖" }));
+    res.end(JSON.stringify({ 
+      message: "I'm having trouble right now. Please try again in a moment! 🤖" 
+    }));
   }
 }
 

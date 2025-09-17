@@ -1,11 +1,20 @@
-// Mock Alert Service - Self-contained demo data
+/**
+ * Alert Service - Self-contained demo data for disaster alerts and weather
+ * Provides realistic mock data for development and demo purposes
+ */
 class AlertService {
   constructor() {
     this.alerts = [];
     this.lastFetch = null;
     this.isLoading = false;
+    this.weatherCache = new Map();
+    this.CACHE_DURATION = 10 * 60 * 1000; // 10 minutes
   }
 
+  /**
+   * Fetches mock disaster alerts with realistic data
+   * @returns {Promise<Array>} Array of alert objects
+   */
   async fetchAlerts() {
     if (this.isLoading) return this.alerts;
     
@@ -103,7 +112,21 @@ class AlertService {
     }
   }
 
+  /**
+   * Gets mock weather data for a location
+   * @param {number} lat - Latitude
+   * @param {number} lon - Longitude
+   * @returns {Promise<Object|null>} Weather data object
+   */
   async getWeatherData(lat, lon) {
+    const cacheKey = `${lat.toFixed(2)},${lon.toFixed(2)}`;
+    const cached = this.weatherCache.get(cacheKey);
+    
+    // Return cached data if still valid
+    if (cached && Date.now() - cached.timestamp < this.CACHE_DURATION) {
+      return cached.data;
+    }
+    
     // Simulate network delay
     await new Promise(resolve => setTimeout(resolve, 300 + Math.random() * 700));
     
@@ -142,6 +165,12 @@ class AlertService {
         }))
       };
 
+      // Cache the result
+      this.weatherCache.set(cacheKey, {
+        data: mockWeather,
+        timestamp: Date.now()
+      });
+
       return mockWeather;
     } catch (error) {
       console.error('Error generating mock weather:', error);
@@ -149,6 +178,11 @@ class AlertService {
     }
   }
 
+  /**
+   * Gets weather description for a weather type
+   * @param {string} main - Main weather type
+   * @returns {string} Weather description
+   */
   getWeatherDescription(main) {
     const descriptions = {
       'Clear': 'clear sky',
@@ -159,6 +193,11 @@ class AlertService {
     return descriptions[main] || 'partly cloudy';
   }
 
+  /**
+   * Gets weather icon code for a weather type
+   * @param {string} main - Main weather type
+   * @returns {string} Icon code
+   */
   getWeatherIcon(main) {
     const icons = {
       'Clear': '01d',
@@ -169,8 +208,14 @@ class AlertService {
     return icons[main] || '02d';
   }
 
+  /**
+   * Gets color for alert severity
+   * @param {string} severity - Alert severity level
+   * @returns {string} Hex color code
+   */
   getSeverityColor(severity) {
-    switch (severity?.toLowerCase()) {
+    const normalizedSeverity = severity?.toLowerCase()?.trim();
+    switch (normalizedSeverity) {
       case 'severe': return '#dc2626';
       case 'moderate': return '#f59e0b';
       case 'minor': return '#10b981';
@@ -178,13 +223,37 @@ class AlertService {
     }
   }
 
+  /**
+   * Gets CSS class for alert severity
+   * @param {string} severity - Alert severity level
+   * @returns {string} CSS class name
+   */
   getSeverityClass(severity) {
-    switch (severity?.toLowerCase()) {
+    const normalizedSeverity = severity?.toLowerCase()?.trim();
+    switch (normalizedSeverity) {
       case 'severe': return 'alert-severe';
       case 'moderate': return 'alert-moderate';
       case 'minor': return 'alert-minor';
       default: return 'border-l-4 border-gray-500 bg-gray-50 dark:bg-gray-900/20';
     }
+  }
+
+  /**
+   * Clears weather cache
+   */
+  clearCache() {
+    this.weatherCache.clear();
+  }
+
+  /**
+   * Gets cache statistics
+   * @returns {Object} Cache statistics
+   */
+  getCacheStats() {
+    return {
+      size: this.weatherCache.size,
+      keys: Array.from(this.weatherCache.keys())
+    };
   }
 }
 

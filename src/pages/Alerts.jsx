@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useMemo } from "react";
 import { motion, AnimatePresence } from "framer-motion";
+import { Search, Filter, MapPin, Clock, Share2, ExternalLink } from "lucide-react";
 import AlertMap from "../components/AlertMap";
 import { ListSkeleton } from "../components/SkeletonLoader";
 import alertService from "../services/alertService";
@@ -162,11 +163,10 @@ const Alerts = () => {
                   value={searchTerm}
                   onChange={(e) => setSearchTerm(e.target.value)}
                   className="w-full pl-12 pr-4 py-3 border border-gray-300 dark:border-gray-600 rounded-xl focus:ring-2 focus:ring-primary-500 focus:border-transparent outline-none transition-all bg-white/80 dark:bg-dark-700/80"
+                  aria-label="Search alerts"
                 />
                 <div className="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400">
-                  <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
-                  </svg>
+                  <Search size={20} />
                 </div>
               </div>
 
@@ -176,6 +176,7 @@ const Alerts = () => {
                   value={selectedState} 
                   onChange={(e) => setSelectedState(e.target.value)}
                   className="px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-xl focus:ring-2 focus:ring-primary-500 focus:border-transparent outline-none transition-all bg-white/80 dark:bg-dark-700/80 min-w-[200px]"
+                  aria-label="Filter by state"
                 >
                   {STATES.map((state) => <option key={state} value={state}>{state}</option>)}
                 </select>
@@ -310,11 +311,11 @@ const Alerts = () => {
                               <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-1 line-clamp-2">{alert.title}</h3>
                               <div className="flex items-center space-x-4 text-sm text-gray-500 dark:text-gray-400">
                                 <span className="flex items-center">
-                                  <span className="mr-1">📍</span>
+                                  <MapPin size={14} className="mr-1" />
                                   {alert.area}
                                 </span>
                                 <span className="flex items-center">
-                                  <span className="mr-1">🕒</span>
+                                  <Clock size={14} className="mr-1" />
                                   {getTimeAgo(alert.effective)}
                                 </span>
                               </div>
@@ -343,8 +344,9 @@ const Alerts = () => {
                               shareAlert(alert);
                             }}
                             className="bg-primary-50 hover:bg-primary-100 text-primary-600 px-4 py-2 rounded-xl font-semibold transition-all duration-200 flex items-center space-x-2"
+                            aria-label={`Share alert: ${alert.title}`}
                           >
-                            <span>📤</span>
+                            <Share2 size={16} />
                             <span>Share</span>
                           </button>
                         </div>
