@@ -1,5 +1,7 @@
 import React, { useEffect, useMemo, useState } from 'react';
+import { Download, Users, TrendingUp, AlertTriangle, Activity } from 'lucide-react';
 import { ResponsiveContainer, LineChart, Line, XAxis, YAxis, Tooltip, CartesianGrid, BarChart, Bar, PieChart, Pie, Cell, Legend } from 'recharts';
+import LoadingSpinner from '../components/LoadingSpinner';
 
 function toCSV(rows) {
   const header = Object.keys(rows[0] || {});
@@ -10,7 +12,7 @@ function toCSV(rows) {
 export default function AdminDashboard() {
   const [students, setStudents] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [, setErrorText] = useState('');
+  const [error, setError] = useState('');
   const [selected, setSelected] = useState(null);
   const [pageStats, setPageStats] = useState({ mostVisited: [], timeline: [] });
 
@@ -38,7 +40,10 @@ export default function AdminDashboard() {
         const byDay = visitEntries.reduce((acc, v) => { const d = new Date(v.at); const key = `${d.getFullYear()}-${d.getMonth()+1}-${d.getDate()}`; acc[key] = (acc[key] || 0) + 1; return acc; }, {});
         const timeline = Object.entries(byDay).map(([day, visits]) => ({ day, visits })).sort((a, b) => (a.day > b.day ? 1 : -1));
         setPageStats({ mostVisited, timeline });
-      } catch { setErrorText('Failed to load students'); }
+      } catch (err) { 
+        setError('Failed to load students'); 
+        console.error('Admin dashboard error:', err);
+      }
       finally { setLoading(false); }
     })();
   }, []);
@@ -52,12 +57,35 @@ export default function AdminDashboard() {
 
   const exportCSV = () => {
     if (!students.length) return;
+    try {
     const csv = toCSV(students);
     const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
     const url = URL.createObjectURL(blob);
     const a = document.createElement('a');
     a.href = url; a.download = 'students.csv'; a.click(); URL.revokeObjectURL(url);
+    } catch (err) {
+      console.error('CSV export error:', err);
+      alert('Failed to export CSV');
+    }
   };
+
+  if (error) {
+    return (
+      <div className="p-6 text-center">
+        <div className="text-red-600 mb-4">
+          <AlertTriangle size={48} className="mx-auto mb-2" />
+          <h2 className="text-xl font-semibold">Error Loading Dashboard</h2>
+          <p className="text-sm">{error}</p>
+        </div>
+        <button 
+          onClick={() => window.location.reload()} 
+          className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
+        >
+          Retry
+        </button>
+      </div>
+    );
+  }
 
   return (
     <div className="p-6 space-y-6">
@@ -69,15 +97,24 @@ export default function AdminDashboard() {
       {/* Summary cards */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
         <div className="rounded-2xl p-5 bg-white shadow border border-slate-100">
+          <div className="flex items-center justify-between mb-2">
           <div className="text-sm text-slate-600">Average Quiz Score</div>
+            <TrendingUp size={20} className="text-blue-600" />
+          </div>
           <div className="text-3xl font-bold text-blue-600">{loading ? '—' : `${avgQuiz}%`}</div>
         </div>
         <div className="rounded-2xl p-5 bg-white shadow border border-slate-100">
+          <div className="flex items-center justify-between mb-2">
           <div className="text-sm text-slate-600">Participation Rate</div>
+            <Users size={20} className="text-emerald-600" />
+          </div>
           <div className="text-3xl font-bold text-emerald-600">{loading ? '—' : `${participation}%`}</div>
         </div>
         <div className="rounded-2xl p-5 bg-white shadow border border-slate-100">
+          <div className="flex items-center justify-between mb-2">
           <div className="text-sm text-slate-600">At-Risk Students</div>
+            <AlertTriangle size={20} className="text-rose-600" />
+          </div>
           <div className="text-3xl font-bold text-rose-600">{loading ? '—' : atRisk.length}</div>
         </div>
       </div>
@@ -88,7 +125,7 @@ export default function AdminDashboard() {
           <div className="font-semibold mb-2">Average Quiz Scores</div>
           <div className="h-64">
             {loading ? (
-              <div className="animate-pulse h-full bg-slate-100 rounded" />
+              <LoadingSpinner message="Loading chart data..." />
             ) : (
               <ResponsiveContainer width="100%" height="100%">
                 <LineChart data={chartData}>
@@ -106,7 +143,7 @@ export default function AdminDashboard() {
           <div className="font-semibold mb-2">Videos Watched</div>
           <div className="h-64">
             {loading ? (
-              <div className="animate-pulse h-full bg-slate-100 rounded" />
+              <LoadingSpinner message="Loading chart data..." />
             ) : (
               <ResponsiveContainer width="100%" height="100%">
                 <BarChart data={chartData}>
@@ -125,7 +162,7 @@ export default function AdminDashboard() {
           <div className="font-semibold mb-2">Engagement Over Time</div>
           <div className="h-64">
             {loading ? (
-              <div className="animate-pulse h-full bg-slate-100 rounded" />
+              <LoadingSpinner message="Loading engagement data..." />
             ) : (
               <ResponsiveContainer width="100%" height="100%">
                 <LineChart data={pageStats.timeline}>
@@ -144,7 +181,7 @@ export default function AdminDashboard() {
           <div className="font-semibold mb-2">Most Visited Pages</div>
           <div className="h-72">
             {loading ? (
-              <div className="animate-pulse h-full bg-slate-100 rounded" />
+              <LoadingSpinner message="Loading page data..." />
             ) : (
               <ResponsiveContainer width="100%" height="100%">
                 <BarChart data={pageStats.mostVisited}>
@@ -169,7 +206,14 @@ export default function AdminDashboard() {
         <div className="p-4 flex items-center justify-between">
           <div className="font-semibold">Students</div>
           <div className="flex gap-2">
-            <button onClick={exportCSV} className="px-3 py-2 rounded-lg bg-slate-900 text-white">Export CSV</button>
+            <button 
+              onClick={exportCSV} 
+              disabled={loading || !students.length}
+              className="px-3 py-2 rounded-lg bg-slate-900 text-white hover:bg-slate-800 transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2"
+            >
+              <Download size={16} />
+              Export CSV
+            </button>
           </div>
         </div>
         <div className="overflow-x-auto">
@@ -186,10 +230,17 @@ export default function AdminDashboard() {
             </thead>
             <tbody>
               {loading ? (
-                <tr><td colSpan="6"><div className="h-24 animate-pulse bg-slate-100" /></td></tr>
+                <tr><td colSpan="6"><LoadingSpinner message="Loading students..." /></td></tr>
               ) : (
                 students.map((s) => (
-                  <tr key={s.userId} className="border-t border-slate-100 hover:bg-slate-50 cursor-pointer" onClick={() => setSelected(s)}>
+                  <tr 
+                    key={s.userId} 
+                    className="border-t border-slate-100 hover:bg-slate-50 cursor-pointer transition-colors" 
+                    onClick={() => setSelected(s)}
+                    role="button"
+                    tabIndex={0}
+                    onKeyDown={(e) => e.key === 'Enter' && setSelected(s)}
+                  >
                     <td className="px-4 py-2">{s.name}</td>
                     <td className="px-4 py-2">{s.userId}</td>
                     <td className="px-4 py-2">{s.latestQuizScore}%</td>
@@ -222,12 +273,18 @@ export default function AdminDashboard() {
 
       {/* Detail side panel */}
       {selected && (
-        <div className="fixed inset-0 z-50">
+        <div className="fixed inset-0 z-50" role="dialog" aria-modal="true" aria-labelledby="student-detail-title">
           <div className="absolute inset-0 bg-black/30" onClick={() => setSelected(null)} />
           <div className="absolute right-0 top-0 h-full w-full sm:w-[420px] bg-white shadow-2xl p-5">
             <div className="flex items-center justify-between mb-3">
-              <div className="font-semibold">{selected.name}</div>
-              <button onClick={() => setSelected(null)}>✖</button>
+              <h2 id="student-detail-title" className="font-semibold">{selected.name}</h2>
+              <button 
+                onClick={() => setSelected(null)}
+                className="p-1 hover:bg-gray-100 rounded transition-colors"
+                aria-label="Close student details"
+              >
+                ✖
+              </button>
             </div>
             <div className="space-y-2 text-sm">
               <div>User ID: {selected.userId}</div>

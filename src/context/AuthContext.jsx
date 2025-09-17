@@ -1,6 +1,8 @@
 import React, { createContext, useCallback, useEffect, useMemo, useState } from 'react';
 import toast from 'react-hot-toast';
 
+const AUTH_STORAGE_KEY = 'auth_user';
+
 export const AuthContext = createContext({
   user: null,
   loading: true,
@@ -16,10 +18,20 @@ export function AuthProvider({ children }) {
   const refresh = useCallback(async () => {
     try {
       setLoading(true);
-      const raw = localStorage.getItem('auth_user');
+      const raw = localStorage.getItem(AUTH_STORAGE_KEY);
       const parsed = raw ? JSON.parse(raw) : null;
+      
+      // Validate user object structure
+      if (parsed && (!parsed.userId || !parsed.role)) {
+        localStorage.removeItem(AUTH_STORAGE_KEY);
+        setUser(null);
+        return;
+      }
+      
       setUser(parsed);
-    } catch {
+    } catch (error) {
+      console.error('Auth refresh error:', error);
+      localStorage.removeItem(AUTH_STORAGE_KEY);
       setUser(null);
     } finally {
       setLoading(false);
@@ -58,10 +70,17 @@ export function AuthProvider({ children }) {
       userId: uid, 
       role: assignedRole, 
       displayName: uid.charAt(0).toUpperCase() + uid.slice(1),
-      email: `${uid}@example.com`
+      email: `${uid}@example.com`,
+      loginTime: new Date().toISOString()
     };
     
-    localStorage.setItem('auth_user', JSON.stringify(nextUser));
+    try {
+      localStorage.setItem(AUTH_STORAGE_KEY, JSON.stringify(nextUser));
+    } catch (error) {
+      console.error('Failed to save auth data:', error);
+      throw new Error('Failed to save login session');
+    }
+    
     setUser(nextUser);
     
     toast.success(`Welcome back, ${nextUser.displayName}! 🎉`);
@@ -75,9 +94,11 @@ export function AuthProvider({ children }) {
 
   const logout = useCallback(async () => {
     try {
-      localStorage.removeItem('auth_user');
+      localStorage.removeItem(AUTH_STORAGE_KEY);
       toast.success('Logged out successfully');
-    } catch { /* ignore */ }
+    } catch (error) {
+      console.error('Logout error:', error);
+    }
     setUser(null);
   }, []);
 
