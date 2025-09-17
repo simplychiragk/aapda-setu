@@ -48,25 +48,7 @@ In this demo build, Google Sheets is disabled and credentials are hardcoded:
 - Student: user `student`, password `student` → `/dashboard`
 - Staff/Admin: user `admin`, password `admin` → `/admin`
 
-If you want to re-enable Sheets later, restore the removed files and env configs and replace the demo handlers with real integrations.
 
-### Environment Variables
-
-Create a local `.env` and set the following (see `.env.example`):
-
-GOOGLE_SERVICE_ACCOUNT_KEY (JSON string)
-GOOGLE_SHEETS_USERS_SHEET_ID
-JWT_SECRET
-LLM_PROVIDER, LLM_MODEL_DEFAULT, LLM_MODEL_LONG, LLM_API_KEY
-
-### Dev
-
-```
-npm i
-npm run dev
-```
-
-Vite runs on :5173; API server on :5174 proxied at `/api`.
 
 ### Notes
 
