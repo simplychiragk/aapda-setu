@@ -15,32 +15,72 @@ export default function AdminDashboard() {
   const [pageStats, setPageStats] = useState({ mostVisited: [], timeline: [] });
 
   useEffect(() => {
-    (async () => {
-      try {
-        const res = await fetch('/api/admin/students', { credentials: 'include' });
-        if (!res.ok) throw new Error('Failed to load');
-        const data = await res.json();
-        // Merge demo current user metrics from localStorage
-        const name = localStorage.getItem('username') || 'You';
-        const prep = parseInt(localStorage.getItem('preparedness')) || 0;
-        const quiz = parseInt(localStorage.getItem('lastQuizPercent')) || 0;
-        const drills = (JSON.parse(localStorage.getItem('drillReports')) || []).length;
-        const me = { userId: 'you', name, email: '', latestQuizScore: quiz || Math.floor(prep * 0.8), videoCompletionsCount: 0, alertsAcknowledged: 0, preparednessPercent: prep };
-        const merged = [me, ...(data.students || [])];
-        setStudents(merged);
+    // Hardcoded student data
+    const hardcodedStudents = [
+      { userId: 'stu001', name: 'Rajesh Kumar', email: 'rajesh@example.com', latestQuizScore: 85, videoCompletionsCount: 12, alertsAcknowledged: 3, preparednessPercent: 82 },
+      { userId: 'stu002', name: 'Priya Sharma', email: 'priya@example.com', latestQuizScore: 92, videoCompletionsCount: 15, alertsAcknowledged: 5, preparednessPercent: 95 },
+      { userId: 'stu003', name: 'Amit Patel', email: 'amit@example.com', latestQuizScore: 78, videoCompletionsCount: 8, alertsAcknowledged: 2, preparednessPercent: 65 },
+      { userId: 'stu004', name: 'Sneha Gupta', email: 'sneha@example.com', latestQuizScore: 65, videoCompletionsCount: 6, alertsAcknowledged: 1, preparednessPercent: 45 },
+      { userId: 'stu005', name: 'Vikram Singh', email: 'vikram@example.com', latestQuizScore: 45, videoCompletionsCount: 4, alertsAcknowledged: 0, preparednessPercent: 32 },
+      { userId: 'stu006', name: 'Anjali Mehta', email: 'anjali@example.com', latestQuizScore: 88, videoCompletionsCount: 10, alertsAcknowledged: 4, preparednessPercent: 79 },
+      { userId: 'stu007', name: 'Gigachad', email: 'giga@example.com', latestQuizScore: 99, videoCompletionsCount: 20, alertsAcknowledged: 7, preparednessPercent: 99 },
+      { userId: 'stu008', name: 'Sigmaboy', email: 'sigma@example.com', latestQuizScore: 97, videoCompletionsCount: 18, alertsAcknowledged: 6, preparednessPercent: 96 },
+      { userId: 'stu009', name: 'Alphamale', email: 'alpha@example.com', latestQuizScore: 95, videoCompletionsCount: 16, alertsAcknowledged: 5, preparednessPercent: 94 },
+      { userId: 'stu010', name: 'Innerwolf', email: 'inner@example.com', latestQuizScore: 90, videoCompletionsCount: 14, alertsAcknowledged: 4, preparednessPercent: 88 },
+      { userId: 'stu011', name: 'Neha Reddy', email: 'neha@example.com', latestQuizScore: 72, videoCompletionsCount: 7, alertsAcknowledged: 2, preparednessPercent: 58 },
+      { userId: 'stu012', name: 'Rahul Verma', email: 'rahul@example.com', latestQuizScore: 38, videoCompletionsCount: 3, alertsAcknowledged: 0, preparednessPercent: 28 },
+      { userId: 'stu013', name: 'Divya Joshi', email: 'divya@example.com', latestQuizScore: 82, videoCompletionsCount: 11, alertsAcknowledged: 3, preparednessPercent: 75 },
+      { userId: 'stu014', name: 'Karan Malhotra', email: 'karan@example.com', latestQuizScore: 55, videoCompletionsCount: 5, alertsAcknowledged: 1, preparednessPercent: 42 },
+      { userId: 'stu015', name: 'Pooja Desai', email: 'pooja@example.com', latestQuizScore: 91, videoCompletionsCount: 13, alertsAcknowledged: 4, preparednessPercent: 87 }
+    ];
 
-        // Build analytics from localStorage visits
-        const keys = Object.keys(localStorage).filter((k) => k.startsWith('analytics:'));
-        const visitEntries = keys.flatMap((k) => { try { return (JSON.parse(localStorage.getItem(k))?.visits) || []; } catch { return []; } });
-        const countByPath = visitEntries.reduce((acc, v) => { acc[v.path] = (acc[v.path] || 0) + 1; return acc; }, {});
-        const mostVisited = Object.entries(countByPath).map(([path, count]) => ({ path, count })).sort((a, b) => b.count - a.count).slice(0, 6);
-        // timeline by day
-        const byDay = visitEntries.reduce((acc, v) => { const d = new Date(v.at); const key = `${d.getFullYear()}-${d.getMonth()+1}-${d.getDate()}`; acc[key] = (acc[key] || 0) + 1; return acc; }, {});
-        const timeline = Object.entries(byDay).map(([day, visits]) => ({ day, visits })).sort((a, b) => (a.day > b.day ? 1 : -1));
-        setPageStats({ mostVisited, timeline });
-      } catch { setErrorText('Failed to load students'); }
-      finally { setLoading(false); }
-    })();
+    // Merge demo current user metrics from localStorage
+    const name = localStorage.getItem('username') || 'You';
+    const prep = parseInt(localStorage.getItem('preparedness')) || 0;
+    const quiz = parseInt(localStorage.getItem('lastQuizPercent')) || 0;
+    const drills = (JSON.parse(localStorage.getItem('drillReports')) || []).length;
+    const me = { userId: 'you', name, email: '', latestQuizScore: quiz || Math.floor(prep * 0.8), videoCompletionsCount: drills, alertsAcknowledged: 0, preparednessPercent: prep };
+    const merged = [me, ...hardcodedStudents];
+    setStudents(merged);
+
+    // Build analytics from localStorage visits
+    const keys = Object.keys(localStorage).filter((k) => k.startsWith('analytics:'));
+    const visitEntries = keys.flatMap((k) => { try { return (JSON.parse(localStorage.getItem(k))?.visits) || []; } catch { return []; } });
+    
+    // If no analytics data, create sample data
+    let mostVisited, timeline;
+    if (visitEntries.length === 0) {
+      mostVisited = [
+        { path: '/courses', count: 42 },
+        { path: '/quiz', count: 38 },
+        { path: '/dashboard', count: 35 },
+        { path: '/videos', count: 29 },
+        { path: '/profile', count: 22 },
+        { path: '/settings', count: 18 }
+      ];
+      
+      timeline = [
+        { day: '2023-10-01', visits: 12 },
+        { day: '2023-10-02', visits: 18 },
+        { day: '2023-10-03', visits: 15 },
+        { day: '2023-10-04', visits: 22 },
+        { day: '2023-10-05', visits: 19 },
+        { day: '2023-10-06', visits: 8 },
+        { day: '2023-10-07', visits: 5 },
+        { day: '2023-10-08', visits: 14 },
+        { day: '2023-10-09', visits: 21 },
+        { day: '2023-10-10', visits: 25 }
+      ];
+    } else {
+      const countByPath = visitEntries.reduce((acc, v) => { acc[v.path] = (acc[v.path] || 0) + 1; return acc; }, {});
+      mostVisited = Object.entries(countByPath).map(([path, count]) => ({ path, count })).sort((a, b) => b.count - a.count).slice(0, 6);
+      // timeline by day
+      const byDay = visitEntries.reduce((acc, v) => { const d = new Date(v.at); const key = `${d.getFullYear()}-${d.getMonth()+1}-${d.getDate()}`; acc[key] = (acc[key] || 0) + 1; return acc; }, {});
+      timeline = Object.entries(byDay).map(([day, visits]) => ({ day, visits })).sort((a, b) => (a.day > b.day ? 1 : -1));
+    }
+    
+    setPageStats({ mostVisited, timeline });
+    setLoading(false);
   }, []);
 
   const atRisk = useMemo(() => students.filter(s => s.preparednessPercent < 50), [students]);
