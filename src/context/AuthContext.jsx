@@ -42,7 +42,7 @@ export function AuthProvider({ children }) {
     refresh();
   }, [refresh]);
 
-  const login = useCallback(async ({ userId, password, role }) => {
+  const login = useCallback(async ({ userId, password }) => {
     const uid = String(userId || '').trim();
     const pwd = String(password || '').trim();
     
@@ -50,50 +50,37 @@ export function AuthProvider({ children }) {
       throw new Error('Please enter both username and password');
     }
 
-    // Demo credentials validation
-    let isValid = false;
-    let assignedRole = 'student';
-    
-    if (uid.toLowerCase() === 'student' && pwd === 'student') {
-      isValid = true;
-      assignedRole = 'student';
-    } else if (uid.toLowerCase() === 'admin' && pwd === 'admin') {
-      isValid = true;
-      assignedRole = 'staff';
+    // Use API to establish server session (JWT cookie)
+    const res = await fetch('/api/auth/login', {
+      method: 'POST',
+      credentials: 'include',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ userId: uid, password: pwd, role: 'auto' })
+    });
+    if (!res.ok) {
+      const text = await res.text().catch(() => 'Login failed');
+      throw new Error(text || 'Login failed');
     }
-    
-    if (!isValid) {
-      throw new Error('Invalid credentials. Use student/student or admin/admin');
-    }
+    await res.json();
+    const meRes = await fetch('/api/auth/me', { credentials: 'include' });
+    const me = meRes.ok ? await meRes.json() : { user: null };
+    if (!me.user) throw new Error('Failed to load user');
 
-    const nextUser = { 
-      userId: uid, 
-      role: assignedRole, 
-      displayName: uid.charAt(0).toUpperCase() + uid.slice(1),
-      email: `${uid}@example.com`,
-      loginTime: new Date().toISOString()
-    };
-    
     try {
-      localStorage.setItem(AUTH_STORAGE_KEY, JSON.stringify(nextUser));
+      localStorage.setItem(AUTH_STORAGE_KEY, JSON.stringify(me.user));
     } catch (error) {
       console.error('Failed to save auth data:', error);
       throw new Error('Failed to save login session');
     }
-    
-    setUser(nextUser);
-    
-    toast.success(`Welcome back, ${nextUser.displayName}! 🎉`);
-    
-    return { 
-      ok: true, 
-      role: assignedRole, 
-      redirectTo: assignedRole === 'staff' ? '/admin' : '/dashboard' 
-    };
+
+    setUser(me.user);
+    toast.success(`Welcome back, ${me.user.displayName || me.user.userId}! 🎉`);
+    return { ok: true, role: me.user.role, redirectTo: me.user.role === 'staff' ? '/admin' : '/dashboard' };
   }, []);
 
   const logout = useCallback(async () => {
     try {
+      await fetch('/api/auth/logout', { method: 'POST', credentials: 'include' });
       localStorage.removeItem(AUTH_STORAGE_KEY);
       toast.success('Logged out successfully');
     } catch (error) {

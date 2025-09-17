@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { Eye, EyeOff, AlertCircle } from 'lucide-react';
 import { AuthContext } from '../context/AuthContext';
+// eslint-disable-next-line no-unused-vars
 import { motion } from 'framer-motion';
 
 function useQuery() {
@@ -43,7 +44,7 @@ export default function Login() {
     setLoading(true);
     
     try {
-      const res = await login({ userId, password, role });
+      const res = await login({ userId, password });
       const redirect = res?.redirectTo || (res?.role === 'staff' ? '/admin' : '/dashboard');
       navigate(redirect, { replace: true });
     } catch (err) {
