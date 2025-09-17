@@ -39,15 +39,25 @@ Temporary demo credentials:
 - Student: user `student`, password `student` (redirects to `/dashboard`)
 - Staff/Admin: user `admin`, password `admin` (redirects to `/admin`)
 
-Note: Google Sheets integration remains in the code but is disabled when env vars are missing or `USE_HARDCODED_AUTH=true`. To re-enable Sheets, set the env vars as described below.
+# Project Setup Guide
 
-### Demo-only Auth (Hardcoded)
+## Prerequisites
+- Node.js (version 14 or higher)
+- npm (Node Package Manager)
 
-In this demo build, Google Sheets is disabled and credentials are hardcoded:
+## Installation
 
-- Student: user `student`, password `student` → `/dashboard`
-- Staff/Admin: user `admin`, password `admin` → `/admin`
+1. **Clone the repository**
+   ```bash
+   git clone github.com/simplychiragk/aapda-setu
+   cd project_directory
+   npm install
+   npm run dev
+  
+Access The Application <br>
+click the link that comes in terminal
 
+The application will be running with demo data
 
 
 ### Notes
