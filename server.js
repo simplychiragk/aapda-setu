@@ -64,7 +64,7 @@ app.use((err, req, res, next) => {
     // Avoid leaking internals
     // eslint-disable-next-line no-console
     console.error('API error:', err && err.stack ? err.stack : err);
-  } catch {}
+  } catch (e) { void e; }
   res.statusCode = err && err.statusCode ? err.statusCode : 500;
   res.setHeader('Content-Type', 'application/json');
   res.end(JSON.stringify({ message: 'Server error' }));
