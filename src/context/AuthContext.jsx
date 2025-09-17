@@ -42,10 +42,10 @@ export function AuthProvider({ children }) {
     let isValid = false;
     let assignedRole = 'student';
     
-    if (uid.toLowerCase() === 'student' && pwd === 'student') {
+    if (uid.toLowerCase() === 'student' && pwd === '123') {
       isValid = true;
       assignedRole = 'student';
-    } else if (uid.toLowerCase() === 'admin' && pwd === 'admin') {
+    } else if (uid.toLowerCase() === 'admin' && pwd === '123') {
       isValid = true;
       assignedRole = 'staff';
     }
