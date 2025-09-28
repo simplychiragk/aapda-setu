@@ -99,15 +99,14 @@ export default function Layout({ children }) {
     { key: 'profile', label: 'Profile', icon: '👤' }
   ];
 
-
   // Don't show navigation on entry and login pages
   const hideNavigation = ['/entry', '/login', '/', '/not-authorized', '/not-found'].includes(location.pathname);
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-100 dark:from-slate-950 dark:via-slate-900 dark:to-slate-900">
-      {/* Modern Navigation */}
+      {/* Modern Navigation - Guardian Theme */}
       {!hideNavigation && (
-        <nav className="bg-white/80 dark:bg-slate-900/60 backdrop-blur-xl border-b border-white/20 dark:border-slate-800 sticky top-0 z-50 shadow-lg shadow-blue-500/5">
+        <nav className="bg-[#0D47A1]/80 backdrop-blur-xl border-b border-white/10 sticky top-0 z-50 shadow-2xl">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div className="flex items-center justify-between h-16">
               {/* Logo */}
@@ -115,10 +114,10 @@ export default function Layout({ children }) {
                 className="flex items-center space-x-3"
                 whileHover={{ scale: 1.02 }}
               >
-                <div className="w-10 h-10 bg-gradient-to-r from-blue-600 to-indigo-600 rounded-xl flex items-center justify-center shadow-lg">
+                <div className="w-10 h-10 bg-gradient-to-r from-[#FF6F00] to-[#FFA000] rounded-xl flex items-center justify-center shadow-lg">
                   <span className="text-white font-bold text-lg">🛡️</span>
                 </div>
-                <span className="text-xl font-bold bg-gradient-to-r from-blue-600 to-indigo-600 bg-clip-text text-transparent">
+                <span className="text-xl font-bold text-white">
                   Aapda Setu
                 </span>
               </motion.div>
@@ -129,54 +128,70 @@ export default function Layout({ children }) {
                   <Link
                     key={item.to}
                     to={item.to}
-                    className={`px-4 py-2 rounded-xl text-sm font-medium transition-all duration-200 ${
+                    className={`px-4 py-2 rounded-xl text-sm font-medium transition-all duration-200 flex items-center space-x-2 ${
                       location.pathname === item.to
-                        ? 'bg-gradient-to-r from-blue-500 to-indigo-500 text-white shadow-lg shadow-blue-500/25'
-                        : 'text-gray-600 dark:text-slate-300 hover:text-blue-600 hover:bg-blue-50 dark:hover:bg-slate-800'
+                        ? 'bg-gradient-to-r from-[#FF6F00] to-[#FFA000] text-white shadow-lg shadow-[#FF6F00]/25'
+                        : 'text-[#B0B0B0] hover:text-white hover:bg-white/5'
                     }`}
                   >
-                    <span className="mr-2">{item.icon}</span>
-                    {item.label}
+                    <span>{item.icon}</span>
+                    <span>{item.label}</span>
                   </Link>
                 ))}
                 
+                {/* Theme Toggle */}
                 <motion.button 
                   whileHover={{ scale: 1.05 }}
                   whileTap={{ scale: 0.95 }}
                   onClick={() => setTheme(darkModeEnabled ? 'light' : 'dark')} 
-                  className="ml-2 px-3 py-2 rounded-xl text-sm font-medium text-gray-600 dark:text-slate-300 hover:bg-blue-50 dark:hover:bg-slate-800 transition-all duration-200" 
+                  className="ml-2 w-10 h-10 rounded-xl text-sm font-medium text-[#B0B0B0] hover:text-white hover:bg-white/5 transition-all duration-200 flex items-center justify-center" 
                   aria-label="Toggle dark mode"
                 >
                   {darkModeEnabled ? '🌙' : '☀️'}
                 </motion.button>
                 
-                <div className="relative ml-2">
+                {/* Notifications */}
+                <div className="relative ml-1">
                   <details className="group">
-                    <summary className="list-none cursor-pointer px-3 py-2 rounded-xl text-sm font-medium text-gray-600 dark:text-slate-300 hover:bg-blue-50 dark:hover:bg-slate-800 flex items-center gap-2 transition-all duration-200">
-                      🔔 {unreadCount > 0 && (<span className="text-xs bg-red-500 text-white px-1.5 py-0.5 rounded-full animate-pulse">{unreadCount}</span>)}
+                    <summary className="list-none cursor-pointer w-10 h-10 rounded-xl text-sm font-medium text-[#B0B0B0] hover:text-white hover:bg-white/5 flex items-center justify-center transition-all duration-200">
+                      🔔 
+                      {unreadCount > 0 && (
+                        <span className="absolute -top-1 -right-1 text-xs bg-[#D50000] text-white px-1.5 py-0.5 rounded-full animate-pulse min-w-5 h-5 flex items-center justify-center">
+                          {unreadCount}
+                        </span>
+                      )}
                     </summary>
                     <motion.div 
                       initial={{ opacity: 0, y: -10 }}
                       animate={{ opacity: 1, y: 0 }}
-                      className="absolute right-0 mt-2 w-80 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl shadow-xl p-2 z-50"
+                      className="absolute right-0 mt-2 w-80 bg-gray-800/95 backdrop-blur-xl border border-gray-700/50 rounded-2xl shadow-2xl p-4 z-50"
                     >
-                      <div className="flex items-center justify-between px-2 py-1">
-                        <div className="text-sm font-semibold">Notifications</div>
-                        <button onClick={markAllRead} className="text-xs text-blue-600 hover:text-blue-700 transition-colors">Mark all read</button>
+                      <div className="flex items-center justify-between mb-3">
+                        <div className="text-sm font-semibold text-white">Notifications</div>
+                        <button 
+                          onClick={markAllRead} 
+                          className="text-xs text-[#FF6F00] hover:text-[#FFA000] transition-colors"
+                        >
+                          Mark all read
+                        </button>
                       </div>
-                      <div className="max-h-72 overflow-y-auto space-y-1">
+                      <div className="max-h-72 overflow-y-auto space-y-2">
                         {notifications.length === 0 ? (
-                          <div className="text-xs text-slate-500 px-2 py-3 text-center">No notifications</div>
+                          <div className="text-xs text-[#B0B0B0] px-2 py-3 text-center">No notifications</div>
                         ) : notifications.map((n) => (
                           <motion.div 
                             key={n.id} 
                             initial={{ opacity: 0, x: -20 }}
                             animate={{ opacity: 1, x: 0 }}
-                            className={`px-3 py-2 rounded-lg text-sm transition-all duration-200 ${n.read ? 'bg-slate-50 dark:bg-slate-800' : 'bg-blue-50 dark:bg-slate-800/70 border-l-2 border-blue-500'}`}
+                            className={`px-3 py-2 rounded-lg text-sm transition-all duration-200 ${
+                              n.read 
+                                ? 'bg-gray-700/50 text-[#B0B0B0]' 
+                                : 'bg-[#FF6F00]/10 text-white border-l-2 border-[#FF6F00]'
+                            }`}
                           >
                             <div className="flex items-center justify-between">
                               <div>{n.message}</div>
-                              <div className="text-[10px] text-slate-500">{new Date(n.at).toLocaleTimeString()}</div>
+                              <div className="text-[10px] text-[#B0B0B0]">{new Date(n.at).toLocaleTimeString()}</div>
                             </div>
                           </motion.div>
                         ))}
@@ -185,12 +200,13 @@ export default function Layout({ children }) {
                   </details>
                 </div>
 
+                {/* Logout Button */}
                 {user && (
                   <motion.button
                     whileHover={{ scale: 1.05 }}
                     whileTap={{ scale: 0.95 }}
                     onClick={handleLogout}
-                    className="ml-2 px-3 py-2 rounded-xl text-sm font-medium text-red-600 hover:bg-red-50 dark:hover:bg-red-900/20 transition-all duration-200"
+                    className="ml-1 px-4 py-2 rounded-xl text-sm font-medium text-[#B0B0B0] hover:text-white hover:bg-[#D50000]/20 transition-all duration-200"
                   >
                     Logout
                   </motion.button>
@@ -199,11 +215,15 @@ export default function Layout({ children }) {
 
               {/* Mobile menu button */}
               <div className="md:hidden">
-                <button className="p-2 rounded-lg text-gray-600 dark:text-slate-300 hover:text-blue-600 hover:bg-blue-50 dark:hover:bg-slate-800 transition-all duration-200">
+                <motion.button 
+                  whileHover={{ scale: 1.05 }}
+                  whileTap={{ scale: 0.95 }}
+                  className="p-2 rounded-lg text-[#B0B0B0] hover:text-white hover:bg-white/5 transition-all duration-200"
+                >
                   <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
                   </svg>
-                </button>
+                </motion.button>
               </div>
             </div>
           </div>
@@ -230,7 +250,7 @@ export default function Layout({ children }) {
         {!hideNavigation && (
           <motion.button 
             onClick={() => setAssistantOpen(true)} 
-            className="fixed bottom-6 right-6 w-14 h-14 rounded-full bg-gradient-to-r from-blue-500 to-indigo-500 text-white shadow-2xl hover:scale-110 active:scale-95 transition-transform focus:outline-none z-40"
+            className="fixed bottom-6 right-6 w-14 h-14 rounded-full bg-gradient-to-r from-[#FF6F00] to-[#FFA000] text-white shadow-2xl hover:scale-110 active:scale-95 transition-transform focus:outline-none z-40"
             whileHover={{ scale: 1.1 }}
             whileTap={{ scale: 0.95 }}
             aria-label="Open assistant"
@@ -253,26 +273,26 @@ export default function Layout({ children }) {
                 initial={{ scale: 0.8, opacity: 0, y: 100 }}
                 animate={{ scale: 1, opacity: 1, y: 0 }}
                 exit={{ scale: 0.8, opacity: 0, y: 100 }}
-                className="relative w-full sm:max-w-md bg-white dark:bg-slate-900 rounded-t-2xl sm:rounded-2xl shadow-2xl border border-slate-200 dark:border-slate-800 p-4 m-0 sm:m-4"
+                className="relative w-full sm:max-w-md bg-gray-800/95 backdrop-blur-xl rounded-t-2xl sm:rounded-2xl shadow-2xl border border-gray-700/50 p-4 m-0 sm:m-4"
               >
                 <div className="flex items-center justify-between mb-4">
                   <div className="flex items-center space-x-2">
-                    <div className="w-8 h-8 bg-gradient-to-r from-blue-500 to-indigo-500 rounded-full flex items-center justify-center">
+                    <div className="w-8 h-8 bg-gradient-to-r from-[#FF6F00] to-[#FFA000] rounded-full flex items-center justify-center">
                       <span className="text-white text-sm">🤖</span>
                     </div>
-                    <div className="font-semibold">AI Assistant</div>
+                    <div className="font-semibold text-white">AI Assistant</div>
                   </div>
                   <button 
                     onClick={() => setAssistantOpen(false)} 
-                    className="text-slate-500 hover:text-slate-700 dark:hover:text-slate-300 transition-colors p-1 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-800"
+                    className="text-[#B0B0B0] hover:text-white transition-colors p-1 rounded-lg hover:bg-white/5"
                   >
                     ✖
                   </button>
                 </div>
                 
-                <div className="h-72 overflow-y-auto rounded-lg border border-slate-200 dark:border-slate-800 p-3 bg-slate-50 dark:bg-slate-800 mb-3" id="assistant-messages">
+                <div className="h-72 overflow-y-auto rounded-lg border border-gray-700/50 p-3 bg-gray-700/30 mb-3" id="assistant-messages">
                   {assistantMessages.length === 0 && (
-                    <div className="text-sm text-slate-600 dark:text-slate-400 mb-3">
+                    <div className="text-sm text-[#B0B0B0] mb-3">
                       <div className="mb-2">👋 Hi! I'm your safety assistant. How can I help you today?</div>
                       <div className="text-xs opacity-75">Try the quick actions below or ask me anything!</div>
                     </div>
@@ -288,8 +308,8 @@ export default function Layout({ children }) {
                       >
                         <div className={`inline-block max-w-[80%] p-2 rounded-lg text-sm ${
                           msg.role === 'user' 
-                            ? 'bg-blue-500 text-white rounded-br-none' 
-                            : 'bg-white dark:bg-slate-700 text-slate-800 dark:text-slate-200 rounded-bl-none border border-slate-200 dark:border-slate-600'
+                            ? 'bg-gradient-to-r from-[#FF6F00] to-[#FFA000] text-white rounded-br-none' 
+                            : 'bg-gray-700/50 text-white rounded-bl-none border border-gray-600/50'
                         }`}>
                           {msg.content}
                         </div>
@@ -303,14 +323,14 @@ export default function Layout({ children }) {
                       animate={{ opacity: 1, y: 0 }}
                       className="text-left mb-3"
                     >
-                      <div className="inline-block bg-white dark:bg-slate-700 text-slate-800 dark:text-slate-200 p-2 rounded-lg rounded-bl-none border border-slate-200 dark:border-slate-600 text-sm">
+                      <div className="inline-block bg-gray-700/50 text-white p-2 rounded-lg rounded-bl-none border border-gray-600/50 text-sm">
                         <div className="flex items-center space-x-1">
                           <div className="flex space-x-1">
-                            <div className="w-2 h-2 bg-slate-400 rounded-full animate-bounce"></div>
-                            <div className="w-2 h-2 bg-slate-400 rounded-full animate-bounce" style={{ animationDelay: '0.1s' }}></div>
-                            <div className="w-2 h-2 bg-slate-400 rounded-full animate-bounce" style={{ animationDelay: '0.2s' }}></div>
+                            <div className="w-2 h-2 bg-[#B0B0B0] rounded-full animate-bounce"></div>
+                            <div className="w-2 h-2 bg-[#B0B0B0] rounded-full animate-bounce" style={{ animationDelay: '0.1s' }}></div>
+                            <div className="w-2 h-2 bg-[#B0B0B0] rounded-full animate-bounce" style={{ animationDelay: '0.2s' }}></div>
                           </div>
-                          <span className="text-xs text-slate-500 ml-2">Assistant is typing...</span>
+                          <span className="text-xs text-[#B0B0B0] ml-2">Assistant is typing...</span>
                         </div>
                       </div>
                     </motion.div>
@@ -326,7 +346,7 @@ export default function Layout({ children }) {
                       whileTap={{ scale: 0.95 }}
                       onClick={() => sendAssistantMessage('', action.key)}
                       disabled={assistantTyping}
-                      className="px-3 py-1 rounded-full bg-blue-100 dark:bg-blue-900/30 text-blue-700 dark:text-blue-300 text-xs font-medium hover:bg-blue-200 dark:hover:bg-blue-900/50 transition-colors disabled:opacity-50"
+                      className="px-3 py-1 rounded-full bg-[#FF6F00]/20 text-[#FF6F00] text-xs font-medium hover:bg-[#FF6F00]/30 transition-colors disabled:opacity-50 border border-[#FF6F00]/30"
                     >
                       <span className="mr-1">{action.icon}</span>
                       {action.label}
@@ -343,7 +363,7 @@ export default function Layout({ children }) {
                   <input 
                     value={assistantInput}
                     onChange={(e) => setAssistantInput(e.target.value)}
-                    className="flex-1 px-3 py-2 rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-900 dark:text-slate-100 placeholder-slate-500 focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all" 
+                    className="flex-1 px-3 py-2 rounded-xl border border-gray-700/50 bg-gray-700/30 text-white placeholder-[#B0B0B0] focus:ring-2 focus:ring-[#FF6F00] focus:border-transparent outline-none transition-all" 
                     placeholder="Ask me anything about safety..."
                     disabled={assistantTyping}
                   />
@@ -351,7 +371,7 @@ export default function Layout({ children }) {
                     whileHover={{ scale: 1.05 }}
                     whileTap={{ scale: 0.95 }}
                     disabled={assistantTyping || !assistantInput.trim()}
-                    className="px-4 py-2 rounded-xl bg-gradient-to-r from-blue-500 to-indigo-500 text-white font-medium hover:from-blue-600 hover:to-indigo-600 transition-all disabled:opacity-50 disabled:cursor-not-allowed"
+                    className="px-4 py-2 rounded-xl bg-gradient-to-r from-[#FF6F00] to-[#FFA000] text-white font-medium hover:from-[#FF8F00] hover:to-[#FFB300] transition-all disabled:opacity-50 disabled:cursor-not-allowed"
                   >
                     {assistantTyping ? '⏳' : 'Send'}
                   </motion.button>
