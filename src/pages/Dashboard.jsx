@@ -71,6 +71,194 @@ const PreparednessShield = ({ preparedness, prepLevel }) => {
   );
 };
 
+// Enhanced Mission Card Component
+const MissionCard = ({ mission, index }) => {
+  const getMissionGradient = (title) => {
+    const gradients = {
+      "Monitor Emergency Alerts": "from-red-500/10 to-orange-500/10",
+      "Complete Safety Training": "from-blue-500/10 to-cyan-500/10", 
+      "Test Your Knowledge": "from-purple-500/10 to-pink-500/10",
+      "Practice Emergency Drills": "from-orange-500/10 to-red-500/10",
+      "Update Emergency Contacts": "from-green-500/10 to-emerald-500/10",
+      "Map Safe Zones": "from-teal-500/10 to-blue-500/10",
+      "Build Your Go-Bag": "from-amber-500/10 to-yellow-500/10",
+      "Play Disaster Hero": "from-indigo-500/10 to-purple-500/10"
+    };
+    return gradients[title] || "from-[#FF6F00]/10 to-[#0D47A1]/10";
+  };
+
+  const getButtonVariant = (progress) => {
+    if (progress === 100) {
+      return "from-green-500 to-emerald-600";
+    } else if (progress < 20) {
+      return "from-[#FF6F00] to-[#D50000]";
+    }
+    return "from-[#FF6F00] to-[#FF8C00]";
+  };
+
+  const getGlowColor = (progress) => {
+    if (progress === 100) {
+      return "#10B981";
+    } else if (progress < 20) {
+      return "#D50000";
+    } else if (progress < 50) {
+      return "#FF6F00";
+    }
+    return "#FF8C00";
+  };
+
+  return (
+    <motion.div
+      initial={{ opacity: 0, y: 30, scale: 0.9 }}
+      animate={{ opacity: 1, y: 0, scale: 1 }}
+      transition={{ 
+        delay: 0.7 + index * 0.1,
+        duration: 0.5,
+        ease: "easeOut"
+      }}
+      whileHover={{ 
+        y: -8,
+        scale: 1.02,
+        transition: { duration: 0.2 }
+      }}
+      className="group"
+    >
+      <Link to={mission.to}>
+        {/* Glassmorphism Card Container */}
+        <div className="relative bg-gray-800/40 backdrop-blur-xl border border-gray-700/50 rounded-2xl p-6 shadow-2xl overflow-hidden h-full transition-all duration-300 group-hover:border-[#FF6F00]/30 group-hover:shadow-[0_8px_32px_rgba(255,111,0,0.15)]">
+          
+          {/* Dynamic Background Gradient */}
+          <div className={`absolute inset-0 bg-gradient-to-br ${getMissionGradient(mission.title)} opacity-60 group-hover:opacity-80 transition-opacity duration-300`} />
+          
+          {/* Subtle Pattern Overlay */}
+          <div className="absolute inset-0 opacity-[0.02] bg-[radial-gradient(circle_at_1px_1px,rgba(255,255,255,0.8)_1px,transparent_0)] bg-[length:16px_16px]" />
+          
+          {/* Active Indicator */}
+          {mission.isActive && (
+            <motion.div
+              animate={{ scale: [1, 1.2, 1] }}
+              transition={{ duration: 2, repeat: Infinity }}
+              className="absolute top-4 right-4 w-3 h-3 bg-[#D50000] rounded-full ring-2 ring-[#D50000]/40"
+            />
+          )}
+          
+          <div className="relative z-10 h-full flex flex-col">
+            {/* Icon with Pulsating Glow */}
+            <div className="flex justify-center mb-4">
+              <motion.div
+                animate={{ 
+                  scale: [1, 1.1, 1],
+                  filter: [
+                    `drop-shadow(0 0 10px ${getGlowColor(mission.progress)}40)`,
+                    `drop-shadow(0 0 20px ${getGlowColor(mission.progress)}60)`,
+                    `drop-shadow(0 0 10px ${getGlowColor(mission.progress)}40)`
+                  ]
+                }}
+                transition={{ 
+                  duration: 2,
+                  repeat: Infinity,
+                  ease: "easeInOut"
+                }}
+                className="w-20 h-20 bg-gradient-to-br from-gray-700 to-gray-800 rounded-2xl flex items-center justify-center shadow-2xl border border-gray-600/50"
+              >
+                <span className="text-3xl">{mission.icon}</span>
+              </motion.div>
+            </div>
+            
+            {/* Content */}
+            <div className="flex-1">
+              <h3 className="text-xl font-bold text-white mb-3 text-center group-hover:text-[#FF6F00] transition-colors duration-300">
+                {mission.title}
+              </h3>
+              <p className="text-gray-300 mb-6 leading-relaxed text-center text-sm">
+                {mission.description}
+              </p>
+              
+              {/* Enhanced Progress Bar */}
+              <div className="mb-6">
+                <div className="flex justify-between items-center mb-3">
+                  <span className="text-xs font-medium text-gray-400">Progress</span>
+                  <span className="text-sm font-bold text-[#FF6F00]">{mission.progress}%</span>
+                </div>
+                
+                {/* Main Progress Bar */}
+                <div className="w-full bg-gray-700/80 rounded-full h-3 backdrop-blur-sm">
+                  <motion.div
+                    initial={{ width: 0 }}
+                    animate={{ width: `${mission.progress}%` }}
+                    transition={{ 
+                      delay: 1 + index * 0.1, 
+                      duration: 1, 
+                      ease: "easeOut" 
+                    }}
+                    className={`relative h-3 rounded-full bg-gradient-to-r from-[#FF6F00] to-[#FF8C00] shadow-lg ${
+                      mission.progress === 100 ? 'from-green-500 to-emerald-400' : ''
+                    }`}
+                    style={{
+                      background: mission.progress === 100 
+                        ? 'linear-gradient(to right, #10B981, #34D399)'
+                        : mission.progress < 20
+                        ? 'linear-gradient(to right, #D50000, #FF6F00)'
+                        : 'linear-gradient(to right, #FF6F00, #FF8C00)'
+                    }}
+                  >
+                    {/* Animated Stripe Effect */}
+                    {mission.progress > 0 && mission.progress < 100 && (
+                      <motion.div
+                        animate={{ x: [-30, 30] }}
+                        transition={{ 
+                          duration: 1.5, 
+                          repeat: Infinity, 
+                          ease: "linear" 
+                        }}
+                        className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent skew-x-12"
+                      />
+                    )}
+                    
+                    {/* Progress Glow */}
+                    <div 
+                      className="absolute inset-0 rounded-full blur-sm opacity-60"
+                      style={{
+                        backgroundColor: getGlowColor(mission.progress)
+                      }}
+                    />
+                  </motion.div>
+                </div>
+              </div>
+            </div>
+            
+            {/* Enhanced Action Button */}
+            <motion.button
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
+              className={`w-full bg-gradient-to-r ${getButtonVariant(mission.progress)} text-white py-3 px-4 rounded-xl font-semibold shadow-lg hover:shadow-xl transition-all duration-300 relative overflow-hidden group/btn`}
+            >
+              {/* Button Shine Effect */}
+              <div className="absolute inset-0 -skew-x-12 -translate-x-full group-hover/btn:translate-x-full transition-transform duration-700 bg-gradient-to-r from-transparent via-white/20 to-transparent" />
+              
+              <span className="relative z-10 flex items-center justify-center gap-2">
+                {mission.progress === 100 ? (
+                  <>
+                    <span>🎉</span>
+                    View Summary
+                  </>
+                ) : mission.progress < 20 ? (
+                  <>
+                    <span>🚨</span>
+                    {mission.buttonText}
+                  </>
+                ) : (
+                  mission.buttonText
+                )}
+              </span>
+            </motion.button>
+          </div>
+        </div>
+      </Link>
+    </motion.div>
+  );
+};
+
 const Dashboard = () => {
   const handleLogout = useLogout();
   const [showProfile, setShowProfile] = useState(false);
@@ -560,75 +748,34 @@ const Dashboard = () => {
         </div>
       </div>
 
-      {/* Your Missions Section */}
+      {/* Enhanced Your Missions Section */}
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-12 pt-8">
-        <motion.h2
+        {/* Section Header with Enhanced Styling */}
+        <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.6 }}
-          className="text-3xl font-bold text-slate-800 mb-8 dark:text-white"
+          className="relative mb-12"
         >
-          Your Missions 🎯
-        </motion.h2>
+          <div className="absolute inset-0 bg-gradient-to-r from-[#FF6F00]/10 to-transparent rounded-2xl blur-xl opacity-50" />
+          <div className="relative">
+            <h2 className="text-4xl font-bold text-white mb-4 text-center">
+              Your Missions <span className="text-[#FF6F00]">🎯</span>
+            </h2>
+            <p className="text-gray-400 text-center max-w-2xl mx-auto">
+              Complete these missions to enhance your disaster preparedness and become a true Guardian
+            </p>
+          </div>
+        </motion.div>
+
+        {/* Mission Cards Grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
           {missionData.map((mission, index) => (
-            <motion.div
-              key={mission.title}
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.7 + index * 0.1 }}
-            >
-              <Link
-                to={mission.to}
-                className="group relative bg-white/70 backdrop-blur-xl border border-slate-200 rounded-2xl p-6 shadow-lg hover:scale-105 transition-all duration-300 overflow-hidden block dark:bg-gray-800/50 dark:border-gray-700/50"
-              >
-                {/* Background Gradient Overlay */}
-                <div className={`absolute inset-0 bg-gradient-to-br from-[#FF6F00]/5 to-[#0D47A1]/5 opacity-0 group-hover:opacity-100 transition-opacity duration-300`}></div>
-                
-                {/* Active Indicator */}
-                {mission.isActive && (
-                  <div className="absolute top-4 right-4 w-3 h-3 bg-[#D50000] rounded-full animate-pulse"></div>
-                )}
-                
-                {/* Icon */}
-                <div className="w-16 h-16 bg-gradient-to-br from-[#FF6F00] to-[#FFA000] rounded-2xl flex items-center justify-center mb-4 shadow-lg group-hover:scale-110 transition-transform duration-300">
-                  <span className="text-2xl">{mission.icon}</span>
-                </div>
-                
-                {/* Content */}
-                <div className="relative z-10">
-                  <h3 className="text-lg font-bold text-slate-800 mb-2 group-hover:text-[#FF6F00] transition-colors dark:text-white">
-                    {mission.title}
-                  </h3>
-                  <p className="text-slate-600 mb-4 leading-relaxed text-sm dark:text-[#B0B0B0]">
-                    {mission.description}
-                  </p>
-                  
-                  {/* Progress Bar */}
-                  <div className="mb-4">
-                    <div className="flex justify-between items-center mb-1">
-                      <span className="text-xs text-slate-500 dark:text-[#B0B0B0]">Progress</span>
-                      <span className="text-xs text-[#FF6F00] font-semibold">{mission.progress}%</span>
-                    </div>
-                    <div className="w-full bg-slate-200 rounded-full h-2 dark:bg-gray-700">
-                      <div 
-                        className="bg-gradient-to-r from-[#FF6F00] to-[#FFA000] h-2 rounded-full transition-all duration-300"
-                        style={{ width: `${mission.progress}%` }}
-                      ></div>
-                    </div>
-                  </div>
-                  
-                  {/* CTA Button */}
-                  <motion.button
-                    whileHover={{ scale: 1.05 }}
-                    whileTap={{ scale: 0.95 }}
-                    className="w-full bg-gradient-to-r from-[#FF6F00] to-[#FFA000] text-white py-2 px-4 rounded-lg font-semibold hover:from-[#FF8F00] hover:to-[#FFB300] transition-all duration-200 shadow-lg text-sm"
-                  >
-                    {mission.buttonText}
-                  </motion.button>
-                </div>
-              </Link>
-            </motion.div>
+            <MissionCard 
+              key={mission.title} 
+              mission={mission} 
+              index={index} 
+            />
           ))}
         </div>
       </div>
