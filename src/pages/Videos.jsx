@@ -93,11 +93,11 @@ function getCategoryIcon(category) {
 
 function getDifficultyColor(difficulty) {
   const colors = {
-    "Beginner": "bg-emerald-500/20 text-emerald-400 border-emerald-500/30",
-    "Intermediate": "bg-yellow-500/20 text-yellow-400 border-yellow-500/30", 
-    "Advanced": "bg-red-500/20 text-red-400 border-red-500/30"
+    "Beginner": "bg-emerald-500/20 text-emerald-600 border-emerald-500/30 dark:text-emerald-400",
+    "Intermediate": "bg-yellow-500/20 text-yellow-600 border-yellow-500/30 dark:text-yellow-400", 
+    "Advanced": "bg-red-500/20 text-red-600 border-red-500/30 dark:text-red-400"
   };
-  return colors[difficulty] || "bg-gray-500/20 text-gray-400 border-gray-500/30";
+  return colors[difficulty] || "bg-gray-500/20 text-gray-600 border-gray-500/30 dark:text-gray-400";
 }
 
 export default function VideoLibrary() {
@@ -115,10 +115,10 @@ export default function VideoLibrary() {
   const completionRate = Math.round((totalWatched / VIDEOS.length) * 100);
 
   return (
-    <div className="min-h-screen" style={{ backgroundColor: '#212121' }}>
+    <div className="min-h-screen bg-slate-50 dark:bg-[#212121] transition-colors duration-200">
       {/* Header Section */}
-      <div className="relative overflow-hidden" style={{ backgroundColor: '#0D47A1' }}>
-        <div className="absolute inset-0 bg-gradient-to-r from-[#0D47A1]/80 to-[#1565C0]/80"></div>
+      <div className="relative overflow-hidden bg-blue-600 dark:bg-[#0D47A1]">
+        <div className="absolute inset-0 bg-gradient-to-r from-blue-600/80 to-blue-700/80 dark:from-[#0D47A1]/80 dark:to-[#1565C0]/80"></div>
         <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
           <motion.div
             initial={{ opacity: 0, y: -20 }}
@@ -136,7 +136,7 @@ export default function VideoLibrary() {
                 <span className="text-sm font-medium text-blue-200">Training Progress</span>
                 <span className="text-sm font-bold text-[#FF6F00]">{completionRate}%</span>
               </div>
-              <div className="w-full bg-gray-700/50 rounded-full h-3 backdrop-blur-sm">
+              <div className="w-full bg-white/20 rounded-full h-3 backdrop-blur-sm dark:bg-gray-700/50">
                 <motion.div 
                   initial={{ width: 0 }}
                   animate={{ width: `${completionRate}%` }}
@@ -158,7 +158,7 @@ export default function VideoLibrary() {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.1 }}
-          className="bg-gradient-to-br from-gray-800/50 to-gray-900/50 backdrop-blur-xl border border-gray-700/50 rounded-2xl p-6 mb-8 shadow-2xl"
+          className="bg-white/70 backdrop-blur-xl border border-slate-200 rounded-2xl p-6 mb-8 shadow-lg dark:bg-gray-800/50 dark:border-gray-700/50"
         >
           <div className="flex flex-col lg:flex-row gap-4">
             {/* Search */}
@@ -169,9 +169,9 @@ export default function VideoLibrary() {
                   placeholder="Search training videos..."
                   value={searchTerm}
                   onChange={(e) => setSearchTerm(e.target.value)}
-                  className="w-full pl-12 pr-4 py-3 bg-gray-800/80 border border-gray-600 rounded-xl focus:ring-2 focus:ring-[#FF6F00] focus:border-transparent outline-none transition-all text-white placeholder-gray-400"
+                  className="w-full pl-12 pr-4 py-3 bg-white/80 border border-slate-300 rounded-xl focus:ring-2 focus:ring-[#FF6F00] focus:border-transparent outline-none transition-all text-slate-800 placeholder-slate-500 dark:bg-gray-800/80 dark:border-gray-600 dark:text-white dark:placeholder-gray-400"
                 />
-                <div className="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400">
+                <div className="absolute left-4 top-1/2 transform -translate-y-1/2 text-slate-400 dark:text-gray-400">
                   <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
                   </svg>
@@ -190,7 +190,7 @@ export default function VideoLibrary() {
                   className={`px-4 py-2 rounded-xl font-semibold transition-all duration-200 flex items-center space-x-2 border ${
                     selectedCategory === category
                       ? 'bg-[#FF6F00] text-white shadow-lg border-[#FF6F00]'
-                      : 'bg-gray-700/50 text-[#B0B0B0] border-gray-600 hover:bg-gray-600/50'
+                      : 'bg-white text-slate-700 border-slate-300 hover:bg-slate-50 dark:bg-gray-700/50 dark:border-gray-600 dark:text-slate-300 dark:hover:bg-gray-600/50'
                   }`}
                 >
                   <span>{getCategoryIcon(category)}</span>
@@ -207,13 +207,13 @@ export default function VideoLibrary() {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.2 }}
-            className="bg-gradient-to-br from-gray-800/50 to-gray-900/50 backdrop-blur-xl border border-gray-700/50 rounded-2xl p-6 shadow-2xl hover:scale-105 transition-all duration-300 cursor-pointer"
+            className="bg-white/70 backdrop-blur-xl border border-slate-200 rounded-2xl p-6 shadow-lg hover:scale-105 transition-all duration-300 cursor-pointer dark:bg-gray-800/50 dark:border-gray-700/50"
           >
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-sm font-medium text-[#B0B0B0]">Training Missions</p>
-                <p className="text-3xl font-bold text-white">{VIDEOS.length}</p>
-                <p className="text-xs text-[#B0B0B0] mt-1">Available videos</p>
+                <p className="text-sm font-medium text-slate-600 dark:text-[#B0B0B0]">Training Missions</p>
+                <p className="text-3xl font-bold text-slate-800 dark:text-white">{VIDEOS.length}</p>
+                <p className="text-xs text-slate-500 dark:text-[#B0B0B0] mt-1">Available videos</p>
               </div>
               <div className="w-12 h-12 bg-[#FF6F00]/20 rounded-xl flex items-center justify-center">
                 <span className="text-2xl">🎬</span>
@@ -225,13 +225,13 @@ export default function VideoLibrary() {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.3 }}
-            className="bg-gradient-to-br from-gray-800/50 to-gray-900/50 backdrop-blur-xl border border-gray-700/50 rounded-2xl p-6 shadow-2xl hover:scale-105 transition-all duration-300 cursor-pointer"
+            className="bg-white/70 backdrop-blur-xl border border-slate-200 rounded-2xl p-6 shadow-lg hover:scale-105 transition-all duration-300 cursor-pointer dark:bg-gray-800/50 dark:border-gray-700/50"
           >
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-sm font-medium text-[#B0B0B0]">Skill Categories</p>
-                <p className="text-3xl font-bold text-white">{CATEGORIES.length - 1}</p>
-                <p className="text-xs text-[#B0B0B0] mt-1">Different disaster types</p>
+                <p className="text-sm font-medium text-slate-600 dark:text-[#B0B0B0]">Skill Categories</p>
+                <p className="text-3xl font-bold text-slate-800 dark:text-white">{CATEGORIES.length - 1}</p>
+                <p className="text-xs text-slate-500 dark:text-[#B0B0B0] mt-1">Different disaster types</p>
               </div>
               <div className="w-12 h-12 bg-[#FF6F00]/20 rounded-xl flex items-center justify-center">
                 <span className="text-2xl">📚</span>
@@ -243,13 +243,13 @@ export default function VideoLibrary() {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.4 }}
-            className="bg-gradient-to-br from-gray-800/50 to-gray-900/50 backdrop-blur-xl border border-gray-700/50 rounded-2xl p-6 shadow-2xl hover:scale-105 transition-all duration-300 cursor-pointer"
+            className="bg-white/70 backdrop-blur-xl border border-slate-200 rounded-2xl p-6 shadow-lg hover:scale-105 transition-all duration-300 cursor-pointer dark:bg-gray-800/50 dark:border-gray-700/50"
           >
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-sm font-medium text-[#B0B0B0]">Active Results</p>
-                <p className="text-3xl font-bold text-white">{filteredVideos.length}</p>
-                <p className="text-xs text-[#B0B0B0] mt-1">Matching your criteria</p>
+                <p className="text-sm font-medium text-slate-600 dark:text-[#B0B0B0]">Active Results</p>
+                <p className="text-3xl font-bold text-slate-800 dark:text-white">{filteredVideos.length}</p>
+                <p className="text-xs text-slate-500 dark:text-[#B0B0B0] mt-1">Matching your criteria</p>
               </div>
               <div className="w-12 h-12 bg-[#FF6F00]/20 rounded-xl flex items-center justify-center">
                 <span className="text-2xl">🔍</span>
@@ -265,11 +265,11 @@ export default function VideoLibrary() {
             animate={{ opacity: 1, scale: 1 }}
             className="text-center py-12"
           >
-            <div className="w-24 h-24 bg-gray-700/50 rounded-full flex items-center justify-center mx-auto mb-4">
+            <div className="w-24 h-24 bg-slate-200 rounded-full flex items-center justify-center mx-auto mb-4 dark:bg-gray-700/50">
               <span className="text-4xl">🔍</span>
             </div>
-            <h3 className="text-xl font-semibold text-white mb-2">No training missions found</h3>
-            <p className="text-[#B0B0B0]">Try adjusting your search or filter criteria.</p>
+            <h3 className="text-xl font-semibold text-slate-800 mb-2 dark:text-white">No training missions found</h3>
+            <p className="text-slate-600 dark:text-[#B0B0B0]">Try adjusting your search or filter criteria.</p>
           </motion.div>
         ) : (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
@@ -279,12 +279,12 @@ export default function VideoLibrary() {
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.5 + idx * 0.1 }}
-                className="group relative bg-gradient-to-br from-gray-800/50 to-gray-900/50 backdrop-blur-xl border border-gray-700/50 rounded-2xl shadow-2xl hover:scale-105 transition-all duration-300 overflow-hidden cursor-pointer"
+                className="group relative bg-white/70 backdrop-blur-xl border border-slate-200 rounded-2xl shadow-lg hover:scale-105 transition-all duration-300 overflow-hidden cursor-pointer dark:bg-gray-800/50 dark:border-gray-700/50"
                 onClick={() => window.open(video.url, "_blank")}
               >
                 {/* Completed Badge */}
                 {video.isWatched && (
-                  <div className="absolute top-4 left-4 z-10 bg-emerald-500/20 text-emerald-400 px-3 py-1 rounded-full text-xs font-semibold border border-emerald-500/30 backdrop-blur-sm">
+                  <div className="absolute top-4 left-4 z-10 bg-emerald-500/20 text-emerald-600 px-3 py-1 rounded-full text-xs font-semibold border border-emerald-500/30 backdrop-blur-sm dark:text-emerald-400">
                     ✅ Completed
                   </div>
                 )}
@@ -301,7 +301,7 @@ export default function VideoLibrary() {
                     alt={video.title} 
                     className="w-full h-48 object-cover group-hover:scale-110 transition-transform duration-500"
                   />
-                  <div className="absolute inset-0 bg-gradient-to-t from-gray-900/60 to-transparent group-hover:bg-black/20 transition-colors duration-300"></div>
+                  <div className="absolute inset-0 bg-gradient-to-t from-slate-900/60 to-transparent group-hover:bg-black/20 transition-colors duration-300 dark:from-gray-900/60"></div>
                   
                   {/* Play Button */}
                   <div className="absolute inset-0 flex items-center justify-center">
@@ -324,17 +324,17 @@ export default function VideoLibrary() {
                     <span className={`px-3 py-1 rounded-full text-xs font-semibold border ${getDifficultyColor(video.difficulty)}`}>
                       {video.difficulty}
                     </span>
-                    <span className="text-sm text-[#B0B0B0] flex items-center space-x-1">
+                    <span className="text-sm text-slate-600 flex items-center space-x-1 dark:text-[#B0B0B0]">
                       <span>{getCategoryIcon(video.category)}</span>
                       <span>{video.category}</span>
                     </span>
                   </div>
                   
-                  <h3 className="text-lg font-bold text-white mb-2 group-hover:text-[#FF6F00] transition-colors line-clamp-2">
+                  <h3 className="text-lg font-bold text-slate-800 mb-2 group-hover:text-[#FF6F00] transition-colors line-clamp-2 dark:text-white">
                     {video.title}
                   </h3>
                   
-                  <p className="text-[#B0B0B0] text-sm leading-relaxed line-clamp-3 mb-4">
+                  <p className="text-slate-600 text-sm leading-relaxed line-clamp-3 mb-4 dark:text-[#B0B0B0]">
                     {video.description}
                   </p>
                   
@@ -366,11 +366,11 @@ export default function VideoLibrary() {
             className="text-center py-12"
           >
             <div className="max-w-md mx-auto">
-              <div className="w-20 h-20 bg-gray-700/50 rounded-full flex items-center justify-center mx-auto mb-4">
+              <div className="w-20 h-20 bg-slate-200 rounded-full flex items-center justify-center mx-auto mb-4 dark:bg-gray-700/50">
                 <span className="text-2xl">🎯</span>
               </div>
-              <h3 className="text-xl font-bold text-white mb-2">No missions match your search</h3>
-              <p className="text-[#B0B0B0] mb-4">
+              <h3 className="text-xl font-bold text-slate-800 mb-2 dark:text-white">No missions match your search</h3>
+              <p className="text-slate-600 mb-4 dark:text-[#B0B0B0]">
                 Try different keywords or browse all categories to find your next training mission.
               </p>
               <button
