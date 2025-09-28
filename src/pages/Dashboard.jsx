@@ -17,11 +17,11 @@ const PreparednessShield = ({ preparedness, prepLevel }) => {
       initial={{ opacity: 0, scale: 0.8 }}
       animate={{ opacity: 1, scale: 1 }}
       transition={{ duration: 0.8 }}
-      className="relative bg-gradient-to-br from-gray-800/50 to-gray-900/50 backdrop-blur-xl border border-gray-700/50 rounded-3xl p-8 shadow-2xl hover:scale-105 transition-all duration-300 group"
+      className="relative bg-white/70 backdrop-blur-xl border border-slate-200 rounded-3xl p-8 shadow-lg hover:scale-105 transition-all duration-300 group dark:bg-gray-800/50 dark:border-gray-700/50"
     >
-      <div className="absolute inset-0 bg-gradient-to-br from-[#FF6F00]/10 to-[#0D47A1]/10 rounded-3xl"></div>
+      <div className="absolute inset-0 bg-gradient-to-br from-[#FF6F00]/10 to-[#0D47A1]/10 rounded-3xl dark:from-[#FF6F00]/10 dark:to-[#0D47A1]/10"></div>
       <div className="relative z-10 text-center">
-        <h3 className="text-lg font-semibold text-[#B0B0B0] mb-4">Preparedness Shield</h3>
+        <h3 className="text-lg font-semibold text-slate-600 mb-4 dark:text-[#B0B0B0]">Preparedness Shield</h3>
         
         {/* Radial Progress */}
         <div className="relative mx-auto w-32 h-32 mb-4">
@@ -31,10 +31,10 @@ const PreparednessShield = ({ preparedness, prepLevel }) => {
               cx="50"
               cy="50"
               r={radius}
-              stroke="#374151"
+              stroke="#CBD5E1"
               strokeWidth="4"
               fill="none"
-              className="opacity-30"
+              className="opacity-60 dark:opacity-30 dark:stroke-gray-600"
             />
             {/* Progress circle */}
             <circle
@@ -57,7 +57,7 @@ const PreparednessShield = ({ preparedness, prepLevel }) => {
           {/* Center content */}
           <div className="absolute inset-0 flex items-center justify-center">
             <div className="text-center">
-              <div className="text-3xl font-bold text-white mb-1">{preparedness}%</div>
+              <div className="text-3xl font-bold text-slate-800 mb-1 dark:text-white">{preparedness}%</div>
               <div className={`text-xs font-medium ${prepLevel.color}`}>{prepLevel.level}</div>
             </div>
           </div>
@@ -65,7 +65,7 @@ const PreparednessShield = ({ preparedness, prepLevel }) => {
         
         {/* Shield Icon */}
         <div className="text-4xl mb-2 group-hover:scale-110 transition-transform duration-300">🛡️</div>
-        <p className="text-sm text-[#B0B0B0]">Your safety rating</p>
+        <p className="text-sm text-slate-500 dark:text-[#B0B0B0]">Your safety rating</p>
       </div>
     </motion.div>
   );
@@ -278,17 +278,17 @@ const Dashboard = () => {
   };
 
   const getPreparednessLevel = () => {
-    if (preparedness >= 90) return { level: "Guardian Elite", color: "text-emerald-400", ring: "ring-emerald-400" };
-    if (preparedness >= 70) return { level: "Safety Expert", color: "text-blue-400", ring: "ring-blue-400" };
-    if (preparedness >= 50) return { level: "Preparedness Pro", color: "text-yellow-400", ring: "ring-yellow-400" };
-    if (preparedness >= 25) return { level: "Safety Scout", color: "text-orange-400", ring: "ring-orange-400" };
-    return { level: "Rookie Guardian", color: "text-red-400", ring: "ring-red-400" };
+    if (preparedness >= 90) return { level: "Guardian Elite", color: "text-emerald-600 dark:text-emerald-400", ring: "ring-emerald-400" };
+    if (preparedness >= 70) return { level: "Safety Expert", color: "text-blue-600 dark:text-blue-400", ring: "ring-blue-400" };
+    if (preparedness >= 50) return { level: "Preparedness Pro", color: "text-yellow-600 dark:text-yellow-400", ring: "ring-yellow-400" };
+    if (preparedness >= 25) return { level: "Safety Scout", color: "text-orange-600 dark:text-orange-400", ring: "ring-orange-400" };
+    return { level: "Rookie Guardian", color: "text-red-600 dark:text-red-400", ring: "ring-red-400" };
   };
 
   const prepLevel = getPreparednessLevel();
 
   return (
-    <div className="min-h-screen" style={{ backgroundColor: '#212121' }}>
+    <div className="min-h-screen bg-slate-50 dark:bg-[#212121] transition-colors duration-200">
       <SafetyBeacon isVisible={showBeacon} userLocation={localStorage.getItem("userLocation") || "Delhi"} />
       
       {/* Login Popup */}
@@ -301,7 +301,7 @@ const Dashboard = () => {
           <motion.div
             initial={{ scale: 0.8, opacity: 0 }}
             animate={{ scale: 1, opacity: 1 }}
-            className="bg-gradient-to-br from-gray-800/90 to-gray-900/90 backdrop-blur-xl border border-gray-700/50 rounded-3xl p-8 w-full max-w-md shadow-2xl"
+            className="bg-white/90 backdrop-blur-xl border border-slate-200 rounded-3xl p-8 w-full max-w-md shadow-2xl dark:bg-gray-800/90 dark:border-gray-700/50"
           >
             <div className="text-center mb-6">
               <motion.div
@@ -312,8 +312,8 @@ const Dashboard = () => {
               >
                 <span className="text-3xl">🛡️</span>
               </motion.div>
-              <h2 className="text-3xl font-bold text-white mb-2">Welcome to Aapda Setu</h2>
-              <p className="text-[#B0B0B0]">Your personal disaster preparedness companion</p>
+              <h2 className="text-3xl font-bold text-slate-800 mb-2 dark:text-white">Welcome to Aapda Setu</h2>
+              <p className="text-slate-600 dark:text-[#B0B0B0]">Your personal disaster preparedness companion</p>
             </div>
             <div className="space-y-4">
               <input
@@ -322,7 +322,7 @@ const Dashboard = () => {
                 onChange={(e) => setInputName(e.target.value)}
                 onKeyDown={(e) => e.key === "Enter" && handleLogin()}
                 placeholder="Enter your name"
-                className="w-full px-4 py-3 border border-gray-600 rounded-xl focus:ring-2 focus:ring-[#FF6F00] focus:border-transparent outline-none transition-all bg-gray-800/80 text-white placeholder-gray-400"
+                className="w-full px-4 py-3 border border-slate-300 rounded-xl focus:ring-2 focus:ring-[#FF6F00] focus:border-transparent outline-none transition-all bg-white/80 text-slate-800 placeholder-slate-400 dark:bg-gray-800/80 dark:border-gray-600 dark:text-white dark:placeholder-gray-400"
               />
               <motion.button 
                 whileHover={{ scale: 1.02 }}
@@ -338,8 +338,8 @@ const Dashboard = () => {
       )}
 
       {/* Header Section */}
-      <div className="relative overflow-hidden" style={{ backgroundColor: '#0D47A1' }}>
-        <div className="absolute inset-0 bg-gradient-to-r from-[#0D47A1]/80 to-[#1565C0]/80"></div>
+      <div className="relative overflow-hidden bg-blue-600 dark:bg-[#0D47A1] transition-colors duration-200">
+        <div className="absolute inset-0 bg-gradient-to-r from-blue-600/80 to-blue-700/80 dark:from-[#0D47A1]/80 dark:to-[#1565C0]/80"></div>
         <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
           <div className="flex items-center justify-between mb-8">
             <motion.div
@@ -392,11 +392,11 @@ const Dashboard = () => {
                   <motion.div
                     initial={{ opacity: 0, scale: 0.8, y: -10 }}
                     animate={{ opacity: 1, scale: 1, y: 0 }}
-                    className="absolute right-0 top-16 bg-gradient-to-br from-gray-800/95 to-gray-900/95 backdrop-blur-xl border border-gray-700/50 rounded-2xl shadow-2xl p-6 w-80 z-40"
+                    className="absolute right-0 top-16 bg-white/95 backdrop-blur-xl border border-slate-200 rounded-2xl shadow-2xl p-6 w-80 z-40 dark:bg-gray-800/95 dark:border-gray-700/50"
                   >
                     <div className="text-center mb-4">
-                      <div className="text-lg font-semibold text-white">{username || "Guest"}</div>
-                      <div className={`inline-block px-3 py-1 rounded-full text-sm font-semibold bg-gray-700 ${prepLevel.color} mt-2`}>
+                      <div className="text-lg font-semibold text-slate-800 dark:text-white">{username || "Guest"}</div>
+                      <div className={`inline-block px-3 py-1 rounded-full text-sm font-semibold bg-slate-100 ${prepLevel.color} mt-2 dark:bg-gray-700`}>
                         {prepLevel.level}
                       </div>
                     </div>
@@ -404,10 +404,10 @@ const Dashboard = () => {
                     {/* Preparedness Progress */}
                     <div className="mb-6">
                       <div className="flex justify-between items-center mb-2">
-                        <span className="text-sm font-medium text-[#B0B0B0]">Preparedness</span>
+                        <span className="text-sm font-medium text-slate-600 dark:text-[#B0B0B0]">Preparedness</span>
                         <span className="text-sm font-bold text-[#FF6F00]">{preparedness}%</span>
                       </div>
-                      <div className="w-full bg-gray-700 rounded-full h-3">
+                      <div className="w-full bg-slate-200 rounded-full h-3 dark:bg-gray-700">
                         <motion.div 
                           initial={{ width: 0 }}
                           animate={{ width: `${preparedness}%` }}
@@ -420,7 +420,7 @@ const Dashboard = () => {
                     {/* Recent Achievements */}
                     {achievements.length > 0 && (
                       <div className="mb-4">
-                        <div className="text-sm font-medium text-[#B0B0B0] mb-2">Recent Achievements</div>
+                        <div className="text-sm font-medium text-slate-600 dark:text-[#B0B0B0] mb-2">Recent Achievements</div>
                         <div className="flex flex-wrap gap-1">
                           {achievements.slice(-3).map((achievement, index) => (
                             <span key={index} className="text-xs bg-[#FF6F00]/20 text-[#FF6F00] px-2 py-1 rounded-full">
@@ -440,7 +440,7 @@ const Dashboard = () => {
                       </Link>
                       <Link 
                         to="/settings" 
-                        className="block w-full text-center py-2 px-4 bg-gray-700 text-[#B0B0B0] rounded-lg hover:bg-gray-600 transition-colors font-medium"
+                        className="block w-full text-center py-2 px-4 bg-slate-100 text-slate-700 rounded-lg hover:bg-slate-200 transition-colors font-medium dark:bg-gray-700 dark:text-[#B0B0B0] dark:hover:bg-gray-600"
                       >
                         Settings
                       </Link>
@@ -470,17 +470,17 @@ const Dashboard = () => {
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.2 }}
-                className="bg-gradient-to-br from-gray-800/50 to-gray-900/50 backdrop-blur-xl border border-gray-700/50 rounded-2xl p-6 shadow-lg hover:scale-105 transition-all duration-300 cursor-pointer"
+                className="bg-white/70 backdrop-blur-xl border border-slate-200 rounded-2xl p-6 shadow-lg hover:scale-105 transition-all duration-300 cursor-pointer dark:bg-gray-800/50 dark:border-gray-700/50"
               >
                 <div className="flex items-center justify-between">
                   <div>
-                    <p className="text-sm font-medium text-[#B0B0B0]">Active Alerts</p>
-                    <p className={`text-3xl font-bold ${alerts.length > 0 ? 'text-[#D50000]' : 'text-white'}`}>
+                    <p className="text-sm font-medium text-slate-600 dark:text-[#B0B0B0]">Active Alerts</p>
+                    <p className={`text-3xl font-bold ${alerts.length > 0 ? 'text-[#D50000]' : 'text-slate-800 dark:text-white'}`}>
                       {alerts.length}
                     </p>
-                    <p className="text-xs text-[#B0B0B0] mt-1">Live monitoring</p>
+                    <p className="text-xs text-slate-500 dark:text-[#B0B0B0] mt-1">Live monitoring</p>
                   </div>
-                  <div className={`w-12 h-12 ${alerts.length > 0 ? 'bg-[#D50000]/20' : 'bg-gray-700'} rounded-xl flex items-center justify-center`}>
+                  <div className={`w-12 h-12 ${alerts.length > 0 ? 'bg-[#D50000]/20' : 'bg-slate-100 dark:bg-gray-700'} rounded-xl flex items-center justify-center`}>
                     <span className="text-2xl">🚨</span>
                   </div>
                 </div>
@@ -493,13 +493,13 @@ const Dashboard = () => {
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.3 }}
-                className="bg-gradient-to-br from-gray-800/50 to-gray-900/50 backdrop-blur-xl border border-gray-700/50 rounded-2xl p-6 shadow-lg hover:scale-105 transition-all duration-300 cursor-pointer"
+                className="bg-white/70 backdrop-blur-xl border border-slate-200 rounded-2xl p-6 shadow-lg hover:scale-105 transition-all duration-300 cursor-pointer dark:bg-gray-800/50 dark:border-gray-700/50"
               >
                 <div className="flex items-center justify-between">
                   <div>
-                    <p className="text-sm font-medium text-[#B0B0B0]">Daily Streak</p>
+                    <p className="text-sm font-medium text-slate-600 dark:text-[#B0B0B0]">Daily Streak</p>
                     <p className="text-3xl font-bold text-[#FF6F00]">{streakCount}</p>
-                    <p className="text-xs text-[#B0B0B0] mt-1">Days active</p>
+                    <p className="text-xs text-slate-500 dark:text-[#B0B0B0] mt-1">Days active</p>
                   </div>
                   <div className="w-12 h-12 bg-[#FF6F00]/20 rounded-xl flex items-center justify-center">
                     <span className="text-2xl">🔥</span>
@@ -514,13 +514,13 @@ const Dashboard = () => {
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.4 }}
-                className="bg-gradient-to-br from-gray-800/50 to-gray-900/50 backdrop-blur-xl border border-gray-700/50 rounded-2xl p-6 shadow-lg hover:scale-105 transition-all duration-300 cursor-pointer"
+                className="bg-white/70 backdrop-blur-xl border border-slate-200 rounded-2xl p-6 shadow-lg hover:scale-105 transition-all duration-300 cursor-pointer dark:bg-gray-800/50 dark:border-gray-700/50"
               >
                 <div className="flex items-center justify-between">
                   <div>
-                    <p className="text-sm font-medium text-[#B0B0B0]">Achievements</p>
+                    <p className="text-sm font-medium text-slate-600 dark:text-[#B0B0B0]">Achievements</p>
                     <p className="text-3xl font-bold text-[#FF6F00]">{achievements.length}</p>
-                    <p className="text-xs text-[#B0B0B0] mt-1">Unlocked</p>
+                    <p className="text-xs text-slate-500 dark:text-[#B0B0B0] mt-1">Unlocked</p>
                   </div>
                   <div className="w-12 h-12 bg-[#FF6F00]/20 rounded-xl flex items-center justify-center">
                     <span className="text-2xl">🏆</span>
@@ -540,7 +540,7 @@ const Dashboard = () => {
           >
             <div className="flex items-center space-x-4">
               {/* Video Thumbnail with Play Button */}
-              <div className="relative w-24 h-16 bg-gradient-to-br from-gray-700 to-gray-800 rounded-xl overflow-hidden flex-shrink-0">
+              <div className="relative w-24 h-16 bg-gradient-to-br from-slate-300 to-slate-400 rounded-xl overflow-hidden flex-shrink-0 dark:from-gray-700 dark:to-gray-800">
                 <div className="absolute inset-0 bg-black/20"></div>
                 <div className="absolute inset-0 flex items-center justify-center">
                   <div className="w-8 h-8 bg-[#FFAB00] rounded-full flex items-center justify-center">
@@ -552,7 +552,7 @@ const Dashboard = () => {
               
               <div className="flex-1">
                 <h3 className="text-lg font-semibold text-[#FFAB00] mb-2">Today's Safety Snap 📸</h3>
-                <p className="text-white text-sm leading-relaxed">{tip}</p>
+                <p className="text-slate-800 text-sm leading-relaxed dark:text-white">{tip}</p>
                 <p className="text-[#FFAB00] text-xs mt-2 font-medium">Tap to watch full video →</p>
               </div>
             </div>
@@ -566,7 +566,7 @@ const Dashboard = () => {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.6 }}
-          className="text-3xl font-bold text-white mb-8"
+          className="text-3xl font-bold text-slate-800 mb-8 dark:text-white"
         >
           Your Missions 🎯
         </motion.h2>
@@ -580,7 +580,7 @@ const Dashboard = () => {
             >
               <Link
                 to={mission.to}
-                className="group relative bg-gradient-to-br from-gray-800/50 to-gray-900/50 backdrop-blur-xl border border-gray-700/50 rounded-2xl p-6 shadow-lg hover:scale-105 transition-all duration-300 overflow-hidden block"
+                className="group relative bg-white/70 backdrop-blur-xl border border-slate-200 rounded-2xl p-6 shadow-lg hover:scale-105 transition-all duration-300 overflow-hidden block dark:bg-gray-800/50 dark:border-gray-700/50"
               >
                 {/* Background Gradient Overlay */}
                 <div className={`absolute inset-0 bg-gradient-to-br from-[#FF6F00]/5 to-[#0D47A1]/5 opacity-0 group-hover:opacity-100 transition-opacity duration-300`}></div>
@@ -597,20 +597,20 @@ const Dashboard = () => {
                 
                 {/* Content */}
                 <div className="relative z-10">
-                  <h3 className="text-lg font-bold text-white mb-2 group-hover:text-[#FF6F00] transition-colors">
+                  <h3 className="text-lg font-bold text-slate-800 mb-2 group-hover:text-[#FF6F00] transition-colors dark:text-white">
                     {mission.title}
                   </h3>
-                  <p className="text-[#B0B0B0] mb-4 leading-relaxed text-sm">
+                  <p className="text-slate-600 mb-4 leading-relaxed text-sm dark:text-[#B0B0B0]">
                     {mission.description}
                   </p>
                   
                   {/* Progress Bar */}
                   <div className="mb-4">
                     <div className="flex justify-between items-center mb-1">
-                      <span className="text-xs text-[#B0B0B0]">Progress</span>
+                      <span className="text-xs text-slate-500 dark:text-[#B0B0B0]">Progress</span>
                       <span className="text-xs text-[#FF6F00] font-semibold">{mission.progress}%</span>
                     </div>
-                    <div className="w-full bg-gray-700 rounded-full h-2">
+                    <div className="w-full bg-slate-200 rounded-full h-2 dark:bg-gray-700">
                       <div 
                         className="bg-gradient-to-r from-[#FF6F00] to-[#FFA000] h-2 rounded-full transition-all duration-300"
                         style={{ width: `${mission.progress}%` }}
