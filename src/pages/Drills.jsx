@@ -192,100 +192,6 @@ export default function Drills() {
     setCompleted(false);
   };
 
-  const styles = {
-    container: {
-      minHeight: "100vh",
-      background: "linear-gradient(to bottom, #f8fafc 0%, #e2e8f0 100%)",
-      color: "#1e293b",
-      fontFamily: "'Segoe UI', Tahoma, Geneva, Verdana, sans-serif",
-    },
-    nav: {
-      background: "rgba(255, 255, 255, 0.9)",
-      WebkitBackdropFilter: "blur(6px)",
-      backdropFilter: "blur(6px)",
-      boxShadow: "0 4px 12px rgba(0,0,0,0.05)",
-      padding: "12px 24px",
-      marginBottom: "24px",
-    },
-    welcomeSection: {
-      background: "linear-gradient(135deg, #dbeafe 0%, #bfdbfe 100%)",
-      borderRadius: "12px",
-      padding: "28px",
-      marginBottom: "28px",
-      textAlign: "center",
-      boxShadow: "0 8px 20px rgba(0,0,0,0.04)",
-    },
-    cardGrid: {
-      display: "grid",
-      gridTemplateColumns: "repeat(auto-fit,minmax(220px,1fr))",
-      gap: 18,
-    },
-    tile: {
-      background: "white",
-      borderRadius: "12px",
-      padding: "18px",
-      boxShadow: "0 6px 18px rgba(0,0,0,0.04)",
-      border: "1px solid #e6eef6",
-      textAlign: "center",
-      cursor: "pointer",
-      transition: "transform 0.18s ease, box-shadow 0.18s ease",
-    },
-    iconBox: (color) => ({
-      width: 64,
-      height: 64,
-      borderRadius: 16,
-      display: "flex",
-      alignItems: "center",
-      justifyContent: "center",
-      fontSize: 28,
-      margin: "0 auto 12px",
-      background: hexToRGBA(color, 0.16),
-      color,
-    }),
-    card: {
-      background: "#fff",
-      borderRadius: 12,
-      padding: 18,
-      border: "1px solid #e6eef6",
-      boxShadow: "0 6px 18px rgba(0,0,0,0.04)",
-    },
-    progressOuter: {
-      height: 12,
-      background: "#e2e8f0",
-      borderRadius: 999,
-      overflow: "hidden",
-      marginTop: 18,
-      marginBottom: 12,
-    },
-    progressInner: (p) => ({
-      height: "100%",
-      width: `${p}%`,
-      background: "#2563eb",
-      transition: "width 300ms ease",
-    }),
-    button: {
-      primary: {
-        padding: "10px 16px",
-        borderRadius: 10,
-        border: "1px solid #2563eb",
-        background: "#2563eb",
-        color: "#fff",
-        fontWeight: 600,
-        cursor: "pointer",
-      },
-      secondary: {
-        padding: "10px 16px",
-        borderRadius: 10,
-        border: "1px solid #e2e8f0",
-        background: "#ffffff",
-        color: "#0f172a",
-        fontWeight: 600,
-        cursor: "pointer",
-      },
-    },
-    smallMuted: { fontSize: 13, color: "#6b7280" },
-  };
-
   const startDrill = () => {
     setStarted(true);
     setStepIdx(0);
@@ -350,63 +256,42 @@ export default function Drills() {
   };
 
   return (
-    <div style={styles.container}>
+    <div className="min-h-screen bg-slate-50 dark:bg-gray-900 transition-colors duration-200">
       {/* NAV */}
-      <nav style={styles.nav}>
-        <div
-          style={{
-            maxWidth: 1200,
-            margin: "0 auto",
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "space-between",
-          }}
-        >
-          <div style={{ fontSize: 20, color: "#1e40af", fontWeight: 700 }}>
+      <nav className="bg-white/90 backdrop-blur-sm shadow-sm py-3 mb-6 dark:bg-gray-800/90">
+        <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 flex items-center justify-between">
+          <div className="text-xl font-bold text-blue-700 dark:text-blue-400">
             Aapda Setu
           </div>
           <div>
             <img
               src="https://i.pravatar.cc/150?img=12"
               alt="User"
-              style={{
-                width: 40,
-                height: 40,
-                borderRadius: "50%",
-                objectFit: "cover",
-              }}
+              className="w-10 h-10 rounded-full object-cover"
             />
           </div>
         </div>
       </nav>
 
       {/* MAIN */}
-      <main style={{ maxWidth: 1200, margin: "0 auto", padding: "0 20px 40px" }}>
+      <main className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 pb-10">
         {/* Welcome */}
-        <section style={styles.welcomeSection}>
-          <h1 style={{ margin: 0, fontSize: 28, color: "#0f172a" }}>
+        <section className="bg-gradient-to-r from-blue-50 to-blue-100 rounded-xl p-6 mb-7 text-center dark:from-blue-900/30 dark:to-blue-800/30">
+          <h1 className="text-3xl font-bold text-slate-800 mb-2 dark:text-white">
             Virtual Drills
           </h1>
-          <p
-            style={{
-              color: "#475569",
-              marginTop: 8,
-              maxWidth: 760,
-              marginLeft: "auto",
-              marginRight: "auto",
-            }}
-          >
+          <p className="text-slate-600 max-w-2xl mx-auto dark:text-slate-300">
             Choose a disaster type, pick a drill, then start practicing step-by-step.
           </p>
         </section>
 
         {/* Level 1: disaster categories */}
         {!selectedCategory && (
-          <section style={styles.cardGrid}>
+          <section className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-5">
             {DRILLS.map((c) => (
               <div
                 key={c.id}
-                style={styles.tile}
+                className="bg-white/70 backdrop-blur-xl border border-slate-200 rounded-xl p-5 text-center cursor-pointer shadow-sm hover:scale-105 transition-all duration-200 dark:bg-gray-800/50 dark:border-gray-700/50"
                 onClick={() => {
                   setSelectedCategory(c.id);
                   setSelectedDrill(null);
@@ -415,11 +300,19 @@ export default function Drills() {
                   setCompleted(false);
                 }}
               >
-                <div style={styles.iconBox(c.color)}>{c.icon}</div>
-                <div style={{ fontWeight: 700, fontSize: 16, color: "#0f172a" }}>
+                <div 
+                  className="w-16 h-16 rounded-2xl flex items-center justify-center text-2xl mx-auto mb-3"
+                  style={{
+                    background: hexToRGBA(c.color, 0.16),
+                    color: c.color
+                  }}
+                >
+                  {c.icon}
+                </div>
+                <div className="font-bold text-slate-800 dark:text-white">
                   {c.title}
                 </div>
-                <div style={{ marginTop: 8, color: "#64748b", fontSize: 13 }}>
+                <div className="text-slate-500 text-sm mt-2 dark:text-slate-400">
                   {c.drills.length} drills
                 </div>
               </div>
@@ -429,40 +322,63 @@ export default function Drills() {
 
         {/* Level 2: drills inside selected category */}
         {selectedCategory && !selectedDrill && (
-          <section style={styles.cardGrid}>
+          <section className="grid grid-cols-1 sm:grid-cols-2 gap-5">
             {category.drills.map((d) => (
               <div
                 key={d.id}
-                style={styles.tile}
+                className="bg-white/70 backdrop-blur-xl border border-slate-200 rounded-xl p-5 text-center cursor-pointer shadow-sm hover:scale-105 transition-all duration-200 dark:bg-gray-800/50 dark:border-gray-700/50"
                 onClick={() => enterDrillIntro(d.id)}
               >
-                <div style={styles.iconBox(category.color)}>{category.icon}</div>
-                <div style={{ fontWeight: 700, fontSize: 16, color: "#0f172a" }}>
+                <div 
+                  className="w-16 h-16 rounded-2xl flex items-center justify-center text-2xl mx-auto mb-3"
+                  style={{
+                    background: hexToRGBA(category.color, 0.16),
+                    color: category.color
+                  }}
+                >
+                  {category.icon}
+                </div>
+                <div className="font-bold text-slate-800 dark:text-white">
                   {d.title}
                 </div>
-                <div style={{ marginTop: 8, color: "#64748b", fontSize: 13 }}>
+                <div className="text-slate-500 text-sm mt-2 dark:text-slate-400">
                   {d.description}
                 </div>
               </div>
             ))}
-            <button style={styles.button.secondary} onClick={resetAll}>
-              ← Back to Categories
-            </button>
+            <div className="sm:col-span-2">
+              <button 
+                className="px-4 py-2.5 border border-slate-300 rounded-lg bg-white text-slate-700 font-medium hover:bg-slate-50 transition-colors dark:bg-gray-700 dark:border-gray-600 dark:text-slate-300 dark:hover:bg-gray-600"
+                onClick={resetAll}
+              >
+                ← Back to Categories
+              </button>
+            </div>
           </section>
         )}
 
         {/* Level 3: inside a drill */}
         {drill && (
-          <section style={styles.card}>
-            <h2 style={{ marginTop: 0, color: "#0f172a" }}>{drill.title}</h2>
-            <p style={styles.smallMuted}>{drill.description}</p>
+          <section className="bg-white/70 backdrop-blur-xl border border-slate-200 rounded-xl p-6 shadow-sm dark:bg-gray-800/50 dark:border-gray-700/50">
+            <h2 className="text-2xl font-bold text-slate-800 mb-2 dark:text-white">
+              {drill.title}
+            </h2>
+            <p className="text-slate-600 text-sm mb-6 dark:text-slate-400">
+              {drill.description}
+            </p>
 
             {!started && !completed && (
-              <div style={{ display: "flex", gap: 12 }}>
-                <button style={styles.button.secondary} onClick={resetToCategory}>
+              <div className="flex flex-wrap gap-3">
+                <button 
+                  className="px-4 py-2.5 border border-slate-300 rounded-lg bg-white text-slate-700 font-medium hover:bg-slate-50 transition-colors dark:bg-gray-700 dark:border-gray-600 dark:text-slate-300 dark:hover:bg-gray-600"
+                  onClick={resetToCategory}
+                >
                   ← Back to Drills
                 </button>
-                <button style={styles.button.primary} onClick={startDrill}>
+                <button 
+                  className="px-4 py-2.5 border border-blue-600 rounded-lg bg-blue-600 text-white font-medium hover:bg-blue-700 transition-colors"
+                  onClick={startDrill}
+                >
                   ▶ Start Drill
                 </button>
               </div>
@@ -470,22 +386,42 @@ export default function Drills() {
 
             {started && !completed && (
               <>
-                <p style={{ marginTop: 14 }}>{drill.steps[stepIdx]}</p>
-                <div style={styles.progressOuter}>
-                  <div style={styles.progressInner(percent)} />
+                <div className="bg-slate-100 rounded-lg p-4 mb-4 dark:bg-gray-700">
+                  <p className="text-slate-800 text-lg dark:text-white">
+                    {drill.steps[stepIdx]}
+                  </p>
                 </div>
-                <p style={styles.smallMuted}>{percent}% complete</p>
+                
+                {/* Progress Bar */}
+                <div className="w-full bg-slate-200 rounded-full h-3 mb-2 dark:bg-gray-700">
+                  <div 
+                    className="bg-blue-600 h-3 rounded-full transition-all duration-300"
+                    style={{ width: `${percent}%` }}
+                  ></div>
+                </div>
+                <p className="text-slate-500 text-sm mb-6 dark:text-slate-400">
+                  {percent}% complete
+                </p>
 
-                <div style={{ display: "flex", gap: 12, marginTop: 16 }}>
-                  <button style={styles.button.secondary} onClick={resetToCategory}>
+                <div className="flex flex-wrap gap-3">
+                  <button 
+                    className="px-4 py-2.5 border border-slate-300 rounded-lg bg-white text-slate-700 font-medium hover:bg-slate-50 transition-colors dark:bg-gray-700 dark:border-gray-600 dark:text-slate-300 dark:hover:bg-gray-600"
+                    onClick={resetToCategory}
+                  >
                     ← Back to Drills
                   </button>
                   {stepIdx > 0 && (
-                    <button style={styles.button.secondary} onClick={previousStep}>
+                    <button 
+                      className="px-4 py-2.5 border border-slate-300 rounded-lg bg-white text-slate-700 font-medium hover:bg-slate-50 transition-colors dark:bg-gray-700 dark:border-gray-600 dark:text-slate-300 dark:hover:bg-gray-600"
+                      onClick={previousStep}
+                    >
                       ← Previous
                     </button>
                   )}
-                  <button style={styles.button.primary} onClick={completeStep}>
+                  <button 
+                    className="px-4 py-2.5 border border-blue-600 rounded-lg bg-blue-600 text-white font-medium hover:bg-blue-700 transition-colors"
+                    onClick={completeStep}
+                  >
                     {stepIdx < drill.steps.length - 1 ? "Next →" : "Finish ✔"}
                   </button>
                 </div>
@@ -494,8 +430,15 @@ export default function Drills() {
 
             {completed && (
               <>
-                <p>✅ {drill.title} completed! Great job!</p>
-                <button style={styles.button.secondary} onClick={resetToCategory}>
+                <div className="bg-green-100 border border-green-200 rounded-lg p-4 mb-4 dark:bg-green-900/30 dark:border-green-800">
+                  <p className="text-green-800 font-medium dark:text-green-300">
+                    ✅ {drill.title} completed! Great job!
+                  </p>
+                </div>
+                <button 
+                  className="px-4 py-2.5 border border-slate-300 rounded-lg bg-white text-slate-700 font-medium hover:bg-slate-50 transition-colors dark:bg-gray-700 dark:border-gray-600 dark:text-slate-300 dark:hover:bg-gray-600"
+                  onClick={resetToCategory}
+                >
                   ← Back to Drills
                 </button>
               </>
