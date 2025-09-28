@@ -6,6 +6,71 @@ import alertService from "../services/alertService";
 import toast from "react-hot-toast";
 import useLogout from "../hooks/useLogout";
 
+// Separate Preparedness Shield Component
+const PreparednessShield = ({ preparedness, prepLevel }) => {
+  const radius = 45;
+  const circumference = 2 * Math.PI * radius;
+  const strokeDashoffset = circumference - (preparedness / 100) * circumference;
+
+  return (
+    <motion.div
+      initial={{ opacity: 0, scale: 0.8 }}
+      animate={{ opacity: 1, scale: 1 }}
+      transition={{ duration: 0.8 }}
+      className="relative bg-gradient-to-br from-gray-800/50 to-gray-900/50 backdrop-blur-xl border border-gray-700/50 rounded-3xl p-8 shadow-2xl hover:scale-105 transition-all duration-300 group"
+    >
+      <div className="absolute inset-0 bg-gradient-to-br from-[#FF6F00]/10 to-[#0D47A1]/10 rounded-3xl"></div>
+      <div className="relative z-10 text-center">
+        <h3 className="text-lg font-semibold text-[#B0B0B0] mb-4">Preparedness Shield</h3>
+        
+        {/* Radial Progress */}
+        <div className="relative mx-auto w-32 h-32 mb-4">
+          <svg className="w-32 h-32 transform -rotate-90" viewBox="0 0 100 100">
+            {/* Background circle */}
+            <circle
+              cx="50"
+              cy="50"
+              r={radius}
+              stroke="#374151"
+              strokeWidth="4"
+              fill="none"
+              className="opacity-30"
+            />
+            {/* Progress circle */}
+            <circle
+              cx="50"
+              cy="50"
+              r={radius}
+              stroke="#FF6F00"
+              strokeWidth="4"
+              fill="none"
+              strokeLinecap="round"
+              strokeDasharray={circumference}
+              strokeDashoffset={strokeDashoffset}
+              className="drop-shadow-lg transition-all duration-1000 ease-out"
+              style={{
+                filter: 'drop-shadow(0 0 6px #FF6F00)'
+              }}
+            />
+          </svg>
+          
+          {/* Center content */}
+          <div className="absolute inset-0 flex items-center justify-center">
+            <div className="text-center">
+              <div className="text-3xl font-bold text-white mb-1">{preparedness}%</div>
+              <div className={`text-xs font-medium ${prepLevel.color}`}>{prepLevel.level}</div>
+            </div>
+          </div>
+        </div>
+        
+        {/* Shield Icon */}
+        <div className="text-4xl mb-2 group-hover:scale-110 transition-transform duration-300">🛡️</div>
+        <p className="text-sm text-[#B0B0B0]">Your safety rating</p>
+      </div>
+    </motion.div>
+  );
+};
+
 const Dashboard = () => {
   const handleLogout = useLogout();
   const [showProfile, setShowProfile] = useState(false);
@@ -14,14 +79,21 @@ const Dashboard = () => {
   const [username, setUsername] = useState(localStorage.getItem("username") || "");
   const [showLoginPopup, setShowLoginPopup] = useState(!localStorage.getItem("username"));
   const [inputName, setInputName] = useState("");
-  const [preparedness, setPreparedness] = useState(parseInt(localStorage.getItem("preparedness")) || 0);
+  const [preparedness, setPreparedness] = useState(() => {
+    const saved = localStorage.getItem("preparedness");
+    return saved ? parseInt(saved) : 0;
+  });
   const [alerts, setAlerts] = useState([]);
   const [showBeacon, setShowBeacon] = useState(false);
   const [achievements, setAchievements] = useState([]);
   const [streakCount, setStreakCount] = useState(0);
 
+  // Use useRef to prevent unnecessary re-renders
+  const preparednessRef = React.useRef(preparedness);
+
   useEffect(() => {
     localStorage.setItem("preparedness", preparedness);
+    preparednessRef.current = preparedness;
   }, [preparedness]);
 
   useEffect(() => {
@@ -205,9 +277,6 @@ const Dashboard = () => {
     }
   };
 
-  // Note: Dashboard logout now uses the secure logout hook from the authentication context
-  // The old dashboard-specific logout logic has been replaced with the secure implementation
-
   const getPreparednessLevel = () => {
     if (preparedness >= 90) return { level: "Guardian Elite", color: "text-emerald-400", ring: "ring-emerald-400" };
     if (preparedness >= 70) return { level: "Safety Expert", color: "text-blue-400", ring: "ring-blue-400" };
@@ -217,76 +286,6 @@ const Dashboard = () => {
   };
 
   const prepLevel = getPreparednessLevel();
-
-  // Preparedness Shield Component - Fixed version without blinking
-  const PreparednessShield = React.memo(({ preparedness, prepLevel }) => {
-    const radius = 45;
-    const circumference = 2 * Math.PI * radius;
-    
-    // Memoize the strokeDashoffset calculation to prevent recalculations
-    const strokeDashoffset = React.useMemo(() => {
-      return circumference - (preparedness / 100) * circumference;
-    }, [preparedness, circumference]);
-
-    return (
-      <motion.div
-        initial={{ opacity: 0, scale: 0.8 }}
-        animate={{ opacity: 1, scale: 1 }}
-        transition={{ delay: 0.3, duration: 0.8 }}
-        className="relative bg-gradient-to-br from-gray-800/50 to-gray-900/50 backdrop-blur-xl border border-gray-700/50 rounded-3xl p-8 shadow-2xl hover:scale-105 transition-all duration-300 group"
-      >
-        <div className="absolute inset-0 bg-gradient-to-br from-[#FF6F00]/10 to-[#0D47A1]/10 rounded-3xl"></div>
-        <div className="relative z-10 text-center">
-          <h3 className="text-lg font-semibold text-[#B0B0B0] mb-4">Preparedness Shield</h3>
-          
-          {/* Radial Progress */}
-          <div className="relative mx-auto w-32 h-32 mb-4">
-            <svg className="w-32 h-32 transform -rotate-90" viewBox="0 0 100 100">
-              {/* Background circle */}
-              <circle
-                cx="50"
-                cy="50"
-                r={radius}
-                stroke="#374151"
-                strokeWidth="4"
-                fill="none"
-                className="opacity-30"
-              />
-              {/* Progress circle - removed transition to prevent blinking */}
-              <circle
-                cx="50"
-                cy="50"
-                r={radius}
-                stroke="#FF6F00"
-                strokeWidth="4"
-                fill="none"
-                strokeLinecap="round"
-                strokeDasharray={circumference}
-                strokeDashoffset={strokeDashoffset}
-                className="drop-shadow-lg"
-                style={{
-                  filter: 'drop-shadow(0 0 6px #FF6F00)',
-                  transition: 'stroke-dashoffset 1s ease-out'
-                }}
-              />
-            </svg>
-            
-            {/* Center content */}
-            <div className="absolute inset-0 flex items-center justify-center">
-              <div className="text-center">
-                <div className="text-3xl font-bold text-white mb-1">{preparedness}%</div>
-                <div className={`text-xs font-medium ${prepLevel.color}`}>{prepLevel.level}</div>
-              </div>
-            </div>
-          </div>
-          
-          {/* Shield Icon */}
-          <div className="text-4xl mb-2 group-hover:scale-110 transition-transform duration-300">🛡️</div>
-          <p className="text-sm text-[#B0B0B0]">Your safety rating</p>
-        </div>
-      </motion.div>
-    );
-  });
 
   return (
     <div className="min-h-screen" style={{ backgroundColor: '#212121' }}>
