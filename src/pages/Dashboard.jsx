@@ -5,6 +5,7 @@ import SafetyBeacon from "../components/SafetyBeacon";
 import alertService from "../services/alertService";
 import toast from "react-hot-toast";
 import useLogout from "../hooks/useLogout";
+import CurrentStatusWidget from "../components/CurrentStatusWidget"; // Add this import
 
 // Separate Preparedness Shield Component
 const PreparednessShield = ({ preparedness, prepLevel }) => {
@@ -458,7 +459,7 @@ const Dashboard = () => {
           </div>
 
           {/* Top Row Information Cards */}
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-6">
             {/* Preparedness Shield - Larger central widget */}
             <div className="lg:col-span-2">
               <PreparednessShield preparedness={preparedness} prepLevel={prepLevel} />
@@ -507,6 +508,14 @@ const Dashboard = () => {
                 </div>
               </motion.div>
             </Link>
+          </div>
+
+          {/* Second Row - Current Status Widget and Achievements */}
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+            {/* Current Status Widget - Placed in the empty space */}
+            <div className="lg:col-span-2">
+              <CurrentStatusWidget />
+            </div>
 
             {/* Achievements Card */}
             <Link to="/leaderboard" className="block">
@@ -528,6 +537,9 @@ const Dashboard = () => {
                 </div>
               </motion.div>
             </Link>
+
+            {/* Empty space to maintain grid structure */}
+            <div className="hidden lg:block"></div>
           </div>
 
           {/* Today's Safety Snap */}
