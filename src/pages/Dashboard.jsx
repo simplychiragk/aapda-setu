@@ -253,7 +253,7 @@ const Dashboard = () => {
                 className="opacity-30"
               />
               {/* Progress circle */}
-              <motion.circle
+              <circle
                 cx="50"
                 cy="50"
                 r={radius}
@@ -263,10 +263,7 @@ const Dashboard = () => {
                 strokeLinecap="round"
                 strokeDasharray={strokeDasharray}
                 strokeDashoffset={strokeDashoffset}
-                initial={{ strokeDashoffset: circumference }}
-                animate={{ strokeDashoffset }}
-                transition={{ duration: 1.5, ease: "easeOut" }}
-                className="drop-shadow-lg"
+                className="drop-shadow-lg transition-all duration-1000 ease-out"
                 style={{
                   filter: 'drop-shadow(0 0 6px #FF6F00)'
                 }}
@@ -468,65 +465,69 @@ const Dashboard = () => {
             </div>
             
             {/* Active Alerts Card */}
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.2 }}
-              className="bg-gradient-to-br from-gray-800/50 to-gray-900/50 backdrop-blur-xl border border-gray-700/50 rounded-2xl p-6 shadow-lg hover:scale-105 transition-all duration-300 cursor-pointer"
-              onClick={() => window.location.href = '/alerts'}
-            >
-              <div className="flex items-center justify-between">
-                <div>
-                  <p className="text-sm font-medium text-[#B0B0B0]">Active Alerts</p>
-                  <p className={`text-3xl font-bold ${alerts.length > 0 ? 'text-[#D50000]' : 'text-white'}`}>
-                    {alerts.length}
-                  </p>
-                  <p className="text-xs text-[#B0B0B0] mt-1">Live monitoring</p>
+            <Link to="/alerts" className="block">
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.2 }}
+                className="bg-gradient-to-br from-gray-800/50 to-gray-900/50 backdrop-blur-xl border border-gray-700/50 rounded-2xl p-6 shadow-lg hover:scale-105 transition-all duration-300 cursor-pointer"
+              >
+                <div className="flex items-center justify-between">
+                  <div>
+                    <p className="text-sm font-medium text-[#B0B0B0]">Active Alerts</p>
+                    <p className={`text-3xl font-bold ${alerts.length > 0 ? 'text-[#D50000]' : 'text-white'}`}>
+                      {alerts.length}
+                    </p>
+                    <p className="text-xs text-[#B0B0B0] mt-1">Live monitoring</p>
+                  </div>
+                  <div className={`w-12 h-12 ${alerts.length > 0 ? 'bg-[#D50000]/20' : 'bg-gray-700'} rounded-xl flex items-center justify-center`}>
+                    <span className="text-2xl">🚨</span>
+                  </div>
                 </div>
-                <div className={`w-12 h-12 ${alerts.length > 0 ? 'bg-[#D50000]/20' : 'bg-gray-700'} rounded-xl flex items-center justify-center`}>
-                  <span className="text-2xl">🚨</span>
-                </div>
-              </div>
-            </motion.div>
+              </motion.div>
+            </Link>
             
             {/* Daily Streak Card */}
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.3 }}
-              className="bg-gradient-to-br from-gray-800/50 to-gray-900/50 backdrop-blur-xl border border-gray-700/50 rounded-2xl p-6 shadow-lg hover:scale-105 transition-all duration-300"
-            >
-              <div className="flex items-center justify-between">
-                <div>
-                  <p className="text-sm font-medium text-[#B0B0B0]">Daily Streak</p>
-                  <p className="text-3xl font-bold text-[#FF6F00]">{streakCount}</p>
-                  <p className="text-xs text-[#B0B0B0] mt-1">Days active</p>
+            <Link to="/profile" className="block">
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.3 }}
+                className="bg-gradient-to-br from-gray-800/50 to-gray-900/50 backdrop-blur-xl border border-gray-700/50 rounded-2xl p-6 shadow-lg hover:scale-105 transition-all duration-300 cursor-pointer"
+              >
+                <div className="flex items-center justify-between">
+                  <div>
+                    <p className="text-sm font-medium text-[#B0B0B0]">Daily Streak</p>
+                    <p className="text-3xl font-bold text-[#FF6F00]">{streakCount}</p>
+                    <p className="text-xs text-[#B0B0B0] mt-1">Days active</p>
+                  </div>
+                  <div className="w-12 h-12 bg-[#FF6F00]/20 rounded-xl flex items-center justify-center">
+                    <span className="text-2xl">🔥</span>
+                  </div>
                 </div>
-                <div className="w-12 h-12 bg-[#FF6F00]/20 rounded-xl flex items-center justify-center">
-                  <span className="text-2xl">🔥</span>
-                </div>
-              </div>
-            </motion.div>
+              </motion.div>
+            </Link>
 
             {/* Achievements Card */}
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.4 }}
-              className="bg-gradient-to-br from-gray-800/50 to-gray-900/50 backdrop-blur-xl border border-gray-700/50 rounded-2xl p-6 shadow-lg hover:scale-105 transition-all duration-300 cursor-pointer"
-              onClick={() => window.location.href = '/leaderboard'}
-            >
-              <div className="flex items-center justify-between">
-                <div>
-                  <p className="text-sm font-medium text-[#B0B0B0]">Achievements</p>
-                  <p className="text-3xl font-bold text-[#FF6F00]">{achievements.length}</p>
-                  <p className="text-xs text-[#B0B0B0] mt-1">Unlocked</p>
+            <Link to="/leaderboard" className="block">
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.4 }}
+                className="bg-gradient-to-br from-gray-800/50 to-gray-900/50 backdrop-blur-xl border border-gray-700/50 rounded-2xl p-6 shadow-lg hover:scale-105 transition-all duration-300 cursor-pointer"
+              >
+                <div className="flex items-center justify-between">
+                  <div>
+                    <p className="text-sm font-medium text-[#B0B0B0]">Achievements</p>
+                    <p className="text-3xl font-bold text-[#FF6F00]">{achievements.length}</p>
+                    <p className="text-xs text-[#B0B0B0] mt-1">Unlocked</p>
+                  </div>
+                  <div className="w-12 h-12 bg-[#FF6F00]/20 rounded-xl flex items-center justify-center">
+                    <span className="text-2xl">🏆</span>
+                  </div>
                 </div>
-                <div className="w-12 h-12 bg-[#FF6F00]/20 rounded-xl flex items-center justify-center">
-                  <span className="text-2xl">🏆</span>
-                </div>
-              </div>
-            </motion.div>
+              </motion.div>
+            </Link>
           </div>
 
           {/* Today's Safety Snap */}
