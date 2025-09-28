@@ -43,7 +43,7 @@ function App() {
           />
           <Layout>
             <Routes>
-              <Route path="/" element={<Entry />} />
+              <Route path="/" element={<Login />} />
               <Route path="/entry" element={<Entry />} />
               <Route path="/login" element={<Login />} />
               <Route
