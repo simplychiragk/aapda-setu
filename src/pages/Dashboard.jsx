@@ -4,8 +4,10 @@ import { motion } from "framer-motion";
 import SafetyBeacon from "../components/SafetyBeacon";
 import alertService from "../services/alertService";
 import toast from "react-hot-toast";
+import useLogout from "../hooks/useLogout";
 
 const Dashboard = () => {
+  const handleLogout = useLogout();
   const [showProfile, setShowProfile] = useState(false);
   const [time, setTime] = useState(new Date());
   const [tip, setTip] = useState("");
@@ -203,13 +205,8 @@ const Dashboard = () => {
     }
   };
 
-  const handleLogout = () => {
-    localStorage.removeItem("username");
-    setUsername("");
-    setShowLoginPopup(true);
-    setShowProfile(false);
-    toast.success("Logged out successfully");
-  };
+  // Note: Dashboard logout now uses the secure logout hook from the authentication context
+  // The old dashboard-specific logout logic has been replaced with the secure implementation
 
   const getPreparednessLevel = () => {
     if (preparedness >= 90) return { level: "Guardian Elite", color: "text-emerald-400", ring: "ring-emerald-400" };
