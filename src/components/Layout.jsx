@@ -99,12 +99,14 @@ export default function Layout({ children }) {
     { key: 'profile', label: 'Profile', icon: '👤' }
   ];
 
-  // Don't show navigation on entry and login pages
-  const hideNavigation = ['/entry', '/login', '/', '/not-authorized', '/not-found', '/admin'].includes(location.pathname);
+  // Pages where nav shouldn't appear at all
+  const hideNavigation = ['/entry', '/login', '/', '/not-authorized', '/not-found'].includes(location.pathname);
+
+  const isStaffPage = location.pathname === '/staff';
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-100 dark:from-slate-950 dark:via-slate-900 dark:to-slate-900">
-      {/* Modern Navigation - Guardian Theme */}
+      {/* Navigation */}
       {!hideNavigation && (
         <nav className="bg-[#0D47A1]/80 backdrop-blur-xl border-b border-white/10 sticky top-0 z-50 shadow-2xl">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -124,21 +126,26 @@ export default function Layout({ children }) {
 
               {/* Navigation Items */}
               <div className="hidden md:flex items-center space-x-1">
-                {navItems.map((item) => (
-                  <Link
-                    key={item.to}
-                    to={item.to}
-                    className={`px-4 py-2 rounded-xl text-sm font-medium transition-all duration-200 flex items-center space-x-2 ${
-                      location.pathname === item.to
-                        ? 'bg-gradient-to-r from-[#FF6F00] to-[#FFA000] text-white shadow-lg shadow-[#FF6F00]/25'
-                        : 'text-[#B0B0B0] hover:text-white hover:bg-white/5'
-                    }`}
-                  >
-                    <span>{item.icon}</span>
-                    <span>{item.label}</span>
-                  </Link>
-                ))}
-                
+                {/* Show full nav only if NOT staff */}
+                {!isStaffPage && (
+                  <>
+                    {navItems.map((item) => (
+                      <Link
+                        key={item.to}
+                        to={item.to}
+                        className={`px-4 py-2 rounded-xl text-sm font-medium transition-all duration-200 flex items-center space-x-2 ${
+                          location.pathname === item.to
+                            ? 'bg-gradient-to-r from-[#FF6F00] to-[#FFA000] text-white shadow-lg shadow-[#FF6F00]/25'
+                            : 'text-[#B0B0B0] hover:text-white hover:bg-white/5'
+                        }`}
+                      >
+                        <span>{item.icon}</span>
+                        <span>{item.label}</span>
+                      </Link>
+                    ))}
+                  </>
+                )}
+
                 {/* Theme Toggle */}
                 <motion.button 
                   whileHover={{ scale: 1.05 }}
@@ -150,56 +157,6 @@ export default function Layout({ children }) {
                   {darkModeEnabled ? '🌙' : '☀️'}
                 </motion.button>
                 
-                {/* Notifications */}
-                <div className="relative ml-1">
-                  <details className="group">
-                    <summary className="list-none cursor-pointer w-10 h-10 rounded-xl text-sm font-medium text-[#B0B0B0] hover:text-white hover:bg-white/5 flex items-center justify-center transition-all duration-200">
-                      🔔 
-                      {unreadCount > 0 && (
-                        <span className="absolute -top-1 -right-1 text-xs bg-[#D50000] text-white px-1.5 py-0.5 rounded-full animate-pulse min-w-5 h-5 flex items-center justify-center">
-                          {unreadCount}
-                        </span>
-                      )}
-                    </summary>
-                    <motion.div 
-                      initial={{ opacity: 0, y: -10 }}
-                      animate={{ opacity: 1, y: 0 }}
-                      className="absolute right-0 mt-2 w-80 bg-gray-800/95 backdrop-blur-xl border border-gray-700/50 rounded-2xl shadow-2xl p-4 z-50"
-                    >
-                      <div className="flex items-center justify-between mb-3">
-                        <div className="text-sm font-semibold text-white">Notifications</div>
-                        <button 
-                          onClick={markAllRead} 
-                          className="text-xs text-[#FF6F00] hover:text-[#FFA000] transition-colors"
-                        >
-                          Mark all read
-                        </button>
-                      </div>
-                      <div className="max-h-72 overflow-y-auto space-y-2">
-                        {notifications.length === 0 ? (
-                          <div className="text-xs text-[#B0B0B0] px-2 py-3 text-center">No notifications</div>
-                        ) : notifications.map((n) => (
-                          <motion.div 
-                            key={n.id} 
-                            initial={{ opacity: 0, x: -20 }}
-                            animate={{ opacity: 1, x: 0 }}
-                            className={`px-3 py-2 rounded-lg text-sm transition-all duration-200 ${
-                              n.read 
-                                ? 'bg-gray-700/50 text-[#B0B0B0]' 
-                                : 'bg-[#FF6F00]/10 text-white border-l-2 border-[#FF6F00]'
-                            }`}
-                          >
-                            <div className="flex items-center justify-between">
-                              <div>{n.message}</div>
-                              <div className="text-[10px] text-[#B0B0B0]">{new Date(n.at).toLocaleTimeString()}</div>
-                            </div>
-                          </motion.div>
-                        ))}
-                      </div>
-                    </motion.div>
-                  </details>
-                </div>
-
                 {/* Logout Button */}
                 {user && (
                   <motion.button
@@ -211,19 +168,6 @@ export default function Layout({ children }) {
                     Logout
                   </motion.button>
                 )}
-              </div>
-
-              {/* Mobile menu button */}
-              <div className="md:hidden">
-                <motion.button 
-                  whileHover={{ scale: 1.05 }}
-                  whileTap={{ scale: 0.95 }}
-                  className="p-2 rounded-lg text-[#B0B0B0] hover:text-white hover:bg-white/5 transition-all duration-200"
-                >
-                  <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
-                  </svg>
-                </motion.button>
               </div>
             </div>
           </div>
