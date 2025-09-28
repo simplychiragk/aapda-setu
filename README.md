@@ -49,7 +49,7 @@ Temporary demo credentials:
 
 1. **Clone the repository**
    ```bash
-   git clone github.com/simplychiragk/aapda-setu
+   git clone github.com/simplychiragk/aapda-setu.git
    cd project_directory
    npm install
    npm run dev
