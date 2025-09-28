@@ -144,18 +144,18 @@ export default function Quizzes() {
   };
 
   const getScoreMessage = () => {
-    if (score >= 8) return { message: "🎉 Excellent! You're a disaster preparedness expert!", color: "text-emerald-600", bg: "bg-emerald-50" };
-    if (score >= 6) return { message: "👍 Great job! You have good knowledge of safety protocols.", color: "text-blue-600", bg: "bg-blue-50" };
-    if (score >= 4) return { message: "📚 Good effort! Keep learning to improve your preparedness.", color: "text-yellow-600", bg: "bg-yellow-50" };
-    return { message: "💪 Don't give up! Practice more to become disaster-ready.", color: "text-red-600", bg: "bg-red-50" };
+    if (score >= 8) return { message: "🎉 Excellent! You're a disaster preparedness expert!", color: "text-emerald-600", bg: "bg-emerald-50", darkBg: "dark:bg-emerald-900/20", darkColor: "dark:text-emerald-400" };
+    if (score >= 6) return { message: "👍 Great job! You have good knowledge of safety protocols.", color: "text-blue-600", bg: "bg-blue-50", darkBg: "dark:bg-blue-900/20", darkColor: "dark:text-blue-400" };
+    if (score >= 4) return { message: "📚 Good effort! Keep learning to improve your preparedness.", color: "text-yellow-600", bg: "bg-yellow-50", darkBg: "dark:bg-yellow-900/20", darkColor: "dark:text-yellow-400" };
+    return { message: "💪 Don't give up! Practice more to become disaster-ready.", color: "text-red-600", bg: "bg-red-50", darkBg: "dark:bg-red-900/20", darkColor: "dark:text-red-400" };
   };
 
   // Start Page
   if (showStartPage) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-emerald-50 to-blue-50 flex items-center justify-center p-4">
+      <div className="min-h-screen bg-gradient-to-br from-emerald-50 to-blue-50 dark:from-gray-900 dark:to-blue-900/30 transition-colors duration-200 flex items-center justify-center p-4">
         <div className="max-w-2xl w-full">
-          <div className="bg-white rounded-3xl shadow-2xl border border-gray-100 overflow-hidden">
+          <div className="bg-white dark:bg-gray-800 rounded-3xl shadow-2xl border border-gray-100 dark:border-gray-700 overflow-hidden">
             {/* Header */}
             <div className="bg-gradient-to-r from-emerald-500 to-blue-500 text-white p-8 text-center">
               <div className="w-20 h-20 bg-white/20 rounded-full flex items-center justify-center mx-auto mb-4">
@@ -168,31 +168,31 @@ export default function Quizzes() {
             {/* Content */}
             <div className="p-8">
               <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
-                <div className="text-center p-4 bg-emerald-50 rounded-2xl">
-                  <div className="text-2xl font-bold text-emerald-600">10</div>
-                  <div className="text-sm text-emerald-700">Questions</div>
+                <div className="text-center p-4 bg-emerald-50 dark:bg-emerald-900/20 rounded-2xl">
+                  <div className="text-2xl font-bold text-emerald-600 dark:text-emerald-400">10</div>
+                  <div className="text-sm text-emerald-700 dark:text-emerald-300">Questions</div>
                 </div>
-                <div className="text-center p-4 bg-blue-50 rounded-2xl">
-                  <div className="text-2xl font-bold text-blue-600">30s</div>
-                  <div className="text-sm text-blue-700">Per Question</div>
+                <div className="text-center p-4 bg-blue-50 dark:bg-blue-900/20 rounded-2xl">
+                  <div className="text-2xl font-bold text-blue-600 dark:text-blue-400">30s</div>
+                  <div className="text-sm text-blue-700 dark:text-blue-300">Per Question</div>
                 </div>
-                <div className="text-center p-4 bg-purple-50 rounded-2xl">
-                  <div className="text-2xl font-bold text-purple-600">+20%</div>
-                  <div className="text-sm text-purple-700">Max Score Boost</div>
+                <div className="text-center p-4 bg-purple-50 dark:bg-purple-900/20 rounded-2xl">
+                  <div className="text-2xl font-bold text-purple-600 dark:text-purple-400">+20%</div>
+                  <div className="text-sm text-purple-700 dark:text-purple-300">Max Score Boost</div>
                 </div>
               </div>
 
               <div className="space-y-4 mb-8">
-                <div className="flex items-center space-x-3 text-gray-700">
-                  <span className="w-6 h-6 bg-emerald-100 rounded-full flex items-center justify-center text-emerald-600 text-sm">✓</span>
+                <div className="flex items-center space-x-3 text-gray-700 dark:text-gray-300">
+                  <span className="w-6 h-6 bg-emerald-100 dark:bg-emerald-900/30 rounded-full flex items-center justify-center text-emerald-600 dark:text-emerald-400 text-sm">✓</span>
                   <span>Multiple choice questions about disaster safety</span>
                 </div>
-                <div className="flex items-center space-x-3 text-gray-700">
-                  <span className="w-6 h-6 bg-emerald-100 rounded-full flex items-center justify-center text-emerald-600 text-sm">✓</span>
+                <div className="flex items-center space-x-3 text-gray-700 dark:text-gray-300">
+                  <span className="w-6 h-6 bg-emerald-100 dark:bg-emerald-900/30 rounded-full flex items-center justify-center text-emerald-600 dark:text-emerald-400 text-sm">✓</span>
                   <span>Timed questions to test quick thinking</span>
                 </div>
-                <div className="flex items-center space-x-3 text-gray-700">
-                  <span className="w-6 h-6 bg-emerald-100 rounded-full flex items-center justify-center text-emerald-600 text-sm">✓</span>
+                <div className="flex items-center space-x-3 text-gray-700 dark:text-gray-300">
+                  <span className="w-6 h-6 bg-emerald-100 dark:bg-emerald-900/30 rounded-full flex items-center justify-center text-emerald-600 dark:text-emerald-400 text-sm">✓</span>
                   <span>Boost your preparedness score based on performance</span>
                 </div>
               </div>
@@ -206,7 +206,7 @@ export default function Quizzes() {
                 </button>
                 <button
                   onClick={() => navigate(-1)}
-                  className="px-6 py-4 bg-gray-100 text-gray-700 rounded-2xl font-semibold hover:bg-gray-200 transition-all duration-200"
+                  className="px-6 py-4 bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 rounded-2xl font-semibold hover:bg-gray-200 dark:hover:bg-gray-600 transition-all duration-200"
                 >
                   Back
                 </button>
@@ -220,11 +220,11 @@ export default function Quizzes() {
 
   // Quiz Page
   return (
-    <div className="min-h-screen bg-gradient-to-br from-emerald-50 to-blue-50 p-4">
+    <div className="min-h-screen bg-gradient-to-br from-emerald-50 to-blue-50 dark:from-gray-900 dark:to-blue-900/30 p-4 transition-colors duration-200">
       <div className="max-w-4xl mx-auto">
         {showScore ? (
           // Results Page
-          <div className="bg-white rounded-3xl shadow-2xl border border-gray-100 overflow-hidden">
+          <div className="bg-white dark:bg-gray-800 rounded-3xl shadow-2xl border border-gray-100 dark:border-gray-700 overflow-hidden">
             <div className="bg-gradient-to-r from-emerald-500 to-blue-500 text-white p-8 text-center">
               <div className="w-20 h-20 bg-white/20 rounded-full flex items-center justify-center mx-auto mb-4">
                 <span className="text-4xl">🎯</span>
@@ -235,22 +235,22 @@ export default function Quizzes() {
 
             <div className="p-8">
               <div className="text-center mb-8">
-                <div className="text-6xl font-bold text-gray-900 mb-2">{score}/{questions.length}</div>
-                <div className="text-2xl font-semibold text-gray-600 mb-4">{percentage}% Correct</div>
+                <div className="text-6xl font-bold text-gray-900 dark:text-white mb-2">{score}/{questions.length}</div>
+                <div className="text-2xl font-semibold text-gray-600 dark:text-gray-400 mb-4">{percentage}% Correct</div>
                 
-                <div className={`inline-block px-6 py-3 rounded-2xl ${getScoreMessage().bg} ${getScoreMessage().color} font-semibold text-lg`}>
+                <div className={`inline-block px-6 py-3 rounded-2xl ${getScoreMessage().bg} ${getScoreMessage().darkBg} ${getScoreMessage().color} ${getScoreMessage().darkColor} font-semibold text-lg`}>
                   {getScoreMessage().message}
                 </div>
               </div>
 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
-                <div className="bg-emerald-50 rounded-2xl p-6 text-center">
-                  <div className="text-3xl font-bold text-emerald-600">{score}</div>
-                  <div className="text-emerald-700">Correct Answers</div>
+                <div className="bg-emerald-50 dark:bg-emerald-900/20 rounded-2xl p-6 text-center">
+                  <div className="text-3xl font-bold text-emerald-600 dark:text-emerald-400">{score}</div>
+                  <div className="text-emerald-700 dark:text-emerald-300">Correct Answers</div>
                 </div>
-                <div className="bg-red-50 rounded-2xl p-6 text-center">
-                  <div className="text-3xl font-bold text-red-600">{questions.length - score}</div>
-                  <div className="text-red-700">Incorrect Answers</div>
+                <div className="bg-red-50 dark:bg-red-900/20 rounded-2xl p-6 text-center">
+                  <div className="text-3xl font-bold text-red-600 dark:text-red-400">{questions.length - score}</div>
+                  <div className="text-red-700 dark:text-red-300">Incorrect Answers</div>
                 </div>
               </div>
 
@@ -263,7 +263,7 @@ export default function Quizzes() {
                 </button>
                 <button
                   onClick={() => navigate("/")}
-                  className="px-6 py-4 bg-gray-100 text-gray-700 rounded-2xl font-semibold hover:bg-gray-200 transition-all duration-200"
+                  className="px-6 py-4 bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 rounded-2xl font-semibold hover:bg-gray-200 dark:hover:bg-gray-600 transition-all duration-200"
                 >
                   Dashboard
                 </button>
@@ -272,7 +272,7 @@ export default function Quizzes() {
           </div>
         ) : (
           // Question Page
-          <div className="bg-white rounded-3xl shadow-2xl border border-gray-100 overflow-hidden">
+          <div className="bg-white dark:bg-gray-800 rounded-3xl shadow-2xl border border-gray-100 dark:border-gray-700 overflow-hidden">
             {/* Progress Header */}
             <div className="bg-gradient-to-r from-emerald-500 to-blue-500 text-white p-6">
               <div className="flex items-center justify-between mb-4">
@@ -293,7 +293,7 @@ export default function Quizzes() {
 
             {/* Question Content */}
             <div className="p-8">
-              <h2 className="text-2xl font-bold text-gray-900 mb-8 leading-relaxed">
+              <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-8 leading-relaxed">
                 {current.question}
               </h2>
 
@@ -303,14 +303,14 @@ export default function Quizzes() {
                   
                   if (selected) {
                     if (option === current.answer) {
-                      buttonClass += "border-emerald-500 bg-emerald-50 text-emerald-700";
+                      buttonClass += "border-emerald-500 bg-emerald-50 dark:bg-emerald-900/20 text-emerald-700 dark:text-emerald-400";
                     } else if (option === selected && selected !== current.answer) {
-                      buttonClass += "border-red-500 bg-red-50 text-red-700";
+                      buttonClass += "border-red-500 bg-red-50 dark:bg-red-900/20 text-red-700 dark:text-red-400";
                     } else {
-                      buttonClass += "border-gray-200 bg-gray-50 text-gray-500";
+                      buttonClass += "border-gray-200 dark:border-gray-600 bg-gray-50 dark:bg-gray-700 text-gray-500 dark:text-gray-400";
                     }
                   } else {
-                    buttonClass += "border-gray-200 bg-white text-gray-900 hover:border-blue-300 hover:bg-blue-50 cursor-pointer";
+                    buttonClass += "border-gray-200 dark:border-gray-600 bg-white dark:bg-gray-800 text-gray-900 dark:text-white hover:border-blue-300 dark:hover:border-blue-500 hover:bg-blue-50 dark:hover:bg-blue-900/20 cursor-pointer";
                   }
 
                   return (
