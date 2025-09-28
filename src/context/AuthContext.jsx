@@ -75,10 +75,34 @@ export function AuthProvider({ children }) {
 
   const logout = useCallback(async () => {
     try {
-      localStorage.removeItem('auth_user');
+      // SECURITY NOTE: Client-side logout implementation
+      // 
+      // IMPORTANT: This client-side logout only clears data from the browser.
+      // It does NOT invalidate the JWT token on the server side.
+      // 
+      // For high-security applications, implement server-side token blocklist:
+      // 1. Maintain a blocklist/blacklist of invalidated tokens on the server
+      // 2. Call an API endpoint (e.g., POST /api/auth/logout) to add the current 
+      //    JWT to the blocklist before clearing client storage
+      // 3. Server should check this blocklist on every protected route
+      // 
+      // This ensures immediate token invalidation even if someone has the JWT.
+
+      // Step 1: Reset application state immediately to prevent flash of logged-in content
+      setUser(null);
+
+      // Step 2: Completely clear all browser storage to remove JWT and cached data
+      localStorage.clear();
+      sessionStorage.clear();
+
+      // Show success message after state is cleared
       toast.success('Logged out successfully');
-    } catch { /* ignore */ }
-    setUser(null);
+    } catch (error) {
+      // Even if clearing storage fails, ensure user state is reset
+      setUser(null);
+      console.error('Logout error:', error);
+      toast.error('Logout completed with warnings');
+    }
   }, []);
 
   const value = useMemo(() => ({ user, loading, login, logout, refresh }), [user, loading, login, logout, refresh]);

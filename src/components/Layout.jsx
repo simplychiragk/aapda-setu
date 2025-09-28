@@ -6,6 +6,7 @@ import { NotificationContext } from '../context/NotificationContext';
 import Toaster from './Toaster';
 import OfflineBanner from './OfflineBanner';
 import { AuthContext } from '../context/AuthContext';
+import useLogout from '../hooks/useLogout';
 
 export default function Layout({ children }) {
   const location = useLocation();
@@ -16,7 +17,8 @@ export default function Layout({ children }) {
   const [assistantTyping, setAssistantTyping] = useState(false);
   const [assistantInput, setAssistantInput] = useState('');
   const { notifications, unreadCount, markAllRead } = React.useContext(NotificationContext);
-  const { user, logout } = React.useContext(AuthContext);
+  const { user } = React.useContext(AuthContext);
+  const handleLogout = useLogout();
 
   // Track page visits for demo analytics
   useEffect(() => {
@@ -97,10 +99,6 @@ export default function Layout({ children }) {
     { key: 'profile', label: 'Profile', icon: '👤' }
   ];
 
-  const handleLogout = async () => {
-    await logout();
-    navigate('/login');
-  };
 
   // Don't show navigation on entry and login pages
   const hideNavigation = ['/entry', '/login', '/', '/not-authorized', '/not-found'].includes(location.pathname);
