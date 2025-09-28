@@ -100,7 +100,7 @@ export default function Layout({ children }) {
   ];
 
   // Don't show navigation on entry and login pages
-  const hideNavigation = ['/entry', '/login', '/', '/not-authorized', '/not-found'].includes(location.pathname);
+  const hideNavigation = ['/entry', '/login', '/', '/not-authorized', '/not-found', '/admin'].includes(location.pathname);
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-100 dark:from-slate-950 dark:via-slate-900 dark:to-slate-900">
