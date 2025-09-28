@@ -218,12 +218,15 @@ const Dashboard = () => {
 
   const prepLevel = getPreparednessLevel();
 
-  // Preparedness Shield Component
-  const PreparednessShield = () => {
+  // Preparedness Shield Component - Fixed version without blinking
+  const PreparednessShield = React.memo(({ preparedness, prepLevel }) => {
     const radius = 45;
     const circumference = 2 * Math.PI * radius;
-    const strokeDasharray = circumference;
-    const strokeDashoffset = circumference - (preparedness / 100) * circumference;
+    
+    // Memoize the strokeDashoffset calculation to prevent recalculations
+    const strokeDashoffset = React.useMemo(() => {
+      return circumference - (preparedness / 100) * circumference;
+    }, [preparedness, circumference]);
 
     return (
       <motion.div
@@ -249,7 +252,7 @@ const Dashboard = () => {
                 fill="none"
                 className="opacity-30"
               />
-              {/* Progress circle */}
+              {/* Progress circle - removed transition to prevent blinking */}
               <circle
                 cx="50"
                 cy="50"
@@ -258,11 +261,12 @@ const Dashboard = () => {
                 strokeWidth="4"
                 fill="none"
                 strokeLinecap="round"
-                strokeDasharray={strokeDasharray}
+                strokeDasharray={circumference}
                 strokeDashoffset={strokeDashoffset}
-                className="drop-shadow-lg transition-all duration-1000 ease-out"
+                className="drop-shadow-lg"
                 style={{
-                  filter: 'drop-shadow(0 0 6px #FF6F00)'
+                  filter: 'drop-shadow(0 0 6px #FF6F00)',
+                  transition: 'stroke-dashoffset 1s ease-out'
                 }}
               />
             </svg>
@@ -282,7 +286,7 @@ const Dashboard = () => {
         </div>
       </motion.div>
     );
-  };
+  });
 
   return (
     <div className="min-h-screen" style={{ backgroundColor: '#212121' }}>
@@ -458,7 +462,7 @@ const Dashboard = () => {
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
             {/* Preparedness Shield - Larger central widget */}
             <div className="lg:col-span-2">
-              <PreparednessShield />
+              <PreparednessShield preparedness={preparedness} prepLevel={prepLevel} />
             </div>
             
             {/* Active Alerts Card */}
