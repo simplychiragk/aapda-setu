@@ -1,14 +1,26 @@
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800;900&display=swap');
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
-/* Global font override */
+/* Guardian Design System - Global font override */
 * {
-  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', sans-serif;
+  font-family: 'Poppins', 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', sans-serif;
 }
 
-/* Glassmorphism utilities */
+/* Guardian Color Palette CSS Variables */
+:root {
+  --guardian-primary-blue: #0D47A1;
+  --guardian-accent-orange: #FF6F00;
+  --guardian-alert-red: #D50000;
+  --guardian-caution-yellow: #FFAB00;
+  --guardian-bg-dark: #212121;
+  --guardian-text-primary: #FFFFFF;
+  --guardian-text-secondary: #B0B0B0;
+}
+
+/* Guardian Design System - Enhanced Glassmorphism utilities */
 .glass {
   background: rgba(255, 255, 255, 0.1);
   backdrop-filter: blur(12px);
@@ -21,6 +33,14 @@
   backdrop-filter: blur(12px);
   -webkit-backdrop-filter: blur(12px);
   border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+/* Guardian frosted glass effect */
+.guardian-glass {
+  background: rgba(33, 33, 33, 0.7);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid rgba(255, 111, 0, 0.2);
 }
 
 /* Skeleton loader animations */
@@ -80,7 +100,7 @@
 .alert-moderate { @apply border-l-4 border-orange-500 bg-orange-50 dark:bg-orange-900/20; }
 .alert-minor { @apply border-l-4 border-yellow-500 bg-yellow-50 dark:bg-yellow-900/20; }
 
-/* Hover effects */
+/* Guardian Design System - Enhanced Hover effects */
 .hover-lift {
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
@@ -88,6 +108,27 @@
 .hover-lift:hover {
   transform: translateY(-4px) scale(1.02);
   box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+}
+
+/* Guardian glow effects */
+.guardian-glow {
+  transition: all 0.3s ease;
+}
+
+.guardian-glow:hover {
+  box-shadow: 0 0 20px rgba(255, 111, 0, 0.3), 0 0 40px rgba(255, 111, 0, 0.1);
+  transform: translateY(-2px) scale(1.05);
+}
+
+/* Mission card effects */
+.mission-card {
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  backdrop-filter: blur(16px);
+}
+
+.mission-card:hover {
+  transform: translateY(-8px) scale(1.03);
+  box-shadow: 0 25px 50px -12px rgba(255, 111, 0, 0.25);
 }
 
 /* Loading spinner */
@@ -105,13 +146,39 @@
   100% { transform: rotate(360deg); }
 }
 
-/* Achievement badge glow */
+/* Guardian Achievement badge glow */
 .achievement-glow {
-  box-shadow: 0 0 20px rgba(221, 107, 32, 0.5);
-  animation: pulse-glow 2s infinite;
+  box-shadow: 0 0 20px rgba(255, 111, 0, 0.5);
+  animation: guardian-pulse-glow 2s infinite;
 }
 
-@keyframes pulse-glow {
-  0%, 100% { box-shadow: 0 0 20px rgba(221, 107, 32, 0.5); }
-  50% { box-shadow: 0 0 30px rgba(221, 107, 32, 0.8); }
+@keyframes guardian-pulse-glow {
+  0%, 100% { box-shadow: 0 0 20px rgba(255, 111, 0, 0.5); }
+  50% { box-shadow: 0 0 30px rgba(255, 111, 0, 0.8); }
+}
+
+/* Guardian Shield pulse animation */
+@keyframes shield-pulse {
+  0%, 100% {
+    transform: scale(1);
+    filter: drop-shadow(0 0 10px rgba(255, 111, 0, 0.3));
+  }
+  50% {
+    transform: scale(1.05);
+    filter: drop-shadow(0 0 20px rgba(255, 111, 0, 0.6));
+  }
+}
+
+.shield-pulse {
+  animation: shield-pulse 3s ease-in-out infinite;
+}
+
+/* Guardian progress bar glow */
+.progress-glow {
+  box-shadow: 0 0 15px rgba(255, 111, 0, 0.4);
+}
+
+/* Guardian text glow */
+.text-glow {
+  text-shadow: 0 0 10px rgba(255, 111, 0, 0.5);
 }
