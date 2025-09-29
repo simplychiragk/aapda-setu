@@ -1,4 +1,4 @@
-// Alerts.theme-aware.jsx
+// Alerts.jsx
 import React, { useState, useEffect, useMemo } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import AlertMap from "../components/AlertMap";
@@ -130,20 +130,23 @@ const Alerts = () => {
           50% { box-shadow: 0 8px 40px -8px rgba(213,0,0,0.45); }
           100% { box-shadow: 0 0 0 0 rgba(213,0,0,0.0); }
         }
+
+        /* fallback class for environments without Tailwind arbitrary animate generation */
+        .pulse-red { animation: pulse-red 1.8s infinite; box-shadow: 0 0 0 4px rgba(213,0,0,0.12); }
       `}</style>
 
-      {/* Header */}
-      <header className="py-6" style={{ background: '#0D47A1' }}>
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex items-center justify-between">
+      {/* Header - ALWAYS visible in both light and dark */}
+      <header className="py-6">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex items-center justify-between" style={{ background: '#0D47A1' }}>
           <div className="flex items-center gap-4">
-            <div className="w-12 h-12 rounded-full flex items-center justify-center" style={{ background: 'rgba(255,255,255,0.06)', border: '1px solid rgba(255,255,255,0.06)' }}>
+            <div className="w-12 h-12 rounded-full flex items-center justify-center bg-white/5 border border-white/6">
               <span style={{ fontSize: 20 }}>🛡️</span>
             </div>
             <div>
               <h1 className="text-white text-lg font-extrabold">Guardian — Command Center</h1>
               <div className="flex items-center gap-3 text-sm mt-1">
                 <div className="flex items-center gap-2">
-                  <div className="w-2.5 h-2.5 rounded-full bg-red-600 animate-[pulse-red_1.8s_infinite] shadow-[0_0_0_4px_rgba(213,0,0,0.12)]" aria-hidden />
+                  <div className="w-2.5 h-2.5 rounded-full bg-red-600 pulse-red" aria-hidden />
                   <span className="text-white text-xs">Live Feed Active</span>
                 </div>
                 <span className="text-white/80 text-xs">
@@ -163,7 +166,16 @@ const Alerts = () => {
       {/* Page content */}
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         {/* Controls */}
-        <motion.div initial={{ opacity: 0, y: 6 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.25 }} className="rounded-2xl p-5 mb-8 shadow-sm border border-slate-200 bg-white/70 dark:bg-[linear-gradient(180deg,rgba(255,255,255,0.03),rgba(255,255,255,0.02))] dark:border-[rgba(255,255,255,0.06)] backdrop-blur-xl">
+        <motion.div
+          initial={{ opacity: 0, y: 6 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.25 }}
+          className={
+            // light: airy card; dark: glassmorphism card
+            "rounded-2xl p-5 mb-8 shadow-sm bg-white/70 border border-slate-200 backdrop-blur-xl " +
+            "dark:bg-gray-800/50 dark:backdrop-blur-xl dark:border dark:border-slate-700"
+          }
+        >
           <div className="flex flex-col lg:flex-row items-start lg:items-center gap-4">
             {/* left controls (search + state) */}
             <div className="flex-1 flex flex-col sm:flex-row items-start sm:items-center gap-3 w-full">
@@ -173,10 +185,7 @@ const Alerts = () => {
                   value={searchTerm}
                   onChange={(e) => setSearchTerm(e.target.value)}
                   placeholder="Search by title, area, description..."
-                  className="w-full rounded-xl py-3 pl-12 pr-4 text-sm outline-none placeholder:text-slate-400"
-                  style={{
-                    background: 'transparent'
-                  }}
+                  className="w-full rounded-xl py-3 pl-12 pr-4 text-sm outline-none placeholder:text-slate-400 bg-transparent"
                 />
                 <div className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400">
                   <svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M21 21l-4.35-4.35" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/><path d="M11 19a8 8 0 100-16 8 8 0 000 16z" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/></svg>
@@ -187,7 +196,7 @@ const Alerts = () => {
                 <select
                   value={selectedState}
                   onChange={(e) => setSelectedState(e.target.value)}
-                  className="w-full py-3 px-4 rounded-xl text-sm outline-none bg-white/80 dark:bg-transparent border border-slate-200 dark:border-[rgba(255,255,255,0.04)]"
+                  className="w-full py-3 px-4 rounded-xl text-sm outline-none bg-white/80 dark:bg-transparent border border-slate-200 dark:border-slate-700"
                 >
                   {STATES.map(s => <option key={s} value={s} className="text-sm">{s}</option>)}
                 </select>
@@ -196,7 +205,7 @@ const Alerts = () => {
 
             {/* right controls (view toggle + quick stats) */}
             <div className="flex items-center gap-3">
-              <nav className="inline-flex bg-slate-100 dark:bg-[rgba(255,255,255,0.03)] rounded-full p-[4px] border border-slate-200 dark:border-[rgba(255,255,255,0.05)]" role="tablist" aria-label="View toggle">
+              <nav className="inline-flex bg-slate-100 dark:bg-[rgba(255,255,255,0.03)] rounded-full p-[4px] border border-slate-200 dark:border-slate-700" role="tablist" aria-label="View toggle">
                 <button
                   className={`px-4 py-2 rounded-full font-semibold text-sm ${viewMode === 'list' ? 'bg-orange-400 text-black shadow-md' : 'text-slate-600 dark:text-slate-300'}`}
                   onClick={() => setViewMode("list")}
@@ -211,7 +220,7 @@ const Alerts = () => {
                 </button>
               </nav>
 
-              <div className="px-3 py-2 rounded-xl bg-white/80 dark:bg-[rgba(255,255,255,0.02)] border border-slate-200 dark:border-[rgba(255,255,255,0.04)] flex items-center gap-3 text-sm">
+              <div className="px-3 py-2 rounded-xl bg-white/80 dark:bg-[rgba(255,255,255,0.02)] border border-slate-200 dark:border-slate-700 flex items-center gap-3 text-sm">
                 <div className="text-slate-500 dark:text-slate-400">Auto-refresh</div>
                 <div className="text-sm font-extrabold">10m</div>
               </div>
@@ -222,11 +231,14 @@ const Alerts = () => {
         {/* Stat cards */}
         <motion.div initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.06 }} className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
           {/* Total Alerts */}
-          <div className="rounded-2xl p-5 shadow-sm border border-slate-200 bg-white/70 dark:bg-[linear-gradient(180deg,rgba(255,255,255,0.03),rgba(255,255,255,0.02))] dark:border-[rgba(255,255,255,0.06)]">
+          <div className={
+            "rounded-2xl p-5 shadow-sm bg-white/70 border border-slate-200 backdrop-blur-xl " +
+            "dark:bg-gray-800/50 dark:backdrop-blur-xl dark:border dark:border-slate-700"
+          }>
             <div className="flex items-start justify-between">
               <div>
                 <div className="text-sm text-slate-500 dark:text-slate-400">Total Alerts</div>
-                <div className="text-2xl font-extrabold">{alerts.length}</div>
+                <div className="text-2xl font-extrabold dark:text-white">{alerts.length}</div>
               </div>
               <div className="rounded-lg p-3 bg-white/50 dark:bg-[rgba(255,255,255,0.02)]">
                 <span className="text-xl">🚨</span>
@@ -236,11 +248,18 @@ const Alerts = () => {
           </div>
 
           {/* Severe Alerts (with conditional glow) */}
-          <div className={`rounded-2xl p-5 shadow-sm border ${severeCount > 0 ? 'border-red-300' : 'border-slate-200'} bg-white/70 dark:bg-[linear-gradient(180deg,rgba(255,255,255,0.03),rgba(255,255,255,0.02))] dark:border-[rgba(255,255,255,0.06)]`} style={{ animation: severeCount > 0 ? 'severe-glow 2.6s infinite' : undefined }}>
+          <div
+            className={
+              "rounded-2xl p-5 shadow-sm bg-white/70 border " +
+              (severeCount > 0 ? "border-red-300 " : "border-slate-200 ") +
+              "backdrop-blur-xl dark:bg-gray-800/50 dark:backdrop-blur-xl dark:border dark:border-slate-700"
+            }
+            style={{ animation: severeCount > 0 ? 'severe-glow 2.6s infinite' : undefined }}
+          >
             <div className="flex items-start justify-between">
               <div>
                 <div className="text-sm text-slate-500 dark:text-slate-400">Severe Alerts</div>
-                <div className={`text-2xl font-extrabold ${severeCount > 0 ? 'text-red-600' : ''}`}>{severeCount}</div>
+                <div className={`text-2xl font-extrabold ${severeCount > 0 ? 'text-red-600' : 'dark:text-white'}`}>{severeCount}</div>
               </div>
               <div className="rounded-lg p-3 bg-red-50 dark:bg-[rgba(213,0,0,0.08)]">
                 <span className="text-xl">🔴</span>
@@ -250,11 +269,14 @@ const Alerts = () => {
           </div>
 
           {/* Active States */}
-          <div className="rounded-2xl p-5 shadow-sm border border-slate-200 bg-white/70 dark:bg-[linear-gradient(180deg,rgba(255,255,255,0.03),rgba(255,255,255,0.02))] dark:border-[rgba(255,255,255,0.06)]">
+          <div className={
+            "rounded-2xl p-5 shadow-sm bg-white/70 border border-slate-200 backdrop-blur-xl " +
+            "dark:bg-gray-800/50 dark:backdrop-blur-xl dark:border dark:border-slate-700"
+          }>
             <div className="flex items-start justify-between">
               <div>
                 <div className="text-sm text-slate-500 dark:text-slate-400">Active States</div>
-                <div className="text-2xl font-extrabold">{new Set(alerts.map(a => (a.area || "").split(",")[0])).size}</div>
+                <div className="text-2xl font-extrabold dark:text-white">{new Set(alerts.map(a => (a.area || "").split(",")[0])).size}</div>
               </div>
               <div className="rounded-lg p-3 bg-white/50 dark:bg-[rgba(255,255,255,0.02)]">
                 <span className="text-xl">🗺️</span>
@@ -264,11 +286,14 @@ const Alerts = () => {
           </div>
 
           {/* Filtered */}
-          <div className="rounded-2xl p-5 shadow-sm border border-slate-200 bg-white/70 dark:bg-[linear-gradient(180deg,rgba(255,255,255,0.03),rgba(255,255,255,0.02))] dark:border-[rgba(255,255,255,0.06)]">
+          <div className={
+            "rounded-2xl p-5 shadow-sm bg-white/70 border border-slate-200 backdrop-blur-xl " +
+            "dark:bg-gray-800/50 dark:backdrop-blur-xl dark:border dark:border-slate-700"
+          }>
             <div className="flex items-start justify-between">
               <div>
                 <div className="text-sm text-slate-500 dark:text-slate-400">Filtered Results</div>
-                <div className="text-2xl font-extrabold">{filtered.length}</div>
+                <div className="text-2xl font-extrabold dark:text-white">{filtered.length}</div>
               </div>
               <div className="rounded-lg p-3 bg-white/50 dark:bg-[rgba(255,255,255,0.02)]">
                 <span className="text-xl">🔎</span>
@@ -285,9 +310,12 @@ const Alerts = () => {
             {loading ? (
               <ListSkeleton items={6} />
             ) : filtered.length === 0 ? (
-              <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="rounded-2xl p-12 text-center shadow-sm border border-slate-200 bg-white/70 dark:bg-[linear-gradient(180deg,rgba(255,255,255,0.03),rgba(255,255,255,0.02))] dark:border-[rgba(255,255,255,0.06)]">
+              <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className={
+                "rounded-2xl p-12 text-center shadow-sm bg-white/70 border border-slate-200 backdrop-blur-xl " +
+                "dark:bg-gray-800/50 dark:backdrop-blur-xl dark:border dark:border-slate-700"
+              }>
                 <div className="text-5xl mb-3">✅</div>
-                <h3 className="text-lg font-extrabold">No alerts found</h3>
+                <h3 className="text-lg font-extrabold dark:text-white">No alerts found</h3>
                 <p className="text-sm text-slate-500 dark:text-slate-400 mt-2">{searchTerm || selectedState !== "All India" ? "Try adjusting your search or state filter." : "System clear — no active alerts"}</p>
               </motion.div>
             ) : (
@@ -301,7 +329,10 @@ const Alerts = () => {
                       exit={{ opacity: 0, y: -8 }}
                       transition={{ delay: idx * 0.03 }}
                       onClick={() => setSelectedAlert(alert)}
-                      className="rounded-2xl p-5 cursor-pointer hover:-translate-y-0.5 transition-transform shadow-sm border border-slate-200 bg-white/70 dark:bg-[rgba(255,255,255,0.03)] dark:border-[rgba(255,255,255,0.04)]"
+                      className={
+                        "rounded-2xl p-5 cursor-pointer hover:-translate-y-0.5 transition-transform shadow-sm bg-white/70 border border-slate-200 backdrop-blur-xl " +
+                        "dark:bg-gray-800/50 dark:backdrop-blur-xl dark:border dark:border-slate-700"
+                      }
                     >
                       <div className="flex items-start justify-between gap-3">
                         <div className="flex items-start gap-4">
@@ -309,7 +340,7 @@ const Alerts = () => {
                             <span className="text-xl">{categoryEmoji(alert.category)}</span>
                           </div>
                           <div className="min-w-0">
-                            <h3 className="line-clamp-2 font-extrabold text-base">{alert.title}</h3>
+                            <h3 className="line-clamp-2 font-extrabold text-base dark:text-white">{alert.title}</h3>
                             <div className="flex gap-3 mt-2 text-sm text-slate-500 dark:text-slate-400">
                               <div className="flex items-center gap-2">
                                 <span>📍</span>
@@ -328,7 +359,7 @@ const Alerts = () => {
                           <div className="flex gap-2">
                             <button
                               onClick={(e) => { e.stopPropagation(); shareAlert(alert); }}
-                              className="px-3 py-2 rounded-lg border border-slate-200 dark:border-[rgba(255,255,255,0.04)] bg-white/60 dark:bg-[rgba(255,255,255,0.02)] text-sm"
+                              className="px-3 py-2 rounded-lg border border-slate-200 dark:border-slate-700 bg-white/60 dark:bg-[rgba(255,255,255,0.02)] text-sm"
                             >
                               Share
                             </button>
@@ -360,8 +391,11 @@ const Alerts = () => {
           {/* Right: Map OR Alert details */}
           <div className="lg:col-span-1">
             {viewMode === "map" ? (
-              <motion.div initial={{ opacity: 0, x: 12 }} animate={{ opacity: 1, x: 0 }} className="rounded-2xl p-4 sticky top-6 shadow-sm border border-slate-200 bg-white/70 dark:bg-[rgba(255,255,255,0.03)] dark:border-[rgba(255,255,255,0.04)]">
-                <h3 className="text-base font-extrabold">Map — Dark</h3>
+              <motion.div initial={{ opacity: 0, x: 12 }} animate={{ opacity: 1, x: 0 }} className={
+                "rounded-2xl p-4 sticky top-6 shadow-sm bg-white/70 border border-slate-200 backdrop-blur-xl " +
+                "dark:bg-gray-800/50 dark:backdrop-blur-xl dark:border dark:border-slate-700"
+              }>
+                <h3 className="text-base font-extrabold dark:text-white">Map — Dark</h3>
                 <div style={{ height: 420 }} className="mt-3">
                   {/* Pass a prop indicating dark style to your map component; implement dark style within AlertMap */}
                   <AlertMap alerts={filtered} selectedAlert={selectedAlert} onAlertClick={setSelectedAlert} mapStyle="dark" />
@@ -369,14 +403,17 @@ const Alerts = () => {
                 <div className="mt-3 text-sm text-slate-500 dark:text-slate-400">Map uses the dark basemap for seamless visual integration.</div>
               </motion.div>
             ) : selectedAlert ? (
-              <motion.div initial={{ opacity: 0, x: 12 }} animate={{ opacity: 1, x: 0 }} className="rounded-2xl p-6 sticky top-6 shadow-sm border border-slate-200 bg-white/70 dark:bg-[rgba(255,255,255,0.03)] dark:border-[rgba(255,255,255,0.04)]">
+              <motion.div initial={{ opacity: 0, x: 12 }} animate={{ opacity: 1, x: 0 }} className={
+                "rounded-2xl p-6 sticky top-6 shadow-sm bg-white/70 border border-slate-200 backdrop-blur-xl " +
+                "dark:bg-gray-800/50 dark:backdrop-blur-xl dark:border dark:border-slate-700"
+              }>
                 <div className="flex justify-between items-center">
-                  <h3 className="text-base font-extrabold">Alert Details</h3>
+                  <h3 className="text-base font-extrabold dark:text-white">Alert Details</h3>
                   <button onClick={() => setSelectedAlert(null)} className="text-slate-500 dark:text-slate-300 bg-transparent border-none text-xl">✕</button>
                 </div>
 
                 <div className="mt-3">
-                  <h4 className="font-extrabold text-sm">{selectedAlert.title}</h4>
+                  <h4 className="font-extrabold text-sm dark:text-white">{selectedAlert.title}</h4>
                   <div className="mt-2 text-sm text-slate-500 dark:text-slate-400">{selectedAlert.description}</div>
 
                   <div className="grid grid-cols-2 gap-3 mt-3 text-sm">
@@ -420,9 +457,12 @@ const Alerts = () => {
                 </div>
               </motion.div>
             ) : (
-              <motion.div initial={{ opacity: 0, x: 12 }} animate={{ opacity: 1, x: 0 }} className="rounded-2xl p-8 sticky top-6 text-center shadow-sm border border-slate-200 bg-white/70 dark:bg-[rgba(255,255,255,0.03)] dark:border-[rgba(255,255,255,0.04)]">
+              <motion.div initial={{ opacity: 0, x: 12 }} animate={{ opacity: 1, x: 0 }} className={
+                "rounded-2xl p-8 sticky top-6 text-center shadow-sm bg-white/70 border border-slate-200 backdrop-blur-xl " +
+                "dark:bg-gray-800/50 dark:backdrop-blur-xl dark:border dark:border-slate-700"
+              }>
                 <div className="text-4xl mb-2">🛰️</div>
-                <h3 className="text-lg font-extrabold">Select an alert</h3>
+                <h3 className="text-lg font-extrabold dark:text-white">Select an alert</h3>
                 <p className="text-sm text-slate-500 dark:text-slate-400 mt-2">Click any alert on the left or switch to map to explore geolocations.</p>
               </motion.div>
             )}
