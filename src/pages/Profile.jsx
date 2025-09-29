@@ -1,7 +1,10 @@
-import React, { useState, useEffect } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import { motion } from "framer-motion";
 import { Link } from "react-router-dom";
 import toast from "react-hot-toast";
+
+const ACCENT_START = "#FF6F00";
+const ACCENT_END = "#FFA000";
 
 const Profile = () => {
   // Single state object for all profile fields
@@ -79,43 +82,49 @@ const Profile = () => {
   ];
 
   return (
-    <div className="min-h-screen" style={{ backgroundColor: '#212121' }}>
+    <div className="min-h-screen bg-slate-50 dark:bg-slate-900 text-slate-900 dark:text-slate-100">
       {/* Header Section */}
-      <div className="relative overflow-hidden" style={{ backgroundColor: '#0D47A1' }}>
-        <div className="absolute inset-0 bg-gradient-to-r from-[#0D47A1]/80 to-[#1565C0]/80"></div>
-        <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-          <motion.div
-            initial={{ opacity: 0, y: -20 }}
-            animate={{ opacity: 1, y: 0 }}
-            className="text-center"
-          >
-            <h1 className="text-4xl font-bold text-white mb-4">
-              Complete Your Guardian Profile 🎯
-            </h1>
-            <p className="text-xl text-blue-100 mb-6">
-              Unlock your full preparedness potential by completing your mission
-            </p>
-            
-            {/* Progress Bar */}
-            <div className="max-w-2xl mx-auto">
-              <div className="flex justify-between items-center mb-2">
-                <span className="text-sm font-medium text-blue-200">Profile Completion</span>
-                <span className="text-sm font-bold text-[#FF6F00]">{completionPercentage}%</span>
-              </div>
-              <div className="w-full bg-gray-700/50 rounded-full h-4 backdrop-blur-sm">
-                <motion.div 
-                  initial={{ width: 0 }}
-                  animate={{ width: `${completionPercentage}%` }}
-                  transition={{ duration: 1, ease: "easeOut" }}
-                  className="bg-gradient-to-r from-[#FF6F00] to-[#FFA000] h-4 rounded-full shadow-lg"
-                ></motion.div>
-              </div>
-              <p className="text-xs text-blue-200 mt-2">
-                {completionPercentage === 100 ? "🎉 Mission Complete! You're a Guardian Elite!" : 
-                 `${10 - Math.ceil(completionPercentage / 10)} sections remaining to complete your mission`}
+      <div className="relative overflow-hidden">
+        <div className="w-full">
+          <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8" style={{ background: '#0D47A1' }}>
+            <motion.div
+              initial={{ opacity: 0, y: -20 }}
+              animate={{ opacity: 1, y: 0 }}
+              className="text-center"
+            >
+              <h1 className="text-4xl font-bold text-white mb-4">
+                Complete Your Guardian Profile 🎯
+              </h1>
+              <p className="text-xl text-blue-100 mb-6">
+                Unlock your full preparedness potential by completing your mission
               </p>
-            </div>
-          </motion.div>
+
+              {/* Progress Bar */}
+              <div className="max-w-2xl mx-auto">
+                <div className="flex justify-between items-center mb-2">
+                  <span className="text-sm font-medium text-blue-200">Profile Completion</span>
+                  <span className="text-sm font-bold text-[#FF6F00]">{completionPercentage}%</span>
+                </div>
+
+                <div className="w-full bg-white/20 dark:bg-slate-800 rounded-full h-4">
+                  <motion.div
+                    initial={{ width: 0 }}
+                    animate={{ width: `${completionPercentage}%` }}
+                    transition={{ duration: 1, ease: "easeOut" }}
+                    className="h-4 rounded-full shadow-sm"
+                    style={{
+                      background: `linear-gradient(90deg, ${ACCENT_START}, ${ACCENT_END})`
+                    }}
+                  />
+                </div>
+
+                <p className="text-xs text-blue-200 mt-2">
+                  {completionPercentage === 100 ? "🎉 Mission Complete! You're a Guardian Elite!"
+                    : `${10 - Math.ceil(completionPercentage / 10)} sections remaining to complete your mission`}
+                </p>
+              </div>
+            </motion.div>
+          </div>
         </div>
       </div>
 
@@ -129,22 +138,26 @@ const Profile = () => {
               initial={{ opacity: 0, x: -20 }}
               animate={{ opacity: 1, x: 0 }}
               transition={{ delay: 0.1 }}
-              className="bg-gradient-to-br from-gray-800/50 to-gray-900/50 backdrop-blur-xl border border-gray-700/50 rounded-2xl p-6 shadow-2xl"
+              className={
+                "rounded-2xl p-6 shadow-sm " +
+                "bg-white border border-slate-200 backdrop-blur-xl " +
+                "dark:bg-gray-800/50 dark:backdrop-blur-xl dark:border-slate-700"
+              }
             >
               <div className="flex items-center mb-6">
                 <div className="w-12 h-12 bg-gradient-to-r from-[#FF6F00] to-[#FFA000] rounded-xl flex items-center justify-center mr-4">
                   <span className="text-xl">👤</span>
                 </div>
                 <div>
-                  <h2 className="text-2xl font-bold text-white">Personal Information</h2>
-                  <p className="text-[#B0B0B0]">Your basic identification details</p>
+                  <h2 className="text-2xl font-bold text-slate-900 dark:text-white">Personal Information</h2>
+                  <p className="text-sm text-slate-500 dark:text-slate-400">Your basic identification details</p>
                 </div>
               </div>
 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 {/* Name */}
                 <div className="space-y-2">
-                  <label className="flex items-center text-sm font-medium text-[#B0B0B0]">
+                  <label className="flex items-center text-sm font-medium text-slate-700 dark:text-slate-400">
                     <span className="mr-2">👤</span>
                     Full Name
                   </label>
@@ -152,14 +165,17 @@ const Profile = () => {
                     type="text"
                     value={profile.name}
                     onChange={(e) => handleChange("name", e.target.value)}
-                    className="w-full px-4 py-3 bg-gray-800/80 border border-gray-600 rounded-xl focus:ring-2 focus:ring-[#FF6F00] focus:border-transparent outline-none transition-all text-white placeholder-gray-400"
+                    className={
+                      "w-full px-4 py-3 rounded-xl outline-none transition-all text-slate-900 dark:text-white " +
+                      "bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 placeholder:text-slate-400 dark:placeholder:text-slate-500"
+                    }
                     placeholder="Enter your full name"
                   />
                 </div>
 
                 {/* Age */}
                 <div className="space-y-2">
-                  <label className="flex items-center text-sm font-medium text-[#B0B0B0]">
+                  <label className="flex items-center text-sm font-medium text-slate-700 dark:text-slate-400">
                     <span className="mr-2">🎂</span>
                     Age
                   </label>
@@ -167,14 +183,17 @@ const Profile = () => {
                     type="number"
                     value={profile.age}
                     onChange={(e) => handleChange("age", e.target.value)}
-                    className="w-full px-4 py-3 bg-gray-800/80 border border-gray-600 rounded-xl focus:ring-2 focus:ring-[#FF6F00] focus:border-transparent outline-none transition-all text-white placeholder-gray-400"
+                    className={
+                      "w-full px-4 py-3 rounded-xl outline-none transition-all text-slate-900 dark:text-white " +
+                      "bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 placeholder:text-slate-400 dark:placeholder:text-slate-500"
+                    }
                     placeholder="Your age"
                   />
                 </div>
 
                 {/* Email */}
                 <div className="space-y-2">
-                  <label className="flex items-center text-sm font-medium text-[#B0B0B0]">
+                  <label className="flex items-center text-sm font-medium text-slate-700 dark:text-slate-400">
                     <span className="mr-2">✉️</span>
                     Email Address
                   </label>
@@ -182,14 +201,17 @@ const Profile = () => {
                     type="email"
                     value={profile.email}
                     onChange={(e) => handleChange("email", e.target.value)}
-                    className="w-full px-4 py-3 bg-gray-800/80 border border-gray-600 rounded-xl focus:ring-2 focus:ring-[#FF6F00] focus:border-transparent outline-none transition-all text-white placeholder-gray-400"
+                    className={
+                      "w-full px-4 py-3 rounded-xl outline-none transition-all text-slate-900 dark:text-white " +
+                      "bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 placeholder:text-slate-400 dark:placeholder:text-slate-500"
+                    }
                     placeholder="your.email@example.com"
                   />
                 </div>
 
                 {/* Phone */}
                 <div className="space-y-2">
-                  <label className="flex items-center text-sm font-medium text-[#B0B0B0]">
+                  <label className="flex items-center text-sm font-medium text-slate-700 dark:text-slate-400">
                     <span className="mr-2">📞</span>
                     Phone Number
                   </label>
@@ -197,14 +219,17 @@ const Profile = () => {
                     type="tel"
                     value={profile.phone}
                     onChange={(e) => handleChange("phone", e.target.value)}
-                    className="w-full px-4 py-3 bg-gray-800/80 border border-gray-600 rounded-xl focus:ring-2 focus:ring-[#FF6F00] focus:border-transparent outline-none transition-all text-white placeholder-gray-400"
+                    className={
+                      "w-full px-4 py-3 rounded-xl outline-none transition-all text-slate-900 dark:text-white " +
+                      "bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 placeholder:text-slate-400 dark:placeholder:text-slate-500"
+                    }
                     placeholder="+1 (555) 000-0000"
                   />
                 </div>
 
                 {/* Address */}
                 <div className="md:col-span-2 space-y-2">
-                  <label className="flex items-center text-sm font-medium text-[#B0B0B0]">
+                  <label className="flex items-center text-sm font-medium text-slate-700 dark:text-slate-400">
                     <span className="mr-2">🏠</span>
                     Home Address
                   </label>
@@ -212,7 +237,10 @@ const Profile = () => {
                     type="text"
                     value={profile.address}
                     onChange={(e) => handleChange("address", e.target.value)}
-                    className="w-full px-4 py-3 bg-gray-800/80 border border-gray-600 rounded-xl focus:ring-2 focus:ring-[#FF6F00] focus:border-transparent outline-none transition-all text-white placeholder-gray-400"
+                    className={
+                      "w-full px-4 py-3 rounded-xl outline-none transition-all text-slate-900 dark:text-white " +
+                      "bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 placeholder:text-slate-400 dark:placeholder:text-slate-500"
+                    }
                     placeholder="Your complete residential address"
                   />
                 </div>
@@ -224,29 +252,36 @@ const Profile = () => {
               initial={{ opacity: 0, x: -20 }}
               animate={{ opacity: 1, x: 0 }}
               transition={{ delay: 0.2 }}
-              className="bg-gradient-to-br from-gray-800/50 to-gray-900/50 backdrop-blur-xl border border-gray-700/50 rounded-2xl p-6 shadow-2xl"
+              className={
+                "rounded-2xl p-6 shadow-sm " +
+                "bg-white border border-slate-200 backdrop-blur-xl " +
+                "dark:bg-gray-800/50 dark:backdrop-blur-xl dark:border-slate-700"
+              }
             >
               <div className="flex items-center mb-6">
                 <div className="w-12 h-12 bg-gradient-to-r from-[#FF6F00] to-[#FFA000] rounded-xl flex items-center justify-center mr-4">
                   <span className="text-xl">🏥</span>
                 </div>
                 <div>
-                  <h2 className="text-2xl font-bold text-white">Medical Details</h2>
-                  <p className="text-[#B0B0B0]">Critical health information for emergencies</p>
+                  <h2 className="text-2xl font-bold text-slate-900 dark:text-white">Medical Details</h2>
+                  <p className="text-sm text-slate-500 dark:text-slate-400">Critical health information for emergencies</p>
                 </div>
               </div>
 
               <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                 {/* Blood Group */}
                 <div className="space-y-2">
-                  <label className="flex items-center text-sm font-medium text-[#B0B0B0]">
+                  <label className="flex items-center text-sm font-medium text-slate-700 dark:text-slate-400">
                     <span className="mr-2">🩸</span>
                     Blood Group
                   </label>
                   <select
                     value={profile.bloodGroup}
                     onChange={(e) => handleChange("bloodGroup", e.target.value)}
-                    className="w-full px-4 py-3 bg-gray-800/80 border border-gray-600 rounded-xl focus:ring-2 focus:ring-[#FF6F00] focus:border-transparent outline-none transition-all text-white"
+                    className={
+                      "w-full px-4 py-3 rounded-xl outline-none transition-all text-slate-900 dark:text-white " +
+                      "bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 placeholder:text-slate-400 dark:placeholder:text-slate-500"
+                    }
                   >
                     <option value="">Select Blood Type</option>
                     <option value="A+">A+</option>
@@ -262,7 +297,7 @@ const Profile = () => {
 
                 {/* Height */}
                 <div className="space-y-2">
-                  <label className="flex items-center text-sm font-medium text-[#B0B0B0]">
+                  <label className="flex items-center text-sm font-medium text-slate-700 dark:text-slate-400">
                     <span className="mr-2">📏</span>
                     Height (cm)
                   </label>
@@ -270,14 +305,17 @@ const Profile = () => {
                     type="number"
                     value={profile.height}
                     onChange={(e) => handleChange("height", e.target.value)}
-                    className="w-full px-4 py-3 bg-gray-800/80 border border-gray-600 rounded-xl focus:ring-2 focus:ring-[#FF6F00] focus:border-transparent outline-none transition-all text-white placeholder-gray-400"
+                    className={
+                      "w-full px-4 py-3 rounded-xl outline-none transition-all text-slate-900 dark:text-white " +
+                      "bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 placeholder:text-slate-400 dark:placeholder:text-slate-500"
+                    }
                     placeholder="Height in cm"
                   />
                 </div>
 
                 {/* Weight */}
                 <div className="space-y-2">
-                  <label className="flex items-center text-sm font-medium text-[#B0B0B0]">
+                  <label className="flex items-center text-sm font-medium text-slate-700 dark:text-slate-400">
                     <span className="mr-2">⚖️</span>
                     Weight (kg)
                   </label>
@@ -285,7 +323,10 @@ const Profile = () => {
                     type="number"
                     value={profile.weight}
                     onChange={(e) => handleChange("weight", e.target.value)}
-                    className="w-full px-4 py-3 bg-gray-800/80 border border-gray-600 rounded-xl focus:ring-2 focus:ring-[#FF6F00] focus:border-transparent outline-none transition-all text-white placeholder-gray-400"
+                    className={
+                      "w-full px-4 py-3 rounded-xl outline-none transition-all text-slate-900 dark:text-white " +
+                      "bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 placeholder:text-slate-400 dark:placeholder:text-slate-500"
+                    }
                     placeholder="Weight in kg"
                   />
                 </div>
@@ -297,22 +338,26 @@ const Profile = () => {
               initial={{ opacity: 0, x: -20 }}
               animate={{ opacity: 1, x: 0 }}
               transition={{ delay: 0.3 }}
-              className="bg-gradient-to-br from-gray-800/50 to-gray-900/50 backdrop-blur-xl border border-gray-700/50 rounded-2xl p-6 shadow-2xl"
+              className={
+                "rounded-2xl p-6 shadow-sm " +
+                "bg-white border border-slate-200 backdrop-blur-xl " +
+                "dark:bg-gray-800/50 dark:backdrop-blur-xl dark:border-slate-700"
+              }
             >
               <div className="flex items-center mb-6">
                 <div className="w-12 h-12 bg-gradient-to-r from-[#FF6F00] to-[#FFA000] rounded-xl flex items-center justify-center mr-4">
                   <span className="text-xl">🚨</span>
                 </div>
                 <div>
-                  <h2 className="text-2xl font-bold text-white">Emergency Contacts</h2>
-                  <p className="text-[#B0B0B0]">Your safety network for critical situations</p>
+                  <h2 className="text-2xl font-bold text-slate-900 dark:text-white">Emergency Contacts</h2>
+                  <p className="text-sm text-slate-500 dark:text-slate-400">Your safety network for critical situations</p>
                 </div>
               </div>
 
               <div className="space-y-4">
                 {[1, 2, 3].map((contactNum) => (
                   <div key={contactNum} className="space-y-2">
-                    <label className="flex items-center text-sm font-medium text-[#B0B0B0]">
+                    <label className="flex items-center text-sm font-medium text-slate-700 dark:text-slate-400">
                       <span className="mr-2">🚨</span>
                       Emergency Contact {contactNum}
                     </label>
@@ -320,7 +365,10 @@ const Profile = () => {
                       type="text"
                       value={profile[`emergencyContact${contactNum}`]}
                       onChange={(e) => handleChange(`emergencyContact${contactNum}`, e.target.value)}
-                      className="w-full px-4 py-3 bg-gray-800/80 border border-gray-600 rounded-xl focus:ring-2 focus:ring-[#FF6F00] focus:border-transparent outline-none transition-all text-white placeholder-gray-400"
+                      className={
+                        "w-full px-4 py-3 rounded-xl outline-none transition-all text-slate-900 dark:text-white " +
+                        "bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 placeholder:text-slate-400 dark:placeholder:text-slate-500"
+                      }
                       placeholder={`Name and phone of contact ${contactNum}`}
                     />
                   </div>
@@ -336,7 +384,10 @@ const Profile = () => {
               whileHover={{ scale: 1.02 }}
               whileTap={{ scale: 0.98 }}
               onClick={handleSave}
-              className="w-full bg-gradient-to-r from-[#FF6F00] to-[#FFA000] text-white py-4 rounded-2xl font-bold text-lg hover:from-[#FF8F00] hover:to-[#FFB300] transition-all duration-200 shadow-2xl"
+              className={
+                "w-full rounded-2xl py-4 font-bold text-lg text-black " +
+                "bg-gradient-to-r from-[#FF6F00] to-[#FFA000] shadow-md"
+              }
             >
               🚀 Complete Mission & Save Profile
             </motion.button>
@@ -349,25 +400,32 @@ const Profile = () => {
               initial={{ opacity: 0, x: 20 }}
               animate={{ opacity: 1, x: 0 }}
               transition={{ delay: 0.2 }}
-              className="bg-gradient-to-br from-gray-800/50 to-gray-900/50 backdrop-blur-xl border border-gray-700/50 rounded-2xl p-6 shadow-2xl"
+              className={
+                "rounded-2xl p-6 shadow-sm " +
+                "bg-white border border-slate-200 backdrop-blur-xl " +
+                "dark:bg-gray-800/50 dark:backdrop-blur-xl dark:border-slate-700"
+              }
             >
-              <h3 className="text-xl font-bold text-white mb-4">Your Guardian Status</h3>
-              
+              <h3 className="text-xl font-bold text-slate-900 dark:text-white mb-4">Your Guardian Status</h3>
+
               {/* Preparedness Score */}
               <div className="text-center mb-6">
                 <div className="text-5xl font-bold text-[#FF6F00] mb-2">{completionPercentage}%</div>
-                <div className="text-[#B0B0B0]">Profile Completion</div>
-                <div className="w-full bg-gray-700 rounded-full h-3 mt-4">
-                  <div 
-                    className="bg-gradient-to-r from-[#FF6F00] to-[#FFA000] h-3 rounded-full transition-all duration-500"
-                    style={{ width: `${completionPercentage}%` }}
-                  ></div>
+                <div className="text-sm text-slate-500 dark:text-slate-400">Profile Completion</div>
+                <div className="w-full bg-slate-100 dark:bg-slate-700 rounded-full h-3 mt-4 overflow-hidden">
+                  <div
+                    className="h-3 rounded-full transition-all duration-500"
+                    style={{
+                      width: `${completionPercentage}%`,
+                      background: `linear-gradient(90deg, ${ACCENT_START}, ${ACCENT_END})`
+                    }}
+                  />
                 </div>
               </div>
 
               <div className="space-y-3">
                 <div className="flex justify-between text-sm">
-                  <span className="text-[#B0B0B0]">Preparedness Level</span>
+                  <span className="text-slate-500 dark:text-slate-400">Preparedness Level</span>
                   <span className={`font-semibold ${
                     completionPercentage >= 90 ? "text-emerald-400" :
                     completionPercentage >= 70 ? "text-blue-400" :
@@ -380,20 +438,20 @@ const Profile = () => {
                      "Rookie Guardian"}
                   </span>
                 </div>
-                
+
                 <div className="flex justify-between text-sm">
-                  <span className="text-[#B0B0B0]">Mission Progress</span>
+                  <span className="text-slate-500 dark:text-slate-400">Mission Progress</span>
                   <span className="text-[#FF6F00] font-semibold">
                     {Math.ceil(completionPercentage / 25)}/4 Chapters
                   </span>
                 </div>
               </div>
 
-              <div className="mt-6 p-4 bg-gradient-to-r from-[#FF6F00]/10 to-[#FFA000]/10 rounded-xl border border-[#FF6F00]/20">
-                <p className="text-sm text-[#B0B0B0] text-center">
-                  {completionPercentage === 100 ? 
-                   "🎉 You've achieved maximum preparedness! You're a true Guardian!" :
-                   `Complete your profile to unlock the "${completionPercentage >= 50 ? 'Guardian Elite' : 'Profile Pioneer'}" badge!`}
+              <div className="mt-6 p-4 rounded-xl border" style={{ borderColor: 'rgba(255,111,0,0.12)', background: 'rgba(255,111,0,0.04)' }}>
+                <p className="text-sm text-slate-700 dark:text-slate-300 text-center">
+                  {completionPercentage === 100 ?
+                    "🎉 You've achieved maximum preparedness! You're a true Guardian!" :
+                    `Complete your profile to unlock the "${completionPercentage >= 50 ? 'Guardian Elite' : 'Profile Pioneer'}" badge!`}
                 </p>
               </div>
             </motion.div>
@@ -403,33 +461,36 @@ const Profile = () => {
               initial={{ opacity: 0, x: 20 }}
               animate={{ opacity: 1, x: 0 }}
               transition={{ delay: 0.3 }}
-              className="bg-gradient-to-br from-gray-800/50 to-gray-900/50 backdrop-blur-xl border border-gray-700/50 rounded-2xl p-6 shadow-2xl"
+              className={
+                "rounded-2xl p-6 shadow-sm " +
+                "bg-white border border-slate-200 backdrop-blur-xl " +
+                "dark:bg-gray-800/50 dark:backdrop-blur-xl dark:border-slate-700"
+              }
             >
-              <h3 className="text-xl font-bold text-white mb-4">Available Badges</h3>
+              <h3 className="text-xl font-bold text-slate-900 dark:text-white mb-4">Available Badges</h3>
               <div className="space-y-4">
                 {badges.map((badge, index) => (
-                  <div key={index} className={`flex items-center p-3 rounded-xl border ${
-                    badge.earned ? 'bg-[#FF6F00]/10 border-[#FF6F00]/30' : 'bg-gray-700/30 border-gray-600/30'
-                  }`}>
-                    <div className={`w-10 h-10 rounded-full flex items-center justify-center mr-3 ${
-                      badge.earned ? 'bg-[#FF6F00]' : 'bg-gray-600'
-                    }`}>
+                  <div key={index} className={
+                    "flex items-center p-3 rounded-xl border " +
+                    (badge.earned ? "bg-white/50 border-[#FF6F00]/30 dark:bg-[#FF6F00]/10 dark:border-[#FF6F00]/30" : "bg-slate-50 border-slate-200 dark:bg-slate-700/30 dark:border-slate-600")
+                  }>
+                    <div className={`w-10 h-10 rounded-full flex items-center justify-center mr-3 ${badge.earned ? 'bg-[#FF6F00]' : 'bg-slate-600'}`}>
                       <span className="text-lg">{badge.earned ? "🏆" : "🔒"}</span>
                     </div>
                     <div>
-                      <div className={`font-semibold ${badge.earned ? 'text-[#FF6F00]' : 'text-[#B0B0B0]'}`}>
+                      <div className={`font-semibold ${badge.earned ? 'text-[#FF6F00]' : 'text-slate-700 dark:text-slate-300'}`}>
                         {badge.name}
                       </div>
-                      <div className="text-xs text-[#B0B0B0]">{badge.description}</div>
+                      <div className="text-xs text-slate-500 dark:text-slate-400">{badge.description}</div>
                     </div>
                   </div>
                 ))}
               </div>
 
               <div className="mt-6 text-center">
-                <Link 
-                  to="/leaderboard" 
-                  className="inline-block px-4 py-2 bg-gray-700/50 text-[#B0B0B0] rounded-lg hover:bg-gray-600/50 transition-colors text-sm font-medium"
+                <Link
+                  to="/leaderboard"
+                  className="inline-block px-4 py-2 rounded-lg text-sm font-medium border border-slate-200 bg-white dark:bg-slate-800 dark:border-slate-700 text-slate-900 dark:text-white"
                 >
                   View Leaderboard →
                 </Link>
@@ -441,10 +502,14 @@ const Profile = () => {
               initial={{ opacity: 0, x: 20 }}
               animate={{ opacity: 1, x: 0 }}
               transition={{ delay: 0.4 }}
-              className="bg-gradient-to-br from-gray-800/50 to-gray-900/50 backdrop-blur-xl border border-gray-700/50 rounded-2xl p-6 shadow-2xl"
+              className={
+                "rounded-2xl p-6 shadow-sm " +
+                "bg-white border border-slate-200 backdrop-blur-xl " +
+                "dark:bg-gray-800/50 dark:backdrop-blur-xl dark:border-slate-700"
+              }
             >
-              <h3 className="text-xl font-bold text-white mb-4">Mission Tips 💡</h3>
-              <ul className="space-y-3 text-sm text-[#B0B0B0]">
+              <h3 className="text-xl font-bold text-slate-900 dark:text-white mb-4">Mission Tips 💡</h3>
+              <ul className="space-y-3 text-sm text-slate-700 dark:text-slate-400">
                 <li className="flex items-start">
                   <span className="text-[#FF6F00] mr-2">•</span>
                   Complete all sections to achieve "Guardian Elite" status
