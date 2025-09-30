@@ -126,6 +126,20 @@ export default function Layout({ children }) {
 
               {/* Navigation Items */}
               <div className="hidden md:flex items-center space-x-1">
+                {/* Back Button - Always visible except on staff pages */}
+                {!isStaffPage && (
+                  <motion.button
+                    whileHover={{ scale: 1.05 }}
+                    whileTap={{ scale: 0.95 }}
+                    onClick={() => navigate(-1)}
+                    className="px-4 py-2 rounded-xl text-sm font-medium text-[#B0B0B0] hover:text-white hover:bg-white/5 transition-all duration-200 flex items-center space-x-2"
+                    title="Go back to previous page"
+                  >
+                    <span>⬅️</span>
+                    <span>Back</span>
+                  </motion.button>
+                )}
+
                 {/* Show full nav only if NOT staff */}
                 {!isStaffPage && (
                   <>
